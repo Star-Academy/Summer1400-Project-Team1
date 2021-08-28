@@ -2,7 +2,6 @@
   flex-grow: 1;
   height: 100%;
   min-height: 100%;
-  background-color: #eee;
 }
 
 .container {
@@ -15,11 +14,11 @@
   align-items: center;
 }
 .sidebar {
-  width: 10rem;
+  width: 15rem;
+  font-size: 1.5rem;
   height: 100%;
-  background-image: linear-gradient(180deg, #213463, #103183);
-  transition: 0.3s all ease;
-
+  background-image: linear-gradient(180deg, var(--color-primary-dark), var(--color-primary));
+  transition: width 0.3s ease;
   & > ul {
     display: flex;
     justify-content: center;
@@ -28,87 +27,61 @@
 
     list-style: none;
 
-    & > div {
-      width: 70%;
-      display: flex;
-      margin-top: 2rem;
-
-      & > label {
-        cursor: pointer;
-        margin-right: auto;
-        width: 1rem;
-        height: 1rem;
-
-        & > svg {
-          fill: white;
-          &:hover {
-            fill: #ff7300;
-          }
-        }
-      }
-    }
-
     & > li {
       display: flex;
       flex-direction: row;
-      justify-content: center;
       align-items: center;
-      width: 90%;
-
-      margin: 1rem auto 0 auto;
-      padding: 0.6rem 0;
-
+      flex-shrink: 0;
+      width: calc(100% - 1.5rem);
+      &.toggle-sidebar{
+        cursor: default;
+        mat-icon {
+          cursor: pointer;
+          color: var(--color-gray-85);
+          transition: 0.3s all ease;
+          &:hover{
+            color: var(--color-gray-95);
+          }
+        }
+      }
+      padding: 1rem;
       color: white;
       cursor: pointer;
       border-radius: 0.2rem;
       transition: 0.3s all ease;
 
-      &:hover {
+      &:hover:not(:first-child) {
         background-color: rgba(255, 255, 255, 0.123);
       }
 
       & > span {
-        width: 1rem;
-        height: 1rem;
-        margin: 0 1rem 0 1rem;
-
+        width: 2rem;
+        height: 2rem;
+        margin-right: 0.2rem;
         display: flex;
-        justify-content: center;
         align-items: center;
 
         & > svg {
           fill: white;
-          width: 1rem;
-          height: 1rem;
+          width: 4rem;
         }
       }
 
       & > div {
+        margin-right: 1rem;
         flex-grow: 1;
+        flex-shrink: 0;
       }
     }
   }
 }
 
-#wrap-sidebar {
-  display: none;
+.sidebar.hide{
+  width: 6rem;
+  & > ul > .toggle-sidebar mat-icon {
+    transform: rotate(180deg);
+  }
 }
-#wrap-sidebar:checked ~ .sidebar {
-  width: 3rem;
-}
-#wrap-sidebar:checked ~ .sidebar > ul > li > div {
-  display: none;
-}
-#wrap-sidebar:checked ~ .sidebar > ul > li > span {
-  margin: 0 !important;
-}
-#wrap-sidebar:checked ~ .sidebar > ul > li {
-  width: 100%;
-}
-#wrap-sidebar:checked ~ .sidebar > ul > div > label {
-  transform: rotate(180deg);
-  margin: auto;
-}
-#wrap-sidebar:checked ~ .sidebar > ul > div {
-  width: 100%;
+.sidebar.hide > ul > li > div {
+  opacity: 0;
 }

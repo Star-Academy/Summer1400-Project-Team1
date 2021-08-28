@@ -7,6 +7,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { HeaderComponent } from './pages/header/header.component';
 import { DatasetsComponent } from './pages/dashboard/datasets/datasets.component';
 import { ConnectionsComponent } from './pages/dashboard/connections/connections.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -16,10 +18,12 @@ import { ConnectionsComponent } from './pages/dashboard/connections/connections.
     DatasetsComponent,
     ConnectionsComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatIconModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
