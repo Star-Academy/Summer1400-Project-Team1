@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+:host .header {
+  background: #547292;
+  height: 7rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+:host .header p {
+  font-size: 2.5rem;
+  color: #fff;
+}
+:host .header img {
+  height: 2rem;
+  width: 2rem;
+}
+:host form .input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+:host form .input-wrapper input {
+  outline: none;
+  border: none;
+  border-bottom: 0.1rem solid #000;
+}
+:host form .input-wrapper input:focus {
+  outline: none;
+  border-bottom: 0.1rem solid #0676c1;
+}
+
+/*# sourceMappingURL=add-new-dataset.component.css.map */
