@@ -12,7 +12,7 @@ export class DatasetService {
     new Dataset(),
     new Dataset(),
     new Dataset()
-  ]
+  ];
 
   private _datasets!:Dataset[];
   private _datasetsRows!:DatasetRow[];
@@ -33,7 +33,6 @@ export class DatasetService {
   get datasetsRows(): DatasetRow[] {
     return this._datasetsRows;
   }
-
   set datasetsRows(value: DatasetRow[]) {
     this._datasetsRows = value;
     this.datasetsRowsChanged.next(value);

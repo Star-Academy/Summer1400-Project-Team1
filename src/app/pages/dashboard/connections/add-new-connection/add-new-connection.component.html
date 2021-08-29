@@ -1,0 +1,27 @@
+<div class='header'>
+    <div class='header-content'>
+        <p>افزودن پایگاه داده جدید</p>
+        <button mat-icon-button aria-label='Example icon button with a home icon' (click)='onClose()'>
+            <img src='assets/images/close.svg' alt='close'>
+        </button>
+    </div>
+
+</div>
+<form (ngSubmit)='onSubmit()' #form="ngForm" >
+    <mat-form-field appearance='outline'>
+        <mat-label>نام اتصال</mat-label>
+        <input type='text' ngModel name="connectionName" #connectionName="ngModel" matInput placeholder='' required>
+    </mat-form-field>
+
+
+
+    <div class='actions-wrapper'>
+        <div class='validate-wrapper'>
+            <button type="submit" mat-raised-button color='primary'>اعتبار سنجی</button>
+            <button mat-stroked-button color='primary'>اضافه کردن پایگاه داده</button>
+        </div>
+        <button mat-stroked-button color='primary' (click)='onClose()'>لغو</button>
+
+
+    </div>
+</form>

@@ -5,13 +5,15 @@ import { PipelineComponent } from './pages/pipeline/pipeline.component';
 import {DatasetsComponent} from './pages/dashboard/datasets/datasets.component';
 import {AddNewDatasetComponent} from './pages/dashboard/datasets/add-new-dataset/add-new-dataset.component';
 import { ConnectionsComponent } from './pages/dashboard/connections/connections.component';
+import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new-connection/add-new-connection.component';
 
 const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent,
     children: [
       { path: 'datasets', component: DatasetsComponent },
       { path: 'connection', component: ConnectionsComponent },
-      { path: 'datasets/add', component: AddNewDatasetComponent }
+      { path: 'datasets/add', component: AddNewDatasetComponent },
+      { path: 'connection/add', component: AddNewConnectionComponent},
 
     ]
   },
