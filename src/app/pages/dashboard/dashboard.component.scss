@@ -32,8 +32,27 @@
       align-items: center;
       flex-shrink: 0;
       width: calc(100% - 1.5rem);
+      a {
+        display: flex;
+        align-items: center;
+        color: white;
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0.2rem;
+        &:not(.selected):hover {
+          background-color: rgba(255, 255, 255, 0.123);
+        }
+        &.selected{
+          background-color: white;
+          color: var(--color-primary);
+          span > svg{
+            fill: var(--color-primary);
+          }
+        }
+      }
       &.toggle-sidebar{
         cursor: default;
+        padding-right: 1rem;
         mat-icon {
           cursor: pointer;
           color: var(--color-gray-85);
@@ -44,37 +63,25 @@
         }
       }
       margin: 0.5rem 1rem;
-      padding: 1rem;
       color: white;
       cursor: pointer;
-      border-radius: 0.2rem;
       transition: 0.3s all ease;
 
-      &:not(.selected):hover:not(:first-child) {
-        background-color: rgba(255, 255, 255, 0.123);
-      }
-      &.selected{
-        background-color: white;
-        color: var(--color-primary);
-        span > svg{
-          fill: var(--color-primary);
-        }
-      }
-      & > span {
+       span {
         width: 2rem;
         height: 2rem;
         margin-right: 0.2rem;
         display: flex;
         align-items: center;
 
-        & > svg {
+         svg {
           fill: white;
           width: 4rem;
         }
       }
 
 
-      & > div {
+      div {
         transition: opacity 0.3s ease;
         margin-right: 1rem;
         flex-grow: 1;
@@ -90,6 +97,6 @@
     transform: rotate(180deg);
   }
 }
-.sidebar.hide > ul > li > div {
+.sidebar.hide > ul > li > a > div {
   opacity: 0;
 }

@@ -8,8 +8,10 @@ import { ConnectionsComponent } from './pages/dashboard/connections/connections.
 import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new-connection/add-new-connection.component';
 
 const routes: Routes = [
+  {path: '', redirectTo:'dashboard', pathMatch:'full'},
   {path: 'dashboard', component: DashboardComponent,
     children: [
+      {path: '', redirectTo:'datasets', pathMatch:'full'},
       { path: 'datasets', component: DatasetsComponent },
       { path: 'connection', component: ConnectionsComponent },
       { path: 'datasets/add', component: AddNewDatasetComponent },
