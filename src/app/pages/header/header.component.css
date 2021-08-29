@@ -1,0 +1,46 @@
+header {
+  height: 6rem;
+  background-image: linear-gradient(to top left, var(--color-primary-dark), var(--color-primary));
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+header nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+header nav ul:first-child li:first-child {
+  width: 6rem;
+}
+header nav ul:first-child .home {
+  margin: auto;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background-color: var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+}
+header nav .header-actions {
+  margin: auto 3rem;
+  display: flex;
+}
+header nav .header-actions mat-icon {
+  cursor: pointer;
+  color: var(--color-gray-95);
+}
+header nav .header-actions button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: var(--color-gray-95);
+  margin-right: 1rem;
+}
+
+/*# sourceMappingURL=header.component.css.map */
