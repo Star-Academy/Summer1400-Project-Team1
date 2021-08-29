@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {NgForm, NgModel} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-pipeline',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PipelineComponent implements OnInit {
 
-  constructor() { }
+  pipelineTitle = 'نام پایپلاین'
+  isEditingPipelineTitle = false;
+  expandSidebar = true;
+  expandPreview = true;
+  constructor(public router: Router) { }
 
   ngOnInit(): void {
   }
 
+  editPipelineName(ngForm: NgForm) {
+    this.pipelineTitle = ngForm.value.newTitle
+    this.isEditingPipelineTitle = false;
+  }
 }
