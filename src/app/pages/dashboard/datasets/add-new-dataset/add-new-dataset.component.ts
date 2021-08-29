@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import { Location } from '@angular/common'
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-add-new-dataset',
@@ -6,13 +8,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-new-dataset.component.scss']
 })
 export class AddNewDatasetComponent implements OnInit {
+  @ViewChild('form', {static: false}) form!: NgForm;
+  datasetName!:string;
+  panelOpenState: boolean=false;
 
-  constructor() { }
+  constructor(private location: Location) { }
 
   ngOnInit(): void {
+
   }
 
     onSubmit() {
+    if (!this.form.valid) return;
+    this.datasetName=this.form.value.datasetName;
+    }
 
+    onClose() {
+        this.location.back();
     }
 }

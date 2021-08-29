@@ -11,26 +11,59 @@
   align-items: center;
   justify-content: space-evenly;
 }
+:host .header .header-content {
+  width: 65%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 :host .header p {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #fff;
 }
 :host .header img {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+:host form {
+  width: 65%;
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-size: 1.5rem;
+}
+:host form .panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+:host form .panel-body button {
+  width: fit-content;
+}
+:host form .panel-body .btn-add {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-primary);
+}
+:host form .panel-body .btn-add img {
   height: 2rem;
   width: 2rem;
 }
-:host form .input-wrapper {
+:host form .actions-wrapper {
+  height: 6rem;
+  width: 100%;
+  margin-top: 3rem;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
-:host form .input-wrapper input {
-  outline: none;
-  border: none;
-  border-bottom: 0.1rem solid #000;
-}
-:host form .input-wrapper input:focus {
-  outline: none;
-  border-bottom: 0.1rem solid #0676c1;
+:host form .actions-wrapper .validate-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /*# sourceMappingURL=add-new-dataset.component.css.map */
