@@ -1,3 +1,83 @@
+.main {
+  flex-grow: 1;
+  height: 100%;
+  min-height: 100%;
+}
 
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.sidebar {
+  width: 15rem;
+  font-size: 1.5rem;
+  height: 100%;
+  background-image: linear-gradient(180deg, var(--color-primary-dark), var(--color-primary));
+  transition: width 0.3s ease;
+}
+.sidebar > ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  list-style: none;
+}
+.sidebar > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  width: calc(100% - 1.5rem);
+  padding: 1rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 0.2rem;
+  transition: 0.3s all ease;
+}
+.sidebar > ul > li.toggle-sidebar {
+  cursor: default;
+}
+.sidebar > ul > li.toggle-sidebar mat-icon {
+  cursor: pointer;
+  color: var(--color-gray-85);
+  transition: 0.3s all ease;
+}
+.sidebar > ul > li.toggle-sidebar mat-icon:hover {
+  color: var(--color-gray-95);
+}
+.sidebar > ul > li:hover:not(:first-child) {
+  background-color: rgba(255, 255, 255, 0.123);
+}
+.sidebar > ul > li > span {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.2rem;
+  display: flex;
+  align-items: center;
+}
+.sidebar > ul > li > span > svg {
+  fill: white;
+  width: 4rem;
+}
+.sidebar > ul > li > div {
+  margin-right: 1rem;
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.sidebar.hide {
+  width: 6rem;
+}
+.sidebar.hide > ul > .toggle-sidebar mat-icon {
+  transform: rotate(180deg);
+}
+
+.sidebar.hide > ul > li > div {
+  opacity: 0;
+}
 
 /*# sourceMappingURL=dashboard.component.css.map */
