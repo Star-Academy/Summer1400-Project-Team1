@@ -1,1 +1,22 @@
-<p>datasets works!</p>
+<div class='btn-container'>
+
+    <button class='btn-add'  routerLink='add'>
+        <img src='assets/images/add.svg' alt='' >
+        Add Dataset
+    </button>
+
+    <button class='btn-drop' (click)='file.click()'>
+        <img src='assets/images/upload.svg' alt=''>
+        Drop a file or <span>browse</span>
+    </button>
+    <input style="display: none;" type="file" accept=".csv" (change)='onUpload($event)'  #file>
+
+  </div>
+<div class='dataset-list-container'>
+    <app-dataset-item *ngFor='let dataset of datasets' [item]='dataset'></app-dataset-item>
+</div>
+
+
+
+
+
