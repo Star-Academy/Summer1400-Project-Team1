@@ -1,18 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: sans-serif;
-}
+/* Error: Can't find stylesheet to import.
+ *   ,
+ * 4 | @use '~@angular/material' as mat;
+ *   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ *   '
+ *   styles.scss 4:1  root stylesheet */
 
-:root {
-  --color-primary:hsla(210, 62%, 26%, 1);
-  --color-primary-hover: hsla(210, 62%, 20%, 1);
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Can't find stylesheet to import.\a   \2577 \a 4 \2502  @use '~@angular/material' as mat;\a   \2502  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\a   \2575 \a   styles.scss 4:1  root stylesheet";
 }
-
-html {
-  font-size: 62.5%;
-}
-
-/*# sourceMappingURL=styles.css.map */
