@@ -13,6 +13,12 @@ import { PipelineComponent } from './pages/pipeline/pipeline.component';
 import { DatasetItemComponent } from './pages/dashboard/datasets/dataset-item/dataset-item.component';
 import { AddNewDatasetComponent } from './pages/dashboard/datasets/add-new-dataset/add-new-dataset.component';
 import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -25,17 +31,21 @@ import {FormsModule} from '@angular/forms';
     DatasetItemComponent,
     AddNewDatasetComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatIconModule
-    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    BrowserAnimationsModule,
+    MatIconModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatExpansionModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatTableModule,
+
   ],
+
   providers: [],
   bootstrap: [AppComponent]
 })
