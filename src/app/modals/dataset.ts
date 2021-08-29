@@ -5,3 +5,9 @@ export class  Dataset{
                 public createdAt:string="testDate")
     {}
 }
+
+export class  DatasetRow{
+    constructor(public position:number,
+                public dataset:Dataset)
+    {}
+}
