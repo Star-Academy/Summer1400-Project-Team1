@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/v1/Input/[action]")]
-    public class InputController : ControllerBase
+    [Route("api/v1")]
+    public class DatasetController : ControllerBase
     {
         
     }
