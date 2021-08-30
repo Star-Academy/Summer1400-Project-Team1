@@ -13,6 +13,8 @@ export class PipelineComponent implements OnInit {
   isEditingPipelineTitle = false;
   expandSidebar = true;
   expandPreview = true;
+  isModalOpen=false;
+  
   constructor(public router: Router) { }
 
   ngOnInit(): void {
