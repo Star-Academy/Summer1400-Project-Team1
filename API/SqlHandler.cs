@@ -27,6 +27,10 @@ namespace API
         {
             Connection.Close();
         }
-        
+
+        public IDbCommand CreatCommand()
+        {
+            return Connection.CreateCommand();
+        }
     }
 }

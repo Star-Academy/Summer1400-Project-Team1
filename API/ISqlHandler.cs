@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.SqlClient;
 
 namespace API
@@ -8,5 +9,6 @@ namespace API
         bool IsOpen();
         void Open();
         void Close();
+        IDbCommand CreatCommand();
     }
 }
