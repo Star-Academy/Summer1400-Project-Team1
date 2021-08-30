@@ -50,18 +50,27 @@ namespace API
             return tablesName;
         }
 
-        public void CopyDataToDataBase(string sourceServer, string sourceDataBase, string sourceTable, string username, string password)
+        public void CopyDataToDataBase(string sourceServer, string sourceDataBase, string sourceTable)
         {
-            var sqlQuery =
-                $"EXEC sp_addlinkedserver @server=\'{sourceServer}\'" +
-                $"EXEC sp_addlinkedsrvlogin \'{sourceServer}\', \'false\', NULL, \'{username}\', \'{password}\'"+
-                $"SELECT * INTO Project1.dbo.{sourceTable} FROM {sourceServer}.{sourceDataBase}.dbo.{sourceTable}"+
-                $"EXEC sp_dropserver \'{sourceServer}\', \'droplogins\';";
-            
+            var addLinkedSrvQuery =
+                "EXEC sp_addlinkedserver @server='project1LinkedSrv',@srvproduct=N'', @provider=N'SQLNCLI'," +
+                $" @datasrc=N'{sourceServer}', @provstr='Integrated Security=SSPI;'"+
+                "EXEC sp_addlinkedsrvlogin 'project1LinkedSrv', true";
+            var selectQuery =
+                $"SELECT * INTO Project1.dbo.{sourceTable} FROM project1LinkedSrv.{sourceDataBase}.dbo.{sourceTable}";
+            var dropLinkedSrvQuery = "EXEC sp_dropserver 'project1LinkedSrv', 'droplogins'";
+           
             _destinationConnection.Open();
-            var sqlCommand = new SqlCommand(sqlQuery, _destinationConnection);
-            sqlCommand.ExecuteReader();
+            using (var command = _destinationConnection.CreateCommand())
+            {
+                command.CommandText = addLinkedSrvQuery;
+                command.ExecuteNonQuery();
+                command.CommandText = selectQuery;
+                command.ExecuteNonQuery();
+                command.CommandText = dropLinkedSrvQuery;
+                command.ExecuteNonQuery();
+            }
             _destinationConnection.Close();
-        }
+        } 
     }
 }
