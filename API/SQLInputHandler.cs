@@ -7,9 +7,9 @@ namespace API
 {
     public class SQLInputHandler
     {
-        private readonly SqlConnection _destinationConnection;
+        private readonly ISqlHandler _destinationConnection;
 
-        public SQLInputHandler(SqlConnection destinationConnection)
+        public SQLInputHandler(ISqlHandler destinationConnection)
         {
             _destinationConnection = destinationConnection;
         }
@@ -61,7 +61,7 @@ namespace API
             var dropLinkedSrvQuery = "EXEC sp_dropserver 'project1LinkedSrv', 'droplogins'";
            
             _destinationConnection.Open();
-            using (var command = _destinationConnection.CreateCommand())
+            using (var command = _destinationConnection.CreatCommand())
             {
                 command.CommandText = addLinkedSrvQuery;
                 command.ExecuteNonQuery();
