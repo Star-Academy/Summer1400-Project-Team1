@@ -1,18 +1,27 @@
-<h1 mat-dialog-title>processor </h1>
-<div class='select-processor-container' mat-dialog-content>
-    <button  mat-flat-button class='processor-item'  (click)='onSelectProcessor("filter")' >
-        filter
-        <img src='assets/images/filter.svg' alt=''>
-    </button>
-    <button mat-flat-button class='processor-item' (click)='onSelectProcessor("join")' >
-        join
-        <img src='assets/images/join.svg' alt=''>
-    </button>
-    <button mat-flat-button class='processor-item' (click)='onSelectProcessor("aggregation")' >
-        aggregate
-        <img src='assets/images/aggregate.svg' alt=''>
-    </button>
-
+<h1 mat-dialog-title>پردازه ها</h1>
+<div class="select-processor-container" mat-dialog-content>
+  <button
+    mat-flat-button
+    class="processor-item"
+    (click)="onSelectProcessor('filter')"
+  >
+    filter
+    <img src="assets/images/filter.svg" alt="" />
+  </button>
+  <button
+    mat-flat-button
+    class="processor-item"
+    (click)="onSelectProcessor('join')"
+  >
+    join
+    <img src="assets/images/join.svg" alt="" />
+  </button>
+  <button
+    mat-flat-button
+    class="processor-item"
+    (click)="onSelectProcessor('aggregation')"
+  >
+    aggregate
+    <img src="assets/images/aggregate.svg" alt="" />
+  </button>
 </div>
-
-

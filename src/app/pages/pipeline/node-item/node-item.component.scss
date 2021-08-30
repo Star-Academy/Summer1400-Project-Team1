@@ -1,33 +1,26 @@
 .node-wrapper {
   height: 12rem;
-  width: 15rem;
+  width: 25rem;
   display: flex;
   align-items: center;
   position: relative;
   gap: 1rem;
 
   .edge {
-    display: grid;
+    display: flex;
+    align-items: center;
+    height: fit-content;
 
-    button {
-      grid-column: 1;
-      grid-row: 1;
-    }
-    .add-icon{
-      visibility: hidden;
-    }
-
-    &:hover .add-icon {
-      visibility: visible;
-    }
-    &:hover .arrow-icon {
-      visibility: hidden;
+    .arrow-icon {
+      height: 100%;
+      display: flex;
+      align-items: center;
     }
   }
 
   img {
     height: 2rem;
-    width: 3rem;
+    width: 2rem;
   }
 
   .node {
@@ -37,44 +30,38 @@
     align-items: center;
     justify-content: center;
     border-radius: 1rem;
-    background:white;
+    background: white;
     overflow: hidden;
-    .node-detail{
-      width:100%;
+    .node-detail {
+      width: 100%;
       height: 100%;
       white-space: initial;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-   }
-    &:hover +.delete {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    &:hover + .delete {
       visibility: visible;
-
     }
   }
-  .start-node{
-    background:var(--color-primary);
-    color:white;
+  .start-node {
+    background: var(--color-gray-92);
   }
-  .end-node{
-    background:var(--color-primary-light);
-    color:white;
+  .end-node {
+    background: var(--color-gray-92);
   }
 
   .delete {
     position: absolute;
     top: 0;
     right: 0;
-    background:white;
-    transform: translate(-3rem, -50%);
+    background: white;
+    transform: translate(-8rem, -50%);
     visibility: hidden;
-    &:hover{
+    &:hover {
       visibility: visible;
     }
   }
-
-
-
 }
 
 .hide {

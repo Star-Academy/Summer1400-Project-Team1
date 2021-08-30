@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>مجموعه داده ها</h1>
+<div class="select-dataset-container" mat-dialog-content>
+  <table mat-table [dataSource]="datasetsRows" class="mat-elevation-z8">
+    <ng-container matColumnDef="شماره">
+      <th mat-header-cell *matHeaderCellDef>شماره</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="نام پایگاه">
+      <th mat-header-cell *matHeaderCellDef>نام پایگاه</th>
+      <td mat-cell *matCellDef="let element">{{ element.dataset.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="نام اتصال">
+      <th mat-header-cell *matHeaderCellDef>نام اتصال</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dataset.connectionName }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="تاریخ ساخت">
+      <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dataset.createdAt }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      (click)="onDatasetClick(row)"
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+</div>
+<div class="actions">
+  <button mat-stroked-button color="primary" (click)="closeDialog()">
+    لغو
+  </button>
+</div>

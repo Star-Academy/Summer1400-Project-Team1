@@ -1,0 +1,32 @@
+$--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
+
+.select-dataset-container {
+  width: 100%;
+  min-height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  table {
+    width: 100%;
+    height: fit-content;
+    margin-right: 5%;
+    .mat-row .mat-cell {
+      border-bottom: 1px solid transparent;
+      border-top: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .mat-row:hover .mat-cell {
+      background: $--item-bg-color--hovered;
+    }
+  }
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  margin-right: -3.2rem;
+  margin-top: 1rem;
+}

@@ -1,21 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Dataset, DatasetRow} from '../modals/dataset';
-import {Subject} from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Dataset, DatasetRow } from "../modals/dataset";
+import { Subject } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class DatasetService {
+  datasetsTemp: Dataset[] = [new Dataset(), new Dataset(), new Dataset()];
 
-  datasetsTemp:Dataset[]=[
-    new Dataset(),
-    new Dataset(),
-    new Dataset(),
-    new Dataset()
-  ];
-
-  private _datasets!:Dataset[];
-  private _datasetsRows!:DatasetRow[];
+  private _datasets!: Dataset[];
+  private _datasetsRows!: DatasetRow[];
 
   datasetsChanged = new Subject<Dataset[]>();
   datasetsRowsChanged = new Subject<DatasetRow[]>();
@@ -27,7 +21,7 @@ export class DatasetService {
     this._datasets = value;
     this.datasetsChanged.next(value);
     this.datasetsRows = value.map((dataSet: Dataset, index) => {
-      return new DatasetRow(index+1, dataSet);
+      return new DatasetRow(index + 1, dataSet);
     });
   }
   get datasetsRows(): DatasetRow[] {
@@ -37,10 +31,8 @@ export class DatasetService {
     this._datasetsRows = value;
     this.datasetsRowsChanged.next(value);
   }
-  constructor() {
-   }
-   getDatasets(){
-     this.datasets = this.datasetsTemp;
+  constructor() {}
+  getDatasets() {
+    this.datasets = this.datasetsTemp;
   }
-
 }
