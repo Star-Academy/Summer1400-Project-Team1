@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace API
 {
-    public class SQLInputHandler
+    public class SQLInputHandler : ISQLInputHandler
     {
         private readonly ISqlHandler _destinationConnection;
 
@@ -72,5 +72,7 @@ namespace API
             }
             _destinationConnection.Close();
         } 
+        
+        
     }
 }
