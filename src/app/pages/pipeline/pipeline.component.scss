@@ -1,4 +1,7 @@
 :host {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   .pipeline-header {
     height: 8rem;
     background-color: var(--color-gray-90);
@@ -17,7 +20,6 @@
     }
 
     .pipeline-subheader {
-      position: relative;
       display: flex;
       align-items: center;
       width: 20rem;
@@ -51,7 +53,6 @@
       form {
         display: flex;
         align-items: center;
-        position: absolute;
 
         mat-form-field {
           font-size: 1.5rem;
@@ -68,33 +69,85 @@
         }
       }
     }
-  }
-  .header-actions{
-    display: flex;
-    align-items: center;
-    margin-right: auto;
-    margin-left: 2rem;
-    .view-actions{
-      button{
-        box-sizing: content-box;
-        cursor: pointer;
-        border: 1px solid var(--color-primary-light);
-        height: 1.5rem;
-        width: 1.5rem;
-        margin: 0.5rem;
-        border-radius: 999px;
-        padding: 0.8rem;
-        background-color: var(--color-bg-primary);
-        svg{
-          fill: var(--color-primary-light);
-        }
-        &.active{
-          background-color: var(--color-primary-light);
+    .header-actions{
+      display: flex;
+      align-items: center;
+      margin-right: auto;
+      margin-left: 2rem;
+      .view-actions{
+        button{
+          box-sizing: content-box;
+          cursor: pointer;
+          border: 1px solid var(--color-primary-light);
+          height: 1.5rem;
+          width: 1.5rem;
+          margin: 0.5rem;
+          border-radius: 999px;
+          padding: 0.8rem;
+          background-color: var(--color-bg-primary);
+          &.toggle-sidebar{
+            transform: rotate(180deg);
+          }
           svg{
-            fill: white;
+            fill: var(--color-primary-light);
+          }
+          &.active{
+            background-color: var(--color-primary-light);
+            svg{
+              fill: white;
+            }
           }
         }
       }
+    }
+  }
+
+  main{
+    position: relative;
+    flex-grow: 1;
+    .graph-template-container{
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .preview-container{
+      position: absolute;
+      z-index: 1;
+      height: 30rem;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      box-shadow: 0 -3px 1.5rem var(--color-gray-60);
+      background-color: var(--color-bg-primary);
+      .preview{
+        .preview-header{
+          display: flex;
+          align-items: center;
+          height: 4rem;
+          font-size: 2rem;
+          border-top: 1px groove var(--color-gray-70);
+          border-bottom: 1px groove var(--color-gray-70);
+        }
+      }
+    }
+    .details-sidebar{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 35rem;
+      height: 100%;
+      z-index: 2;
+      box-shadow: 3px 0 1.5rem var(--color-gray-60);
+      background-color: var(--color-bg-primary);
+      .details-header{
+        display: flex;
+        align-items: center;
+        height: 4rem;
+        font-size: 2rem;
+        border-top: 1px groove var(--color-gray-70);
+        border-bottom: 1px groove var(--color-gray-70);    }
     }
   }
 }
