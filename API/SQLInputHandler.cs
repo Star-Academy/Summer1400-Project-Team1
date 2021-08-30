@@ -44,8 +44,8 @@ namespace API
             using var sourceConnection = new SqlConnection(sourceConnectionString);
             sourceConnection.Open();
             var tables = sourceConnection.GetSchema("Tables");
-            var tablesName = (from DataRow database in tables.Rows 
-                select database.Field<string>("TABLE_NAME")).ToList();
+            var tablesName = (from DataRow table in tables.Rows 
+                select table.Field<string>("TABLE_NAME")).ToList();
             
             return tablesName;
         }
