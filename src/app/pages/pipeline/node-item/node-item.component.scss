@@ -1,0 +1,82 @@
+.node-wrapper {
+  height: 12rem;
+  width: 15rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 1rem;
+
+  .edge {
+    display: grid;
+
+    button {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .add-icon{
+      visibility: hidden;
+    }
+
+    &:hover .add-icon {
+      visibility: visible;
+    }
+    &:hover .arrow-icon {
+      visibility: hidden;
+    }
+  }
+
+  img {
+    height: 2rem;
+    width: 3rem;
+  }
+
+  .node {
+    height: 100%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background:white;
+    overflow: hidden;
+    .node-detail{
+      width:100%;
+      height: 100%;
+      white-space: initial;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+   }
+    &:hover +.delete {
+      visibility: visible;
+
+    }
+  }
+  .start-node{
+    background:var(--color-primary);
+    color:white;
+  }
+  .end-node{
+    background:var(--color-primary-light);
+    color:white;
+  }
+
+  .delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background:white;
+    transform: translate(-3rem, -50%);
+    visibility: hidden;
+    &:hover{
+      visibility: visible;
+    }
+  }
+
+
+
+}
+
+.hide {
+  visibility: hidden;
+}

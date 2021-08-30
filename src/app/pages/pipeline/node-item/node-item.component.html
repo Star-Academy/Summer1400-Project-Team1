@@ -1,0 +1,25 @@
+<div class='node-wrapper'>
+    <div class='edge'>
+        <button class='add-icon' mat-icon-button [ngClass]="index===0?'hide':''"
+                [ngStyle]="{'visibility': node.id ===-1?'hidden':''}"
+                (click)='openDialog()'>
+            <img src='assets/images/add-black.svg' alt=' '>
+        </button>
+        <button class='arrow-icon' [ngClass]="index===0?'hide':''" mat-icon-button>
+            <img src='assets/images/left-arrow.svg' alt=' '>
+        </button>
+    </div>
+
+    <button class='node'
+            mat-stroked-button (click)='onNodeClick()'>
+        <span class='node-detail'><img src='assets/images/{{nodeType}}.svg' alt=' '>
+            {{node.name}}{{node.id > 0 ? node.id : '' }}</span>
+    </button>
+    <button *ngIf='node.id!==-1' class='delete' mat-icon-button (click)='onDeleteNode()'>
+        <img src='assets/images/delete.svg' alt='delete'>
+    </button>
+
+    <!--    <p *ngIf="animal">-->
+    <!--        You chose: <i>{{animal}}</i>-->
+    <!--    </p>-->
+</div>

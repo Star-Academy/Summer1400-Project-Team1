@@ -1,3 +1,44 @@
-
+.pipeline-wrapper {
+  width: 100vw;
+  height: fit-content;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+.pipeline-wrapper .end-node-wrapper {
+  display: flex;
+  align-items: center;
+}
+.pipeline-wrapper .end-node-wrapper img {
+  height: 2rem;
+  width: 3rem;
+}
+.pipeline-wrapper .end-node-wrapper .edge {
+  display: grid;
+}
+.pipeline-wrapper .end-node-wrapper .edge button {
+  grid-column: 1;
+  grid-row: 1;
+}
+.pipeline-wrapper .end-node-wrapper .edge .add-icon {
+  visibility: hidden;
+}
+.pipeline-wrapper .end-node-wrapper .edge:hover .add-icon {
+  visibility: visible;
+}
+.pipeline-wrapper .end-node-wrapper .edge:hover .arrow-icon {
+  visibility: hidden;
+}
+.pipeline-wrapper .end-node-wrapper .node {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: white;
+}
 
 /*# sourceMappingURL=pipeline.component.css.map */

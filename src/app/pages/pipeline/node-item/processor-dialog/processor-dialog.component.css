@@ -1,0 +1,23 @@
+.select-processor-container {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.select-processor-container .processor-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  padding: 1rem;
+  gap: 1.5rem;
+  height: 5rem;
+  width: 100%;
+  font-size: 2rem;
+}
+.select-processor-container .processor-item img {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+/*# sourceMappingURL=processor-dialog.component.css.map */

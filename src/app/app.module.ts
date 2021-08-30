@@ -20,6 +20,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTableModule} from '@angular/material/table';
 import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new-connection/add-new-connection.component';
+import { NodeItemComponent } from './pages/pipeline/node-item/node-item.component';
+import { ProcessorDialogComponent } from './pages/pipeline/node-item/processor-dialog/processor-dialog.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatRadioModule} from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -31,22 +35,26 @@ import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new
     PipelineComponent,
     DatasetItemComponent,
     AddNewDatasetComponent,
-    AddNewConnectionComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatExpansionModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatTableModule,
+    AddNewConnectionComponent,
+    NodeItemComponent,
+    ProcessorDialogComponent,
+   ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatExpansionModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatTableModule,
+        MatDialogModule,
+        MatRadioModule,
 
-  ],
+    ],
 
   providers: [],
   bootstrap: [AppComponent]

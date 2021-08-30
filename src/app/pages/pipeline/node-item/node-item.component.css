@@ -1,0 +1,74 @@
+.node-wrapper {
+  height: 12rem;
+  width: 15rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 1rem;
+}
+.node-wrapper .edge {
+  display: grid;
+}
+.node-wrapper .edge button {
+  grid-column: 1;
+  grid-row: 1;
+}
+.node-wrapper .edge .add-icon {
+  visibility: hidden;
+}
+.node-wrapper .edge:hover .add-icon {
+  visibility: visible;
+}
+.node-wrapper .edge:hover .arrow-icon {
+  visibility: hidden;
+}
+.node-wrapper img {
+  height: 2rem;
+  width: 3rem;
+}
+.node-wrapper .node {
+  height: 100%;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: white;
+  overflow: hidden;
+}
+.node-wrapper .node .node-detail {
+  width: 100%;
+  height: 100%;
+  white-space: initial;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.node-wrapper .node:hover + .delete {
+  visibility: visible;
+}
+.node-wrapper .start-node {
+  background: var(--color-primary);
+  color: white;
+}
+.node-wrapper .end-node {
+  background: var(--color-primary-light);
+  color: white;
+}
+.node-wrapper .delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: white;
+  transform: translate(-3rem, -50%);
+  visibility: hidden;
+}
+.node-wrapper .delete:hover {
+  visibility: visible;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+/*# sourceMappingURL=node-item.component.css.map */
