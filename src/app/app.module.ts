@@ -21,6 +21,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatTableModule} from '@angular/material/table';
 import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new-connection/add-new-connection.component';
 import { AddNewOperationComponent } from './pages/pipeline/add-new-operation/add-new-operation.component';
+import { PipelinesComponent } from './pages/dashboard/pipelines/pipelines.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { AddNewOperationComponent } from './pages/pipeline/add-new-operation/add
     AddNewDatasetComponent,
     AddNewConnectionComponent,
     AddNewOperationComponent,
+    PipelinesComponent
   ],
   imports: [
     BrowserModule,

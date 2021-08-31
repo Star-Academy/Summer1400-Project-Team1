@@ -6,6 +6,8 @@ import {DatasetsComponent} from './pages/dashboard/datasets/datasets.component';
 import {AddNewDatasetComponent} from './pages/dashboard/datasets/add-new-dataset/add-new-dataset.component';
 import { ConnectionsComponent } from './pages/dashboard/connections/connections.component';
 import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new-connection/add-new-connection.component';
+import { PipelinesComponent } from './pages/dashboard/pipelines/pipelines.component';
+
 
 const routes: Routes = [
   {path: '', redirectTo:'dashboard', pathMatch:'full'},
@@ -16,7 +18,7 @@ const routes: Routes = [
       { path: 'connection', component: ConnectionsComponent },
       { path: 'datasets/add', component: AddNewDatasetComponent },
       { path: 'connection/add', component: AddNewConnectionComponent},
-
+      { path: 'pipelines', component: PipelinesComponent},
     ]
   },
   {path: 'pipeline', component: PipelineComponent},
