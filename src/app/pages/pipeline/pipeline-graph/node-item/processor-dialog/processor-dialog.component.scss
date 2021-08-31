@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  .processor-item {
+  button {
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
@@ -17,5 +17,14 @@
       height: 2.5rem;
       width: 2.5rem;
     }
+  }
+  .processor-filter{
+    border: .2rem solid hsla(178, 46%, 67%, 1);
+  }
+  .processor-join{
+    border: .2rem solid hsla(1, 73%, 84%, 1);
+  }
+  .processor-aggregate{
+    border: .2rem solid hsla(255, 25%, 59%, 1);
   }
 }
