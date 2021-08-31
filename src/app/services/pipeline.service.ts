@@ -95,11 +95,11 @@ export class PipelineService {
   }
 
   nodesTemp: Node[] = [
-    new Node(-1, "دیتاست مبدا", NodeType.SOURCE_LOCAL),
-    new Node(1, "filter", NodeType.FILTER),
-    new Node(2, "join", NodeType.JOIN),
-    new Node(3, "aggregate", NodeType.AGGREGATION),
-    new Node(-2, "دیتاست مقصد", NodeType.DESTINATION_LOCAL),
+    // new Node(-1, "دیتاست مبدا", NodeType.SOURCE_LOCAL),
+    // new Node(1, "filter", NodeType.FILTER),
+    // new Node(2, "join", NodeType.JOIN),
+    // new Node(3, "aggregate", NodeType.AGGREGATION),
+    // new Node(-2, "دیتاست مقصد", NodeType.DESTINATION_LOCAL),
   ];
   private _nodes!: Node[];
   private _sourceDataset!: Dataset;
