@@ -1,4 +1,5 @@
-<div class='pipeline-graph-wrapper'>
+<div class='pipeline-graph-wrapper '
+    [ngClass]="{'side-menu-open':isSideBarOpen}">
     <div *ngIf="!hasSourceNode" class='start-node-wrapper'>
         <button class='node'
                 mat-stroked-button (click)='onSourceNodeClick("source")'>

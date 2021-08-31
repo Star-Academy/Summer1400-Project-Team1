@@ -1,6 +1,6 @@
 .pipeline-graph-wrapper {
   width: 100vw;
-  height: fit-content;
+   height: fit-content;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -54,8 +54,15 @@
       border-radius: 1rem;
       background: white;
       overflow: hidden;
+      img{
+        height:3rem;
+        width:3rem;
+      }
 
     }
   }
 
+}
+.side-menu-open {
+  width:80vw;
 }
