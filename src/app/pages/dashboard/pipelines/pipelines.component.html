@@ -1,0 +1,32 @@
+<!-- <div class="btn-container">
+  <button class="btn-add" mat-raised-button routerLink="add">
+    <img src="assets/images/add.svg" alt="" />
+    افزودن اتصال جدید
+  </button>
+</div> -->
+
+<table mat-table [dataSource]="pipelineRows" class="mat-elevation-z8">
+  <ng-container matColumnDef="شماره">
+    <th mat-header-cell *matHeaderCellDef>شماره</th>
+    <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="نام">
+    <th mat-header-cell *matHeaderCellDef>نام</th>
+    <td mat-cell *matCellDef="let element">{{ element.pipeline.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="تاریخ ساخت">
+    <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.pipeline.createdAt }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row
+    (click)="onPipelineClick(row)"
+    *matRowDef="let row; columns: displayedColumns"
+  ></tr>
+</table>
