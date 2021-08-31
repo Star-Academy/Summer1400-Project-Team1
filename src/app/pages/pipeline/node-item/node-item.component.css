@@ -1,30 +1,24 @@
 .node-wrapper {
   height: 12rem;
-  width: 15rem;
+  width: 25rem;
   display: flex;
   align-items: center;
   position: relative;
   gap: 1rem;
 }
 .node-wrapper .edge {
-  display: grid;
+  display: flex;
+  align-items: center;
+  height: fit-content;
 }
-.node-wrapper .edge button {
-  grid-column: 1;
-  grid-row: 1;
-}
-.node-wrapper .edge .add-icon {
-  visibility: hidden;
-}
-.node-wrapper .edge:hover .add-icon {
-  visibility: visible;
-}
-.node-wrapper .edge:hover .arrow-icon {
-  visibility: hidden;
+.node-wrapper .edge .arrow-icon {
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .node-wrapper img {
   height: 2rem;
-  width: 3rem;
+  width: 2rem;
 }
 .node-wrapper .node {
   height: 100%;
@@ -48,19 +42,17 @@
   visibility: visible;
 }
 .node-wrapper .start-node {
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-gray-92);
 }
 .node-wrapper .end-node {
-  background: var(--color-primary-light);
-  color: white;
+  background: var(--color-gray-92);
 }
 .node-wrapper .delete {
   position: absolute;
   top: 0;
   right: 0;
   background: white;
-  transform: translate(-3rem, -50%);
+  transform: translate(-8rem, -50%);
   visibility: hidden;
 }
 .node-wrapper .delete:hover {
