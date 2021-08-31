@@ -119,16 +119,21 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
         switch (result) {
           case "filter":
             processorType = NodeType.FILTER;
+            this.pipelineService.toggleSideBar.next({isOpen:true,processorType});
+
             break;
           case "join":
             processorType = NodeType.JOIN;
+            this.pipelineService.toggleSideBar.next({isOpen:true,processorType});
+
             break;
           case "aggregation":
             processorType = NodeType.AGGREGATION;
+            this.pipelineService.toggleSideBar.next({isOpen:true,processorType});
+
             break;
         }
-        this.pipelineService.toggleSideBar.next(true);
-        node = new Node(this.nodes.length, result, processorType);
+         node = new Node(this.nodes.length, result, processorType);
         let index = this.nodes.length;
         this.addNode({ index, node });
       }

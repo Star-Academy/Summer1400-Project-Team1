@@ -12,6 +12,7 @@ export class PipelineComponent implements OnInit {
   pipelineTitle = "نام پایپلاین";
   isEditingPipelineTitle = false;
   expandSidebar = false;
+  sidebarProcessorType:string ="filter";
   expandPreview = false;
   isModalOpen = false;
   previewResize = {
@@ -29,8 +30,9 @@ export class PipelineComponent implements OnInit {
     document.onmouseup = (event) => {
       this.previewResize.isResizing = false;
     };
-    this.pipelineService.toggleSideBar.subscribe((expandSidebar: boolean) => {
-      this.expandSidebar = expandSidebar;
+    this.pipelineService.toggleSideBar.subscribe((expandSidebar) => {
+      this.expandSidebar = expandSidebar.isOpen;
+      this.sidebarProcessorType=expandSidebar.processorType;
     });
   }
 

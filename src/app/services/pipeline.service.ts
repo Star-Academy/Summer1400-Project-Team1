@@ -7,7 +7,7 @@ import { Node, NodeType } from "../modals/node";
   providedIn: "root",
 })
 export class PipelineService {
-  toggleSideBar = new Subject<boolean>();
+  toggleSideBar = new Subject<{isOpen:boolean,processorType:string}>();
 
   get destinationDataset(): Dataset {
     return this._destinationDataset;
