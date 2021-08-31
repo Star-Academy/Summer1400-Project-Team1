@@ -59,6 +59,7 @@
     </button>
     <div class="view-actions">
       <button
+
         [ngClass]="{ 'toggle-preview active': true, active: expandPreview }"
         (click)="expandPreview = !expandPreview"
       >
@@ -70,7 +71,7 @@
       </button>
       <button
         [ngClass]="{ 'toggle-sidebar': true, active: expandSidebar }"
-        (click)="expandSidebar = !expandSidebar"
+        (click)="toggleSidebar()"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
           <path
@@ -111,7 +112,7 @@
   </div>
 
   <div class="details-sidebar" [hidden]="!expandSidebar">
-    <app-sidebar [processType]="sidebarProcessorType"></app-sidebar>
+    <app-sidebar [processType]="sidebarProcessorType" (openChooseProcessorDialog)="openChooseProcessorDialog()"></app-sidebar>
   </div>
 </main>
 

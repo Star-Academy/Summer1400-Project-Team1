@@ -1,18 +1,21 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { NgForm, NgModel } from "@angular/forms";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { PipelineService } from "src/app/services/pipeline.service";
+import {Subscription} from "rxjs";
+import {PipelineGraphComponent} from "./pipeline-graph/pipeline-graph.component";
 
 @Component({
   selector: "app-pipeline",
   templateUrl: "./pipeline.component.html",
   styleUrls: ["./pipeline.component.scss"],
-})
-export class PipelineComponent implements OnInit {
+ })
+export class PipelineComponent implements OnInit,OnDestroy {
   pipelineTitle = "نام پایپلاین";
   isEditingPipelineTitle = false;
-  expandSidebar = false;
-  sidebarProcessorType:string ="filter";
+  expandSidebar = true;
+  sidebarProcessorType:string ="initial";
+  sidebarProcessorTypeSub!:Subscription;
   expandPreview = false;
   isModalOpen = false;
   previewResize = {
@@ -20,20 +23,28 @@ export class PipelineComponent implements OnInit {
     previewHeight: 300,
     lastYPosition: 0,
   };
+  @ViewChild(PipelineGraphComponent ) pipelineGraph!: PipelineGraphComponent ;
+
 
   constructor(
     public router: Router,
     private pipelineService: PipelineService
   ) {}
-
   ngOnInit(): void {
-    document.onmouseup = (event) => {
+    document.onmouseup = ( ) => {
       this.previewResize.isResizing = false;
     };
-    this.pipelineService.toggleSideBar.subscribe((expandSidebar) => {
-      this.expandSidebar = expandSidebar.isOpen;
-      this.sidebarProcessorType=expandSidebar.processorType;
+    console.log(this.expandSidebar);
+    this.sidebarProcessorType=this.pipelineService.currentSidebarProcessor;
+    this.pipelineService.toggleSideBar.next(this.expandSidebar);
+    this.pipelineService.toggleSideBar.subscribe((isOpen:boolean) => {
+      this.expandSidebar =  isOpen;
+      // this.sidebarProcessorType=expandSidebar.processorType;
     });
+    this.sidebarProcessorTypeSub =
+        this.pipelineService.currentSidebarProcessorChanged.subscribe((type:string)=>{
+          this.sidebarProcessorType=type;
+        });
   }
 
   editPipelineName(ngForm: NgForm) {
@@ -52,5 +63,20 @@ export class PipelineComponent implements OnInit {
       this.previewResize.previewHeight += heightOffset;
       this.previewResize.lastYPosition = event.pageY;
     }
+  }
+
+  toggleSidebar() {
+    this.expandSidebar = !this.expandSidebar;
+    //TODO empty side bar
+    this.pipelineService.toggleSideBar.next(this.expandSidebar);
+  }
+
+
+  ngOnDestroy(): void {
+    this.sidebarProcessorTypeSub.unsubscribe();
+  }
+
+  openChooseProcessorDialog() {
+    this.pipelineGraph.onNoDestinationAddNode();
   }
 }

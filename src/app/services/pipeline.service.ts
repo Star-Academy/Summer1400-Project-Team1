@@ -1,12 +1,23 @@
-import { Injectable } from '@angular/core';
-import {Pipeline, PipelineRow} from '../modals/pipeline';
-import {Subject} from 'rxjs';
+
+
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+import { Dataset } from "../modals/dataset";
+import { Node, NodeType } from "../modals/node";
+import {Pipeline, PipelineRow} from "../modals/pipeline";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
-
 export class PipelineService {
+  get currentSidebarProcessor(): string {
+    return this._currentSidebarProcessor;
+  }
+
+  set currentSidebarProcessor(value: string) {
+    this._currentSidebarProcessor = value;
+    this.currentSidebarProcessorChanged.next(value);
+  }
   pipelineTemp:Pipeline[]=[
     new Pipeline(),
     new Pipeline(),
@@ -40,22 +51,12 @@ export class PipelineService {
     this.pipelineRowsChanged.next(value);
   }
 
-  constructor() { }
 
   getPipeline(){
     this.pipelines = this.pipelineTemp;
   }
 
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
-import { Dataset } from "../modals/dataset";
-import { Node, NodeType } from "../modals/node";
-
-@Injectable({
-  providedIn: "root",
-})
-export class PipelineService {
-  toggleSideBar = new Subject<{isOpen:boolean,processorType:string}>();
+  toggleSideBar = new Subject<boolean>();
 
   get destinationDataset(): Dataset {
     return this._destinationDataset;
@@ -95,6 +96,9 @@ export class PipelineService {
 
   nodesTemp: Node[] = [
     new Node(-1, "دیتاست مبدا", NodeType.SOURCE_LOCAL),
+    new Node(1, "filter", NodeType.FILTER),
+    new Node(2, "join", NodeType.JOIN),
+    new Node(3, "aggregate", NodeType.AGGREGATION),
     new Node(-2, "دیتاست مقصد", NodeType.DESTINATION_LOCAL),
   ];
   private _nodes!: Node[];
@@ -102,7 +106,8 @@ export class PipelineService {
   private _destinationDataset!: Dataset;
   private _hasSourceNode: boolean = false;
   private _hasDestinationNode: boolean = false;
-
+  private _currentSidebarProcessor:string = "initial";
+  currentSidebarProcessorChanged = new Subject<string>();
   nodesChanged = new Subject<Node[]>();
   hasSourceNodeChanged = new Subject<boolean>();
   hasDestinationNodeChanged = new Subject<boolean>();
