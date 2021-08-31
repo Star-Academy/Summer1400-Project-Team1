@@ -1,43 +1,47 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
-import {Subscription} from 'rxjs';
-import { DatasetRow} from 'src/app/modals/dataset';
-import {DatasetService} from 'src/app/services/dataset.service';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { DatasetRow } from "src/app/modals/dataset";
+import { DatasetService } from "src/app/services/dataset.service";
 
 @Component({
-    selector: 'app-datasets',
-    templateUrl: './datasets.component.html',
-    styleUrls: ['./datasets.component.scss'],
+  selector: "app-datasets",
+  templateUrl: "./datasets.component.html",
+  styleUrls: ["./datasets.component.scss"],
 })
 export class DatasetsComponent implements OnInit, OnDestroy {
+  datasetsRows!: DatasetRow[];
+  datasetsRowsSub!: Subscription;
 
-    datasetsRows!: DatasetRow[];
-    datasetsRowsSub!: Subscription;
+  displayedColumns: string[] = [
+    "شماره",
+    "نام پایگاه",
+    "نام اتصال",
+    "تاریخ ساخت",
+  ];
 
-    displayedColumns: string[] = ['شماره', 'نام پایگاه', 'نام اتصال', 'تاریخ ساخت'];
+  constructor(private datasetService: DatasetService, private router: Router) {}
 
-    constructor(private datasetService: DatasetService,private router: Router) {}
+  ngOnInit(): void {
+    this.datasetService.getDatasets();
+    this.datasetsRows = this.datasetService.datasetsRows;
+    this.datasetsRowsSub = this.datasetService.datasetsRowsChanged.subscribe(
+      (datasetsRows: DatasetRow[]) => {
+        this.datasetsRows = datasetsRows;
+      }
+    );
+  }
 
-    ngOnInit(): void {
-        this.datasetService.getDatasets();
-        this.datasetsRows = this.datasetService.datasetsRows;
-        this.datasetsRowsSub = this.datasetService.datasetsRowsChanged.subscribe((datasetsRows: DatasetRow[]) => {
-            this.datasetsRows = datasetsRows;
-         });
-    }
+  onUpload(event: any) {
+    if (event.target !== null) console.log(event.target.files);
+  }
 
-    onUpload(event: any) {
-        if (event.target !== null)
-            console.log(event.target.files);
-    }
+  onDatasetClick(row: DatasetRow) {
+    console.log(row.dataset.name);
+    this.router.navigate(["/pipeline"]).then();
+  }
 
-    onDatasetClick(row: DatasetRow) {
-        console.log(row.dataset.name);
-        this.router.navigate(['/pipeline']).then();
-     }
-
-
-    ngOnDestroy(): void {
-        this.datasetsRowsSub.unsubscribe();
-    }
+  ngOnDestroy(): void {
+    this.datasetsRowsSub.unsubscribe();
+  }
 }

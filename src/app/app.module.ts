@@ -29,6 +29,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { AddDestinationDialogComponent } from "./pages/pipeline/pipeline-graph/add-destination-dialog/add-destination-dialog.component";
 import { PipelineGraphComponent } from './pages/pipeline/pipeline-graph/pipeline-graph.component';
 import { AddNewOperationComponent } from './pages/pipeline/add-new-operation/add-new-operation.component';
+import { SidebarComponent } from './pages/pipeline/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { AddNewOperationComponent } from './pages/pipeline/add-new-operation/add
     ProcessorDialogComponent,
     AddDestinationDialogComponent,
     PipelineGraphComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,

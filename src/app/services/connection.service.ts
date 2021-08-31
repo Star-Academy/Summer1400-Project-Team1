@@ -1,20 +1,19 @@
-import { Injectable } from '@angular/core';
-import {Connection, ConnectionRow} from '../modals/connection';
-import {Subject} from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Connection, ConnectionRow } from "../modals/connection";
+import { Subject } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
-
 export class ConnectionService {
-  connectionsTemp:Connection[]=[
+  connectionsTemp: Connection[] = [
     new Connection(),
     new Connection(),
     new Connection(),
-    new Connection()
-  ]
-  private _connections!:Connection[];
-  private _connectionRows!:ConnectionRow[];
+    new Connection(),
+  ];
+  private _connections!: Connection[];
+  private _connectionRows!: ConnectionRow[];
 
   connectionChanged = new Subject<Connection[]>();
   connectionRowsChanged = new Subject<ConnectionRow[]>();
@@ -27,7 +26,7 @@ export class ConnectionService {
     this._connections = value;
     this.connectionChanged.next(value);
     this.connectionRows = value.map((connection: Connection, index) => {
-      return new ConnectionRow(index+1, connection);
+      return new ConnectionRow(index + 1, connection);
     });
   }
 
@@ -40,10 +39,9 @@ export class ConnectionService {
     this.connectionRowsChanged.next(value);
   }
 
-  constructor() { }
+  constructor() {}
 
-  getConnection(){
+  getConnection() {
     this.connections = this.connectionsTemp;
   }
-
 }

@@ -1,0 +1,17 @@
+<!-- <header class="details-header" >Lorem ipsum.</header>
+<main>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere, rem,
+  repellendus. A adipisci cumque delectus dolores et facilis fuga id illum, in
+  ipsam odio pariatur perspiciatis praesentium veritatis voluptas. Harum.
+</main> -->
+<div [ngSwitch]="processType">
+  <div *ngSwitchCase="'filter'">
+    <header class="details-header">Filter</header>
+  </div>
+  <div *ngSwitchCase="'join'">
+    <header class="details-header">Join</header>
+  </div>
+  <div *ngSwitchCase="'aggregate'">
+    <header class="details-header">Aggregate</header>
+  </div>
+</div>

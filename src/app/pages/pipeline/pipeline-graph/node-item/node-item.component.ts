@@ -95,6 +95,7 @@ export class NodeItemComponent implements OnInit {
               processorType = NodeType.AGGREGATION;
               break;
           }
+          this.pipelineService.toggleSideBar.next(true);
           node = new Node(this.nodesLength, result, processorType);
           this.addNode.emit({ index: this.index, node });
         }
