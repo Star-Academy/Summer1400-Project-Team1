@@ -11,8 +11,18 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
     width: 100%;
     height: fit-content;
     margin-right: 5%;
+    box-shadow: unset;
+    border: 0.1rem solid hsla(0, 7%, 68%, 0.226);
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+
+    td :nth-child(3) {
+      border-bottom: unset;
+    }
+    td {
+      border-bottom: 0.1rem solid hsla(0, 7%, 68%, 0.226);
+    }
     .mat-row .mat-cell {
-      border-bottom: 1px solid transparent;
       border-top: 1px solid transparent;
       cursor: pointer;
     }
