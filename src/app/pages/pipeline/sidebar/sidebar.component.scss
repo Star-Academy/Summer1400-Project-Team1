@@ -1,18 +1,15 @@
-.details-sidebar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 35rem;
-  height: 100%;
-  z-index: 2;
-  box-shadow: 3px 0 1.5rem var(--color-gray-60);
-  background-color: var(--color-bg-primary);
-  .details-header {
-    display: flex;
-    align-items: center;
-    height: 4rem;
+main {
+  height: 75vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+  p {
     font-size: 2rem;
-    border-top: 1px groove var(--color-gray-70);
-    border-bottom: 1px groove var(--color-gray-70);
   }
+
+
 }
+
