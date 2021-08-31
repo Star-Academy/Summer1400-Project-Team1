@@ -11,8 +11,8 @@ export class PipelineComponent implements OnInit {
 
   pipelineTitle = 'نام پایپلاین'
   isEditingPipelineTitle = false;
-  expandSidebar = true;
-  expandPreview = true;
+  expandSidebar = false;
+  expandPreview = false;
   isModalOpen=false;
   previewResize = {
     isResizing: false,
@@ -20,10 +20,23 @@ export class PipelineComponent implements OnInit {
     lastYPosition: 0
   }
 
+
   constructor(public router: Router) { }
 
   ngOnInit(): void {
+    document.onmouseup = (event) => {this.previewResize.isResizing = false;}
   }
+
+  editPipelineName(ngForm: NgForm) {
+    this.pipelineTitle = ngForm.value.newTitle
+    this.isEditingPipelineTitle = false;
+  }
+
+  onStartResize(event: MouseEvent) {
+    this.previewResize.isResizing = true;
+    this.previewResize.lastYPosition = event.pageY;
+  }
+
 
   handleResize(event: MouseEvent){
     if (this.previewResize.isResizing){

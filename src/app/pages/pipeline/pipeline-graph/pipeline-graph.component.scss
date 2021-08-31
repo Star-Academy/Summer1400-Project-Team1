@@ -1,43 +1,59 @@
-.pipeline-wrapper {
+.pipeline-graph-wrapper {
   width: 100vw;
   height: fit-content;
   display: flex;
   flex-wrap: wrap;
-  justify-content:center;
+  justify-content: center;
   gap: 2rem;
   padding: 2rem;
-  .end-node-wrapper{
+  img {
+    height: 2rem;
+    width: 3rem;
+  }
+
+  .end-node-wrapper {
+    height: 12rem;
+    width: 25rem;
     display: flex;
     align-items: center;
-    img {
-      height: 2rem;
-      width: 3rem;
-    }
+    position: relative;
+    gap: 1rem;
     .edge {
-      display: grid;
-      button {
-        grid-column: 1;
-        grid-row: 1;
-      }
-      .add-icon{
-        visibility: hidden;
-      }
+      display: flex;
+      align-items: center;
+      height: fit-content;
 
-      &:hover .add-icon {
-        visibility: visible;
-      }
-      &:hover .arrow-icon {
-        visibility: hidden;
+      .arrow-icon {
+        height: 100%;
+        display: flex;
+        align-items: center;
       }
     }
-    .node{
+
+    .node {
       height: 100%;
       width: 80%;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 1rem;
-      background:white;
+      background: white;
+      overflow: hidden;
+
+    }
+  }
+  .start-node-wrapper {
+    display: flex;
+    align-items: center;
+    .node {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1rem;
+      background: white;
+      overflow: hidden;
 
     }
   }

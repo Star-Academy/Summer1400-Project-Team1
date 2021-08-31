@@ -20,13 +20,13 @@ $finalProject-warn: mat.define-palette(mat.$red-palette);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $finalProject-theme: mat.define-light-theme(
-  (
-    color: (
-      primary: $finalProject-primary,
-      accent: $finalProject-accent,
-      warn: $finalProject-warn,
-    ),
-  )
+                (
+                        color: (
+                                primary: $finalProject-primary,
+                                accent: $finalProject-accent,
+                                warn: $finalProject-warn,
+                        ),
+                )
 );
 
 // Include theme styles for core and each component used in your app.
@@ -44,6 +44,8 @@ $finalProject-theme: mat.define-light-theme(
   --color-secondary-light: #ff6e70;
   --color-secondary: #ef5a5b;
   --color-secondary-dark: #c53c3c;
+
+  --color-error: hsl(0, 100%, 50%);
 
   --color-white: #ffffff;
   --color-gray-98: #fafafa;
@@ -95,7 +97,6 @@ body {
   width: 100%;
   height: 100%;
   min-height: 100%;
-
   font-family: "iransans", 'sans-serif' !important;
 }
 
@@ -106,3 +107,13 @@ a {
 ul {
   list-style: none;
 }
+
+.error-alert {
+  border-right: 4px solid var(--color-error);
+
+  button {
+    color: var(--color-error);
+  }
+}
+
+

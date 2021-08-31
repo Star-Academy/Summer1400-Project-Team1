@@ -20,31 +20,14 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
 import { AddNewConnectionComponent } from "./pages/dashboard/connections/add-new-connection/add-new-connection.component";
-import { NodeItemComponent } from "./pages/pipeline/node-item/node-item.component";
-import { ProcessorDialogComponent } from "./pages/pipeline/node-item/processor-dialog/processor-dialog.component";
+import { NodeItemComponent } from "./pages/pipeline/pipeline-graph/node-item/node-item.component";
+import { ProcessorDialogComponent } from "./pages/pipeline/pipeline-graph/node-item/processor-dialog/processor-dialog.component";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from "@angular/material/radio";
-import { AddDestinationDialogComponent } from "./pages/pipeline/add-destination-dialog/add-destination-dialog.component";
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
+import { AddDestinationDialogComponent } from "./pages/pipeline/pipeline-graph/add-destination-dialog/add-destination-dialog.component";
 import { PipelineGraphComponent } from './pages/pipeline/pipeline-graph/pipeline-graph.component';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { HeaderComponent } from './pages/header/header.component';
-import { DatasetsComponent } from './pages/dashboard/datasets/datasets.component';
-import { ConnectionsComponent } from './pages/dashboard/connections/connections.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatIconModule} from "@angular/material/icon";
-import { PipelineComponent } from './pages/pipeline/pipeline.component';
-import { DatasetItemComponent } from './pages/dashboard/datasets/dataset-item/dataset-item.component';
-import { AddNewDatasetComponent } from './pages/dashboard/datasets/add-new-dataset/add-new-dataset.component';
-import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatTableModule} from '@angular/material/table';
-import { AddNewConnectionComponent } from './pages/dashboard/connections/add-new-connection/add-new-connection.component';
 import { AddNewOperationComponent } from './pages/pipeline/add-new-operation/add-new-operation.component';
 
 @NgModule({
@@ -77,8 +60,10 @@ import { AddNewOperationComponent } from './pages/pipeline/add-new-operation/add
     MatButtonModule,
     MatDividerModule,
     MatTableModule,
-
-  ],
+    MatDialogModule,
+    MatRadioModule,
+    MatSnackBarModule
+   ],
 
   providers: [],
   bootstrap: [AppComponent]

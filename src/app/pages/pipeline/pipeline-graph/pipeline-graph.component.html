@@ -1,4 +1,10 @@
-<div class='pipeline-wrapper'>
+<div class='pipeline-graph-wrapper'>
+    <div *ngIf="!hasSourceNode" class='start-node-wrapper'>
+        <button class='node'
+                mat-stroked-button (click)='onSourceNodeClick("source")'>
+            منبع ورودی +
+        </button>
+    </div>
     <app-node-item *ngFor='let nodeItem of nodes;let i =index'
                    [node]='nodeItem'
                    [index]='i'
@@ -7,19 +13,26 @@
                    (addNode)='addNode($event)'
     ></app-node-item>
 
-    <div *ngIf="!hasEndNodes" class='end-node-wrapper'>
-        <div class='edge'>
-            <button class='add-icon' mat-icon-button (click)='onAddNode()'>
-                <img src='assets/images/add-black.svg' alt=' '>
+    <div *ngIf="!hasDestinationNode" class='end-node-wrapper'>
+        <div class="edge">
+            <div class="arrow-icon">
+                <img src="assets/images/left-arrow.svg" alt=" "/>
+            </div>
+            <button
+                    class="add-icon"
+                    mat-icon-button
+                    (click)="onNoDestinationAddNode()"
+            >
+                <img src="assets/images/add-black.svg" alt=" "/>
             </button>
-            <button class='arrow-icon' mat-icon-button>
-                <img src='assets/images/left-arrow.svg' alt=' '>
-            </button>
+            <div class="arrow-icon">
+                <img src="assets/images/left-arrow.svg" alt=" "/>
+            </div>
         </div>
 
         <button class='node'
-                mat-stroked-button (click)='onEndNodeClick()'>
-            add end node +
+                mat-stroked-button (click)='onSourceNodeClick("destination")'>
+            منبع خروجی +
         </button>
     </div>
 

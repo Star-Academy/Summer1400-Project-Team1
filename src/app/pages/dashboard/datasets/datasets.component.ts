@@ -1,4 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 import {Subscription} from 'rxjs';
 import { DatasetRow} from 'src/app/modals/dataset';
 import {DatasetService} from 'src/app/services/dataset.service';
@@ -15,7 +16,7 @@ export class DatasetsComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = ['شماره', 'نام پایگاه', 'نام اتصال', 'تاریخ ساخت'];
 
-    constructor(private datasetService: DatasetService) {}
+    constructor(private datasetService: DatasetService,private router: Router) {}
 
     ngOnInit(): void {
         this.datasetService.getDatasets();
@@ -32,6 +33,7 @@ export class DatasetsComponent implements OnInit, OnDestroy {
 
     onDatasetClick(row: DatasetRow) {
         console.log(row.dataset.name);
+        this.router.navigate(['/pipeline']).then();
      }
 
 

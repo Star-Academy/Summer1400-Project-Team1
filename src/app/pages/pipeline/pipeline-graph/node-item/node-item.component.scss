@@ -45,10 +45,10 @@
     }
   }
   .start-node {
-    background: var(--color-gray-92);
+    background: hsla(210, 62%, 26%, 0.2);
   }
   .end-node {
-    background: var(--color-gray-92);
+    background: hsla(210, 62%, 26%, 0.25);
   }
 
   .delete {
@@ -56,7 +56,7 @@
     top: 0;
     right: 0;
     background: white;
-    transform: translate(-8rem, -50%);
+    transform: translate(-7.5rem, -50%);
     visibility: hidden;
     &:hover {
       visibility: visible;
