@@ -38,13 +38,7 @@ namespace API
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var command = new SqlCommand($"CREATE TABLE {tableName} (temp int);",_sqlHandler.Connection);
-            using(SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader);
-                }
-            }
+            command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
 
@@ -54,13 +48,7 @@ namespace API
             var command =
                 new SqlCommand($"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " text;",
                     _sqlHandler.Connection);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader);
-                }
-            }
+            command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
 
@@ -71,13 +59,7 @@ namespace API
                 new SqlCommand(
                     $"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " datetime;",
                     _sqlHandler.Connection);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader);
-                }
-            }
+            command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
 
@@ -87,13 +69,7 @@ namespace API
             var command =
                 new SqlCommand($"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " float;",
                     _sqlHandler.Connection);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader);
-                }
-            }
+            command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
 
@@ -103,13 +79,7 @@ namespace API
             var command =
                 new SqlCommand($"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " int;",
                     _sqlHandler.Connection);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader);
-                }
-            }
+            command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
         
@@ -172,13 +142,7 @@ namespace API
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var command = new SqlCommand("ALTER TABLE myTable DROP COLUMN temp", _sqlHandler.Connection);
-            using (SqlDataReader reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader);
-                }
-            }
+            command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
 
