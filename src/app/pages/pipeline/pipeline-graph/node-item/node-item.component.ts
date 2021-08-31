@@ -48,6 +48,20 @@ export class NodeItemComponent implements OnInit {
                 this.openAddSourceDialog("source");
                 break;
         }
+        switch (this.node.nodeType) {
+            case NodeType.FILTER:
+                this.openFilterSideBar();
+                break;
+            case NodeType.JOIN:
+                this.openJoinSidebar();
+                break;
+            case NodeType.AGGREGATION:
+                this.openAggregateSidebar();
+                break;
+
+
+        }
+
     }
 
     openAddSourceDialog(source: string) {
@@ -88,15 +102,15 @@ export class NodeItemComponent implements OnInit {
                     switch (result) {
                         case "filter":
                             processorType = NodeType.FILTER;
-                            this.pipelineService.toggleSideBar.next({isOpen: true, processorType});
+                            this.openFilterSideBar();
                             break;
                         case "join":
                             processorType = NodeType.JOIN;
-                            this.pipelineService.toggleSideBar.next({isOpen: true, processorType});
+                            this.openJoinSidebar();
                             break;
                         case "aggregation":
                             processorType = NodeType.AGGREGATION;
-                            this.pipelineService.toggleSideBar.next({isOpen: true, processorType});
+                            this.openAggregateSidebar();
                             break;
                     }
                     node = new Node(this.nodesLength, result, processorType);
@@ -114,5 +128,20 @@ export class NodeItemComponent implements OnInit {
 
             return;
         }
+    }
+
+    private openAggregateSidebar() {
+        this.pipelineService.toggleSideBar.next(true);
+        this.pipelineService.currentSidebarProcessor = "aggregate"
+    }
+
+    private openJoinSidebar() {
+        this.pipelineService.toggleSideBar.next(true);
+        this.pipelineService.currentSidebarProcessor = "join"
+    }
+
+    private openFilterSideBar() {
+        this.pipelineService.toggleSideBar.next(true);
+        this.pipelineService.currentSidebarProcessor = "filter"
     }
 }

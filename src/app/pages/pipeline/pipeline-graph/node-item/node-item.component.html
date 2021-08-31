@@ -20,7 +20,12 @@
             class="node"
             mat-stroked-button
             (click)="onNodeClick()"
-            [ngClass]="{ 'start-node': node.id === -1, 'end-node': node.id === -2 }"
+            [ngClass]="{ 'start-node': node.id === -1,
+             'end-node': node.id === -2,
+             'filter': node.nodeType === 'filter',
+             'join':  node.nodeType === 'join' ,
+             'aggregate':  node.nodeType === 'aggregate'
+             }"
     >
     <span class="node-detail"
     ><img src="assets/images/{{ nodeType }}.svg" alt=" "/> {{ node.name
