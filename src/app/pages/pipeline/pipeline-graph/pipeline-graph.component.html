@@ -1,0 +1,26 @@
+<div class='pipeline-wrapper'>
+    <app-node-item *ngFor='let nodeItem of nodes;let i =index'
+                   [node]='nodeItem'
+                   [index]='i'
+                   [nodesLength]='nodes.length'
+                   (deleteNode)='deleteNode($event)'
+                   (addNode)='addNode($event)'
+    ></app-node-item>
+
+    <div *ngIf="!hasEndNodes" class='end-node-wrapper'>
+        <div class='edge'>
+            <button class='add-icon' mat-icon-button (click)='onAddNode()'>
+                <img src='assets/images/add-black.svg' alt=' '>
+            </button>
+            <button class='arrow-icon' mat-icon-button>
+                <img src='assets/images/left-arrow.svg' alt=' '>
+            </button>
+        </div>
+
+        <button class='node'
+                mat-stroked-button (click)='onEndNodeClick()'>
+            add end node +
+        </button>
+    </div>
+
+</div>

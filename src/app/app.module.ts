@@ -25,6 +25,7 @@ import { ProcessorDialogComponent } from "./pages/pipeline/node-item/processor-d
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from "@angular/material/radio";
 import { AddDestinationDialogComponent } from "./pages/pipeline/add-destination-dialog/add-destination-dialog.component";
+import { PipelineGraphComponent } from './pages/pipeline/pipeline-graph/pipeline-graph.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { AddDestinationDialogComponent } from "./pages/pipeline/add-destination-
     NodeItemComponent,
     ProcessorDialogComponent,
     AddDestinationDialogComponent,
+    PipelineGraphComponent,
   ],
   imports: [
     BrowserModule,
