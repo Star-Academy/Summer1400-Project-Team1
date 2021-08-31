@@ -5,23 +5,21 @@ using System.Data.SqlClient;
 
 namespace API.Aggregation
 {
-    public class AggregationTask : IAggregationTask
+    public class AggregationTask : IPipelineComponent
     {
         private ISqlHandler _sqlHandler;
-        private string _tableName;
         private IEnumerable<GroupByItem> _groupByItems;
         private IEnumerable<AggregateFunction> _aggregateFunctions;
 
-        public AggregationTask(ISqlHandler sqlHandler, string tableName, IEnumerable<GroupByItem> groupByItems,
+        public AggregationTask(ISqlHandler sqlHandler, IEnumerable<GroupByItem> groupByItems,
             IEnumerable<AggregateFunction> aggregateFunctions)
         {
             _sqlHandler = sqlHandler;
             _groupByItems = groupByItems;
             _aggregateFunctions = aggregateFunctions;
-            _tableName = tableName;
         }
 
-        public DataTable Run()
+        public string Execute(string sourceDataset)
         {
             var sqlString = "SELECT ";
             bool first = true;
@@ -33,8 +31,11 @@ namespace API.Aggregation
                     first = false;
                 sqlString += function;
             }
+            
+            var destinationName = "##Aggregation";
+            sqlString += "INTO " + destinationName + " ";
 
-            sqlString += "FROM " + _tableName + " ";
+            sqlString += "FROM " + sourceDataset + " ";
             sqlString += "GROUP BY ";
 
             first = true;
@@ -57,7 +58,7 @@ namespace API.Aggregation
             table.Load(stream);
             _sqlHandler.Close();
 
-            return table;
+            return destinationName;
         }
     }
 }
