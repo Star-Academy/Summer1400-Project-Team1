@@ -9,6 +9,6 @@ namespace API
         bool IsOpen();
         void Open();
         void Close();
-        IDbCommand CreatCommand();
+        void ExecuteSQLQuery(string sqlQuery);
     }
 }

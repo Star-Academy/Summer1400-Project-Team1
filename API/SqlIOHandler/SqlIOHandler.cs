@@ -3,15 +3,15 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace API
+namespace API.SqlIOHandler
 {
-    public class SQLInputHandler : ISQLInputHandler
+    public class SqlIOHandler : ISqlIOHandler
     {
-        private readonly ISqlHandler _destinationConnection;
+        private readonly ILinkedServerHandler _linkedServerHandler;
 
-        public SQLInputHandler(ISqlHandler destinationConnection)
+        public SqlIOHandler(ILinkedServerHandler linkedServerHandler)
         {
-            _destinationConnection = destinationConnection;
+            _linkedServerHandler = linkedServerHandler;
         }
 
         public bool IsServerConnected(string sourceConnectionString)
@@ -50,29 +50,29 @@ namespace API
             return tablesName;
         }
 
-        public void CopyDataToDataBase(string sourceServer, string sourceDataBase, string sourceTable)
+        public void ImportToNewTable(string sourceServer, string sourceDataBase, string sourceTable)
         {
-            var addLinkedSrvQuery =
-                "EXEC sp_addlinkedserver @server='project1LinkedSrv',@srvproduct=N'', @provider=N'SQLNCLI'," +
-                $" @datasrc=N'{sourceServer}', @provstr='Integrated Security=SSPI;'"+
-                "EXEC sp_addlinkedsrvlogin 'project1LinkedSrv', true";
-            var selectQuery =
-                $"SELECT * INTO Project1.dbo.{sourceTable} FROM project1LinkedSrv.{sourceDataBase}.dbo.{sourceTable}";
-            var dropLinkedSrvQuery = "EXEC sp_dropserver 'project1LinkedSrv', 'droplogins'";
-           
-            _destinationConnection.Open();
-            using (var command = _destinationConnection.CreatCommand())
-            {
-                command.CommandText = addLinkedSrvQuery;
-                command.ExecuteNonQuery();
-                command.CommandText = selectQuery;
-                command.ExecuteNonQuery();
-                command.CommandText = dropLinkedSrvQuery;
-                command.ExecuteNonQuery();
-            }
-            _destinationConnection.Close();
-        } 
+            _linkedServerHandler.AddLinkedServer(sourceServer);
+            _linkedServerHandler.ImportToNewTable(sourceServer,sourceDataBase,sourceTable);
+            _linkedServerHandler.DropLinkedServer(sourceServer);
+            
+        }
         
+        public void ExportToNewTable(string desServer, string desDataBase,string desTable, string sourceTable)
+        {
+            _linkedServerHandler.AddLinkedServer(desServer);
+            _linkedServerHandler.ExportToNewTable(desServer,desDataBase,desTable,sourceTable);
+            _linkedServerHandler.DropLinkedServer(desServer);
+            
+        }
         
+        public void ExportToSelectedTable(string desServer, string desDataBase,string desTable, string sourceTable)
+        {
+            _linkedServerHandler.AddLinkedServer(desServer);
+            _linkedServerHandler.ExportDataToSelectedTable(desServer,desDataBase,desTable,sourceTable);
+            _linkedServerHandler.DropLinkedServer(desServer);
+            
+        }
+
     }
 }
