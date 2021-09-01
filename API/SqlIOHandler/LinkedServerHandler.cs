@@ -9,12 +9,14 @@
             _sqlHandler = sqlHandler;
         }
 
-        public void AddLinkedServer(string serverLinkedWith)
+        public void AddLinkedServer(string serverLinkedWith, string username, string password)
         {
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
             var addLinkedSrvQuery = $"EXEC sp_addlinkedserver @server='{serverLinkedWith}'" +
-                                    $"EXEC sp_addlinkedsrvlogin '{serverLinkedWith}', true";
+                                    $"EXEC sp_addlinkedsrvlogin @rmtsrvname='{serverLinkedWith}' ," +
+                                    $"@useself='FALSE', @locallogin=NULL, @rmtuser='{username}'," +
+                                    $"@rmtpassword='{password}'";
             _sqlHandler.ExecuteSQLQuery(addLinkedSrvQuery);
             _sqlHandler.Close();
         }
