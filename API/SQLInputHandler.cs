@@ -52,27 +52,33 @@ namespace API
 
         public void CopyDataToDataBase(string sourceServer, string sourceDataBase, string sourceTable)
         {
-            var addLinkedSrvQuery =
-                "EXEC sp_addlinkedserver @server='project1LinkedSrv',@srvproduct=N'', @provider=N'SQLNCLI'," +
-                $" @datasrc=N'{sourceServer}', @provstr='Integrated Security=SSPI;'"+
-                "EXEC sp_addlinkedsrvlogin 'project1LinkedSrv', true";
-            var selectQuery =
-                $"SELECT * INTO Project1.dbo.{sourceTable} FROM project1LinkedSrv.{sourceDataBase}.dbo.{sourceTable}";
-            var dropLinkedSrvQuery = "EXEC sp_dropserver 'project1LinkedSrv', 'droplogins'";
-           
             _destinationConnection.Open();
-            using (var command = _destinationConnection.CreatCommand())
-            {
-                command.CommandText = addLinkedSrvQuery;
-                command.ExecuteNonQuery();
-                command.CommandText = selectQuery;
-                command.ExecuteNonQuery();
-                command.CommandText = dropLinkedSrvQuery;
-                command.ExecuteNonQuery();
-            }
+            AddLinkedServer(sourceServer);
+            GetTableDataViaLinkedServer(sourceServer,sourceDataBase,sourceTable);
+            DropLinkedServer(sourceServer);
             _destinationConnection.Close();
-        } 
-        
+        }
+
+        public void AddLinkedServer(string serverLinkWith)
+        {
+            var addLinkedSrvQuery =
+                $"EXEC sp_addlinkedserver @server='{serverLinkWith}'"+
+                $"EXEC sp_addlinkedsrvlogin '{serverLinkWith}', true";
+            _destinationConnection.ExecuteSQLQuery(addLinkedSrvQuery);
+        }
+
+        public void DropLinkedServer(string serverLinkWith)
+        {
+            var dropLinkedSrvQuery = $"EXEC sp_dropserver '{serverLinkWith}', 'droplogins'";
+            _destinationConnection.ExecuteSQLQuery(dropLinkedSrvQuery);
+        }
+
+        public void GetTableDataViaLinkedServer(string linkedServerName,string sourceDataBase, string tableName)
+        {
+            var selectQuery =
+                $"SELECT * INTO {tableName} FROM {linkedServerName}.{sourceDataBase}.dbo.{tableName}";
+            _destinationConnection.ExecuteSQLQuery(selectQuery);
+        }
         
     }
 }

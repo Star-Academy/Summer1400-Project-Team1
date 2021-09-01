@@ -28,9 +28,11 @@ namespace API
             Connection.Close();
         }
 
-        public IDbCommand CreatCommand()
+        public void ExecuteSQLQuery(string sqlQuery)
         {
-            return Connection.CreateCommand();
+            using var command = Connection.CreateCommand();
+            command.CommandText = sqlQuery;
+            command.ExecuteNonQuery();
         }
     }
 }
