@@ -1,7 +1,7 @@
 .main-wrapper {
   padding: 1rem;
   height: 88vh;
-  border: .5rem solid hsla(178, 46%, 67%, .5);
+  border: .5rem solid var(--color-bg-filter);
   border-bottom: unset;
   header{
     height:5vh;

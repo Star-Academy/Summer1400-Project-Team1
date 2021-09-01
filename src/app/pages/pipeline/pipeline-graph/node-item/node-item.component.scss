@@ -50,12 +50,14 @@
     }
   }
   .start-node {
-    background: hsla(50, 100%, 87%, 0.5);
-    border-color:hsla(50, 100%, 87%, 1);
+    background: var(--color-bg-source);
+    border-color:var(--color-border-source);
+
   }
   .end-node {
-    background: hsla(50, 100%, 87%, 0.5);
-    border-color:hsla(50, 100%, 87%, 1);  }
+    background: var(--color-bg-destination);
+    border-color:var(--color-border-destination);
+  }
 
   .delete {
     position: absolute;
@@ -71,17 +73,17 @@
 }
 
 .filter{
-  background-color:hsla(178, 46%, 67%, 0.5) !important;
-  border-color:hsla(178, 46%, 67%, 1);
+  background-color:var(--color-bg-filter) !important;
+  border-color:var(--color-border-filter);
 
 }
 .join{
-  background-color: hsla(1, 73%, 84%, 0.5) !important;
-  border-color:hsla(1, 73%, 84%, 1);
+  background-color: var(--color-bg-join) !important;
+  border-color:var(--color-border-join);
 }
 .aggregate{
-    background-color: hsla(255, 25%, 59%, 0.5) !important;
-  border-color:hsla(255, 25%, 59%, 1);
+    background-color:var(--color-bg-aggregate) !important;
+  border-color:var(--color-border-aggregate);
 }
 
 .hide {

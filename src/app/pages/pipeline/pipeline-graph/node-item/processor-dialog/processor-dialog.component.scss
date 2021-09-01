@@ -19,12 +19,12 @@
     }
   }
   .processor-filter{
-    border: .2rem solid hsla(178, 46%, 67%, 1);
+    border: .2rem solid var(--color-border-filter);
   }
   .processor-join{
-    border: .2rem solid hsla(1, 73%, 84%, 1);
+    border: .2rem solid var(--color-border-join);
   }
   .processor-aggregate{
-    border: .2rem solid hsla(255, 25%, 59%, 1);
+    border: .2rem solid var(--color-border-aggregate);
   }
 }

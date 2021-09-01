@@ -155,8 +155,8 @@
       width: 35rem;
       height: 100vh;
       z-index: 2;
+      background-color: white;
       box-shadow: 3px 0 1.5rem var(--color-gray-60);
-      background-color: var(--color-bg-primary);
       .details-header{
         display: flex;
         align-items: center;
@@ -165,5 +165,15 @@
         border-top: 1px groove var(--color-gray-70);
         border-bottom: 1px groove var(--color-gray-70);    }
     }
+
+    .filter{
+      background:var(--color-sidebar-filter) !important;
+    }
+    .join{
+      background-color: var(--color-sidebar-join) !important;
+     }
+    .aggregate{
+      background-color:var(--color-sidebar-aggregate) !important;
+     }
   }
 }

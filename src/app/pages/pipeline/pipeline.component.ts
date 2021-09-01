@@ -13,7 +13,7 @@ import {PipelineGraphComponent} from "./pipeline-graph/pipeline-graph.component"
 export class PipelineComponent implements OnInit,OnDestroy {
   pipelineTitle = "نام پایپلاین";
   isEditingPipelineTitle = false;
-  expandSidebar = true;
+  expandSidebar = false;
   sidebarProcessorType:string ="initial";
   sidebarProcessorTypeSub!:Subscription;
   expandPreview = false;
@@ -24,6 +24,8 @@ export class PipelineComponent implements OnInit,OnDestroy {
     lastYPosition: 0,
   };
   @ViewChild(PipelineGraphComponent ) pipelineGraph!: PipelineGraphComponent ;
+  processor: string='initial';
+  processorSub!: Subscription;
 
 
   constructor(
@@ -34,8 +36,11 @@ export class PipelineComponent implements OnInit,OnDestroy {
     document.onmouseup = ( ) => {
       this.previewResize.isResizing = false;
     };
-    console.log(this.expandSidebar);
-    this.sidebarProcessorType=this.pipelineService.currentSidebarProcessor;
+    this.processor = this.pipelineService.currentSidebarProcessor;
+    this.processorSub = this.pipelineService.currentSidebarProcessorChanged.subscribe((processor:string)=>{
+      this.processor = processor;
+    });
+     this.sidebarProcessorType=this.pipelineService.currentSidebarProcessor;
     this.pipelineService.toggleSideBar.next(this.expandSidebar);
     this.pipelineService.toggleSideBar.subscribe((isOpen:boolean) => {
       this.expandSidebar =  isOpen;
@@ -74,6 +79,7 @@ export class PipelineComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     this.sidebarProcessorTypeSub.unsubscribe();
+    this.processorSub.unsubscribe();
   }
 
   openChooseProcessorDialog() {

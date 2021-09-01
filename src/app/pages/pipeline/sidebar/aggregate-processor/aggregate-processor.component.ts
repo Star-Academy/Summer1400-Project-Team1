@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {map, startWith} from "rxjs/operators";
+ import {PipelineService} from "../../../../services/pipeline.service";
+import {Aggregate, AggregateNode} from "../../../../modals/aggregate-node";
 
 interface AggregateType {
     name: string;
@@ -14,12 +16,10 @@ interface AggregateType {
 })
 export class AggregateProcessorComponent implements OnInit {
 
-    constructor() {
-    }
+
 
     panelOpenState: boolean = true;
-    filterProcessorList = [1, 2, 3, 4, 5]
-    aggregateTypeControl = new FormControl('', Validators.required);
+     aggregateTypeControl = new FormControl('', Validators.required);
     aggregateTypes: AggregateType[] = [
         {name: 'COUNT'},
         {name: 'SUM'},
@@ -32,14 +32,27 @@ export class AggregateProcessorComponent implements OnInit {
     options: string[] = ['One', 'Two', 'Three'];
     filteredOptions!: Observable<string[]>;
 
+    aggregatesList: Aggregate[] = []
+
+    aggregatesListSub!: Subscription;
+    constructor(private pipelineService:PipelineService) {
+    }
+
     ngOnInit(): void {
         this.filteredOptions = this.myControl.valueChanges
             .pipe(
                 startWith(''),
                 map(value => this._filter(value))
             );
+        this.aggregatesList = (this.pipelineService.currentSidebarProcessorDetail as AggregateNode).aggregateList;
+        this.aggregatesListSub = this.pipelineService.currentSidebarProcessorDetailChanged.subscribe((details: any) => {
+            this.aggregatesList = details.aggregateList;
+        });
     }
 
+    ngOnDestroy(): void {
+        this.aggregatesListSub.unsubscribe();
+    }
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();
 

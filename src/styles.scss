@@ -47,6 +47,24 @@ $finalProject-theme: mat.define-light-theme(
 
   --color-error: hsl(0, 100%, 50%);
 
+  --color-bg-source: hsla(0, 0%, 27%, .3);
+  --color-border-source: hsla(0, 0%, 27%, .8);
+
+  --color-bg-destination: hsla(0, 0%, 27%, .3);
+  --color-border-destination: hsla(0, 0%, 27%, .8);
+
+  --color-bg-filter:hsla(178, 46%, 67%, 0.5);
+  --color-border-filter:hsla(178, 46%, 67%, 1);
+  --color-sidebar-filter:hsla(178, 46%, 90%, 1);
+
+  --color-bg-join:hsla(209, 78%, 35%, .3) ;
+  --color-border-join:hsla(209, 78%, 35%, 1);
+  --color-sidebar-join:hsla(209, 78%, 90%, 1);
+
+  --color-bg-aggregate:hsla(196, 67%, 45%, .3);
+  --color-border-aggregate:hsla(196, 67%, 45%, 1);
+  --color-sidebar-aggregate:hsla(196, 67%, 90%, 1);
+
   --color-white: #ffffff;
   --color-gray-98: #fafafa;
   --color-gray-95: #f2f2f2;

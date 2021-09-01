@@ -6,7 +6,7 @@
         </button>
     </header>
     <main>
-        <mat-accordion *ngFor="let item of filterProcessorList;let i = index;">
+        <mat-accordion *ngFor="let item of joinList;let i = index;">
             <mat-expansion-panel [expanded]="i==0" (opened)='panelOpenState = true'
                                  (closed)='panelOpenState = false'>
 

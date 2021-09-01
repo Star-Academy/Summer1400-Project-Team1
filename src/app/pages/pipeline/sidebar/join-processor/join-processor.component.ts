@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {map, startWith} from "rxjs/operators";
+ import {PipelineService} from "../../../../services/pipeline.service";
+import {Join, JoinNode} from "../../../../modals/join-node";
 interface JoinType {
    name: string;
 }
@@ -11,11 +13,9 @@ interface JoinType {
   templateUrl: './join-processor.component.html',
   styleUrls: ['./join-processor.component.scss']
 })
-export class JoinProcessorComponent implements OnInit {
-  constructor() {
-  }
+export class JoinProcessorComponent implements OnInit ,OnDestroy{
+
   panelOpenState: boolean = true;
-  filterProcessorList = [1,2,3,4,5]
   joinTypeControl = new FormControl('', Validators.required);
   joinTypes: JoinType[] = [
     { name: 'Left outer join'},
@@ -27,12 +27,26 @@ export class JoinProcessorComponent implements OnInit {
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions!: Observable<string[]>;
 
+  joinList: Join[] = []
+
+  joinListSub!: Subscription;
+  constructor(private pipelineService:PipelineService) {
+  }
+
   ngOnInit(): void {
     this.filteredOptions = this.myControl.valueChanges
         .pipe(
             startWith(''),
             map(value => this._filter(value))
         );
+    this.joinList = (this.pipelineService.currentSidebarProcessorDetail as JoinNode).joinsList;
+    this.joinListSub = this.pipelineService.currentSidebarProcessorDetailChanged.subscribe((details: any) => {
+      this.joinList = details.joinsList;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.joinListSub.unsubscribe();
   }
 
   private _filter(value: string): string[] {

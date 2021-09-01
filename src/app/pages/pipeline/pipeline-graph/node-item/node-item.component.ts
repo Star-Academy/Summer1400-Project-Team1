@@ -7,6 +7,9 @@ import {Dataset} from "src/app/modals/dataset";
 import {PipelineService} from "src/app/services/pipeline.service";
 import {Alert} from "src/app/utils/alert";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Filter, FilterNode} from "src/app/modals/filter-node";
+import {Join, JoinNode} from "../../../../modals/join-node";
+import {Aggregate, AggregateNode} from "../../../../modals/aggregate-node";
 
 @Component({
     selector: "app-node-item",
@@ -50,16 +53,14 @@ export class NodeItemComponent implements OnInit {
         }
         switch (this.node.nodeType) {
             case NodeType.FILTER:
-                this.openFilterSideBar();
+                this.openFilterSideBar(false);
                 break;
             case NodeType.JOIN:
-                this.openJoinSidebar();
+                this.openJoinSidebar(false);
                 break;
             case NodeType.AGGREGATION:
-                this.openAggregateSidebar();
+                this.openAggregateSidebar(false);
                 break;
-
-
         }
 
     }
@@ -102,15 +103,15 @@ export class NodeItemComponent implements OnInit {
                     switch (result) {
                         case "filter":
                             processorType = NodeType.FILTER;
-                            this.openFilterSideBar();
+                            this.openFilterSideBar(true);
                             break;
                         case "join":
                             processorType = NodeType.JOIN;
-                            this.openJoinSidebar();
+                            this.openJoinSidebar(true);
                             break;
                         case "aggregation":
                             processorType = NodeType.AGGREGATION;
-                            this.openAggregateSidebar();
+                            this.openAggregateSidebar(true);
                             break;
                     }
                     node = new Node(this.nodesLength, result, processorType);
@@ -130,18 +131,45 @@ export class NodeItemComponent implements OnInit {
         }
     }
 
-    private openAggregateSidebar() {
+    private openAggregateSidebar(isNew: boolean) {
         this.pipelineService.toggleSideBar.next(true);
         this.pipelineService.currentSidebarProcessor = "aggregate"
+        if (isNew) {
+            this.pipelineService.currentSidebarProcessorDetail = new AggregateNode(Math.floor(Math.random() * 1000), [
+                new Aggregate()
+            ]);
+        } else {
+
+            this.pipelineService.currentSidebarProcessorDetail =
+                this.node.NodeDetail || new AggregateNode(Math.floor(Math.random() * 1000), []);
+        }
+
     }
 
-    private openJoinSidebar() {
+    private openJoinSidebar(isNew: boolean) {
         this.pipelineService.toggleSideBar.next(true);
         this.pipelineService.currentSidebarProcessor = "join"
+        if (isNew) {
+            this.pipelineService.currentSidebarProcessorDetail = new JoinNode(Math.floor(Math.random() * 1000), [
+                new Join()
+            ]);
+
+        } else {
+            this.pipelineService.currentSidebarProcessorDetail = this.node.NodeDetail || new JoinNode(Math.floor(Math.random() * 1000), []);
+        }
     }
 
-    private openFilterSideBar() {
+    private openFilterSideBar(isNew: boolean) {
         this.pipelineService.toggleSideBar.next(true);
         this.pipelineService.currentSidebarProcessor = "filter"
+        if (isNew) {
+            this.pipelineService.currentSidebarProcessorDetail = new FilterNode(Math.floor(Math.random() * 1000), [
+                new Filter()
+            ]);
+        } else {
+            console.log(this.node.NodeDetail);
+            this.pipelineService.currentSidebarProcessorDetail =
+                this.node.NodeDetail || new FilterNode(Math.floor(Math.random() * 1000), []);
+        }
     }
 }
