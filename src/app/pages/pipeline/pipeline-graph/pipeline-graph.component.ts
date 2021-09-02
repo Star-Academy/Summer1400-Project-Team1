@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 import {Subscription} from "rxjs";
 import {Dataset} from "src/app/modals/dataset";
@@ -8,6 +8,8 @@ import {AddDestinationDialogComponent} from "./add-destination-dialog/add-destin
 import {ProcessorDialogComponent} from "./node-item/processor-dialog/processor-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Alert} from "../../../utils/alert";
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray} from "@angular/cdk/drag-drop";
+import {ViewportRuler} from "@angular/cdk/overlay";
 
 @Component({
     selector: "app-pipeline-graph",
@@ -30,9 +32,15 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
     constructor(
         private pipelineService: PipelineService,
         public dialog: MatDialog,
-        private snackBar: MatSnackBar
-    ) {
+        private snackBar: MatSnackBar,
+     ) {
+
     }
+
+
+
+
+
 
     ngOnInit(): void {
         this.pipelineService.getNodes();
@@ -160,4 +168,8 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
         this.hasDestinationNodeSub.unsubscribe();
         this.sidebarSub.unsubscribe();
     }
+
+
 }
+
+

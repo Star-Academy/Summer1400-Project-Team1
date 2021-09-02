@@ -20,6 +20,7 @@ export class PipelineService {
     new Node(1, "filter", NodeType.FILTER,new FilterNode(1,[
         new Filter(1,"a",">","2"),
         new Filter(2,"b","==","5"),
+        new Filter(5,"bc","<","45"),
     ])),
     new Node(4, "filter2", NodeType.FILTER,new FilterNode(2,[
       new Filter(3,"c","<","20"),

@@ -1,0 +1,65 @@
+<mat-accordion >
+    <mat-expansion-panel  (opened)='panelOpenState = true'
+                         (closed)='panelOpenState = false'>
+
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{item.schema()}}
+            </mat-panel-title>
+
+            <div class="delete"><img (click)="onDelete()" src="assets/images/delete.svg" alt=""></div>
+
+        </mat-expansion-panel-header>
+
+        <div class='panel-body'>
+            <form #form="ngForm">
+                <mat-form-field   appearance="fill">
+                    <mat-label>نام ستون</mat-label>
+                    <input type="text"
+                           aria-label="ستون"
+                           matInput
+                           required
+                           [(ngModel)]="item.column"
+                           [formControl]="myControl"
+                           [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async"
+                                    [value]="item.operator">
+                            {{option}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>شرط</mat-label>
+                    <mat-select [formControl]="operatorControl"
+                                [(value)]="item.operator"
+                                required>
+                        <mat-option *ngFor="let operator of operators"
+                                    [value]="operator">
+                            {{operator}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="operatorControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
+                </mat-form-field>
+                <!--  <p>{{Control.value.name}}</p>-->
+                <mat-form-field  appearance="fill">
+                    <mat-label>مقدار</mat-label>
+                    <input type="text"
+                           aria-label="مقدار"
+                           matInput
+                           required
+                           [(ngModel)]="item.value"
+                    >
+
+                </mat-form-field>
+            </form>
+
+        </div>
+    </mat-expansion-panel>
+    <section *ngIf="index!==length-1">
+        <mat-button-toggle-group [(ngModel)]="logicExp" aria-label="Font Style">
+            <mat-button-toggle value="bold">AND</mat-button-toggle>
+            <mat-button-toggle value="italic">OR</mat-button-toggle>
+        </mat-button-toggle-group>
+    </section>
+</mat-accordion>

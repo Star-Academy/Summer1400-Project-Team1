@@ -14,25 +14,15 @@ import { PipelineService } from 'src/app/services/pipeline.service';
 })
 export class FilterProcessorComponent implements OnInit, OnDestroy {
 
-    panelOpenState: boolean = true;
-     operatorControl = new FormControl('', Validators.required);
-    // operators: Operator[] = Operator.operators
-    operators =[">","<","=="]
-    myControl = new FormControl();
-    options: string[] = ['One', 'Two', 'Three'];
-    filteredOptions!: Observable<string[]>;
-    filtersList: Filter[] = []
 
+
+    filtersList: Filter[] = []
     filtersListSub!: Subscription;
     constructor(private pipelineService:PipelineService) {
     }
 
     ngOnInit(): void {
-        this.filteredOptions = this.myControl.valueChanges
-            .pipe(
-                startWith(''),
-                map(value => this._filter(value))
-            );
+
         this.filtersList = (this.pipelineService.currentSidebarProcessorDetail as FilterNode).filtersList;
         this.filtersListSub = this.pipelineService.currentSidebarProcessorDetailChanged.subscribe((details: any) => {
            this.filtersList = details.filtersList;
@@ -43,11 +33,7 @@ export class FilterProcessorComponent implements OnInit, OnDestroy {
         this.filtersListSub.unsubscribe();
     }
 
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
 
-        return this.options.filter(option => option.toLowerCase().includes(filterValue));
-    }
 
     onClose() {
 

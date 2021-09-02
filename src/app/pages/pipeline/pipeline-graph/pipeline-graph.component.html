@@ -1,5 +1,8 @@
+
+
 <div class='pipeline-graph-wrapper '
-    [ngClass]="{'side-menu-open':isSideBarOpen}">
+
+     [ngClass]="{'side-menu-open':isSideBarOpen}">
     <div *ngIf="!hasSourceNode" class='start-node-wrapper'>
         <button class='node'
                 mat-stroked-button (click)='onSourceNodeClick("source")'>
@@ -12,7 +15,10 @@
                    [nodesLength]='nodes.length'
                    (deleteNode)='deleteNode($event)'
                    (addNode)='addNode($event)'
-    ></app-node-item>
+
+    >
+        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+    </app-node-item>
 
     <div *ngIf="!hasDestinationNode" class='end-node-wrapper'>
         <div class="edge">

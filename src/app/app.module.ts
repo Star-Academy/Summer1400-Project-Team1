@@ -36,6 +36,9 @@ import { JoinProcessorComponent } from './pages/pipeline/sidebar/join-processor/
 import { AggregateProcessorComponent } from './pages/pipeline/sidebar/aggregate-processor/aggregate-processor.component';
 import {MatSelectModule} from "@angular/material/select";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import { FilterItemComponent } from './pages/pipeline/sidebar/filter-processor/filter-item/filter-item.component';
 
 @NgModule({
   declarations: [
@@ -58,26 +61,29 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     PipelinesComponent,
     FilterProcessorComponent,
     JoinProcessorComponent,
-    AggregateProcessorComponent
+    AggregateProcessorComponent,
+    FilterItemComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatExpansionModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatTableModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatExpansionModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatTableModule,
+        MatDialogModule,
+        MatSnackBarModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        DragDropModule,
+        MatButtonToggleModule
+    ],
 
   providers: [],
   bootstrap: [AppComponent]
