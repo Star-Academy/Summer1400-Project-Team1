@@ -7,168 +7,171 @@ import { Dataset } from "src/app/models/dataset";
 import { PipelineService } from "src/app/services/pipeline.service";
 import { Alert } from "src/app/utils/alert";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Filter, FilterNode } from "src/app/models/filter-node";
+import { Join, JoinNode } from "../../../../models/join-node";
+import { Aggregate, AggregateNode } from "../../../../models/aggregate-node";
 
 @Component({
-    selector: "app-node-item",
-    templateUrl: "./node-item.component.html",
-    styleUrls: ["./node-item.component.scss"],
+  selector: "app-node-item",
+  templateUrl: "./node-item.component.html",
+  styleUrls: ["./node-item.component.scss"],
 })
 export class NodeItemComponent implements OnInit {
-    @Input() node!: Node;
-    @Input() index!: number;
-    @Input() nodesLength!: number;
-    @Output() deleteNode = new EventEmitter<Node>();
-    @Output() addNode = new EventEmitter<{ index: number; node: Node }>();
+  @Input() node!: Node;
+  @Input() index!: number;
+  @Input() nodesLength!: number;
+  @Output() deleteNode = new EventEmitter<Node>();
+  @Output() addNode = new EventEmitter<{ index: number; node: Node }>();
 
-    nodeType!: string;
-    destinationNode!: Dataset;
-    private processorType: any;
+  nodeType!: string;
+  destinationNode!: Dataset;
+  private processorType: any;
 
-    constructor(
-        public dialog: MatDialog,
-        private pipelineService: PipelineService,
-        private snackBar: MatSnackBar
-    ) {
+  constructor(
+    public dialog: MatDialog,
+    private pipelineService: PipelineService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  ngOnInit(): void {
+    this.nodeType = this.node.nodeType;
+  }
+
+  onDeleteNode() {
+    this.deleteNode.emit(this.node);
+  }
+
+  onNodeClick() {
+    switch (this.node.id) {
+      case -2:
+        this.openAddSourceDialog("destination");
+        break;
+      case -1:
+        this.openAddSourceDialog("source");
+        break;
     }
-
-    ngOnInit(): void {
-        this.nodeType = this.node.nodeType;
+    switch (this.node.nodeType) {
+      case NodeType.FILTER:
+        this.openFilterSideBar(false);
+        break;
+      case NodeType.JOIN:
+        this.openJoinSidebar(false);
+        break;
+      case NodeType.AGGREGATION:
+        this.openAggregateSidebar(false);
+        break;
     }
+  }
 
-    onDeleteNode() {
-        this.deleteNode.emit(this.node);
-    }
+  openAddSourceDialog(source: string) {
+    const dialogRef = this.dialog.open(AddDestinationDialogComponent, {
+      width: "50vw",
+      data: this.destinationNode,
+    });
 
-    onNodeClick() {
-        switch (this.node.id) {
-            case -2:
-                this.openAddSourceDialog("destination");
-                break;
-            case -1:
-                this.openAddSourceDialog("source");
-                break;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        switch (source) {
+          case "source":
+            this.pipelineService.addSourceDataset(result, true, false);
+            break;
+          case "destination":
+            this.pipelineService.addSourceDataset(result, true, true);
+
+            break;
+          case "newSource":
+            this.pipelineService.addSourceDataset(result, false, false);
+            break;
         }
-        switch (this.node.nodeType) {
-            case NodeType.FILTER:
-                this.openFilterSideBar();
-                break;
-            case NodeType.JOIN:
-                this.openJoinSidebar();
-                break;
-            case NodeType.AGGREGATION:
-                this.openAggregateSidebar();
-                break;
+      }
+    });
+  }
 
+  openChooseProcessorDialog(): void {
+    if (this.pipelineService.hasSourceNode) {
+      const dialogRef = this.dialog.open(ProcessorDialogComponent, {
+        width: "250px",
+        data: { processorType: this.processorType },
+      });
 
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          let processorType!: NodeType;
+          let node!: Node;
+          switch (result) {
+            case "filter":
+              processorType = NodeType.FILTER;
+              this.openFilterSideBar(true);
+              break;
+            case "join":
+              processorType = NodeType.JOIN;
+              this.openJoinSidebar(true);
+              break;
+            case "aggregation":
+              processorType = NodeType.AGGREGATION;
+              this.openAggregateSidebar(true);
+              break;
+          }
+          node = new Node(this.nodesLength, result, processorType);
+          this.addNode.emit({ index: this.index, node });
         }
+      });
+    } else {
+      Alert.showAlert(
+        this.snackBar,
+        "منبع ورودی را انتخاب کنید",
+        "انتخاب",
+        4500,
+        () => this.openAddSourceDialog("newSource")
+      );
 
+      return;
     }
+  }
 
-    openAddSourceDialog(source: string) {
-        const dialogRef = this.dialog.open(AddDestinationDialogComponent, {
-            width: "50vw",
-            data: this.destinationNode,
-        });
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                switch (source) {
-                    case "source":
-                        this.pipelineService.addSourceDataset(result, true, false);
-                        break;
-                    case "destination":
-                        this.pipelineService.addSourceDataset(result, true, true);
-
-                        break;
-                    case "newSource":
-                        this.pipelineService.addSourceDataset(result, false, false);
-                        break;
-                }
-            }
-        });
+  private openAggregateSidebar(isNew: boolean) {
+    this.pipelineService.toggleSideBar.next(true);
+    this.pipelineService.currentSidebarProcessor = "aggregate";
+    if (isNew) {
+      this.pipelineService.currentSidebarProcessorDetail = new AggregateNode(
+        Math.floor(Math.random() * 1000),
+        [new Aggregate()]
+      );
+    } else {
+      this.pipelineService.currentSidebarProcessorDetail =
+        this.node.NodeDetail ||
+        new AggregateNode(Math.floor(Math.random() * 1000), []);
     }
+  }
 
-    openChooseProcessorDialog(): void {
-        if (this.pipelineService.hasSourceNode) {
-            const dialogRef = this.dialog.open(ProcessorDialogComponent, {
-                width: "250px",
-                data: {processorType: this.processorType},
-            });
-
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    let processorType!: NodeType;
-                    let node!: Node;
-                    switch (result) {
-                        case "filter":
-                            processorType = NodeType.FILTER;
-                            this.openFilterSideBar(true);
-                            break;
-                        case "join":
-                            processorType = NodeType.JOIN;
-                            this.openJoinSidebar(true);
-                            break;
-                        case "aggregation":
-                            processorType = NodeType.AGGREGATION;
-                            this.openAggregateSidebar(true);
-                            break;
-                    }
-                    node = new Node(this.nodesLength, result, processorType);
-                    this.addNode.emit({index: this.index, node});
-                }
-            });
-        } else {
-            Alert.showAlert(
-                this.snackBar,
-                "منبع ورودی را انتخاب کنید",
-                "انتخاب",
-                4500,
-                () => this.openAddSourceDialog("newSource")
-            );
-
-            return;
-        }
+  private openJoinSidebar(isNew: boolean) {
+    this.pipelineService.toggleSideBar.next(true);
+    this.pipelineService.currentSidebarProcessor = "join";
+    if (isNew) {
+      this.pipelineService.currentSidebarProcessorDetail = new JoinNode(
+        Math.floor(Math.random() * 1000),
+        [new Join()]
+      );
+    } else {
+      this.pipelineService.currentSidebarProcessorDetail =
+        this.node.NodeDetail ||
+        new JoinNode(Math.floor(Math.random() * 1000), []);
     }
+  }
 
-    private openAggregateSidebar(isNew: boolean) {
-        this.pipelineService.toggleSideBar.next(true);
-        this.pipelineService.currentSidebarProcessor = "aggregate"
-        if (isNew) {
-            this.pipelineService.currentSidebarProcessorDetail = new AggregateNode(Math.floor(Math.random() * 1000), [
-                new Aggregate()
-            ]);
-        } else {
-
-            this.pipelineService.currentSidebarProcessorDetail =
-                this.node.NodeDetail || new AggregateNode(Math.floor(Math.random() * 1000), []);
-        }
-
+  private openFilterSideBar(isNew: boolean) {
+    this.pipelineService.toggleSideBar.next(true);
+    this.pipelineService.currentSidebarProcessor = "filter";
+    if (isNew) {
+      this.pipelineService.currentSidebarProcessorDetail = new FilterNode(
+        Math.floor(Math.random() * 1000),
+        [new Filter()]
+      );
+    } else {
+      console.log(this.node.NodeDetail);
+      this.pipelineService.currentSidebarProcessorDetail =
+        this.node.NodeDetail ||
+        new FilterNode(Math.floor(Math.random() * 1000), []);
     }
-
-    private openJoinSidebar(isNew: boolean) {
-        this.pipelineService.toggleSideBar.next(true);
-        this.pipelineService.currentSidebarProcessor = "join"
-        if (isNew) {
-            this.pipelineService.currentSidebarProcessorDetail = new JoinNode(Math.floor(Math.random() * 1000), [
-                new Join()
-            ]);
-
-        } else {
-            this.pipelineService.currentSidebarProcessorDetail = this.node.NodeDetail || new JoinNode(Math.floor(Math.random() * 1000), []);
-        }
-    }
-
-    private openFilterSideBar(isNew: boolean) {
-        this.pipelineService.toggleSideBar.next(true);
-        this.pipelineService.currentSidebarProcessor = "filter"
-        if (isNew) {
-            this.pipelineService.currentSidebarProcessorDetail = new FilterNode(Math.floor(Math.random() * 1000), [
-                new Filter()
-            ]);
-        } else {
-            console.log(this.node.NodeDetail);
-            this.pipelineService.currentSidebarProcessorDetail =
-                this.node.NodeDetail || new FilterNode(Math.floor(Math.random() * 1000), []);
-        }
-    }
+  }
 }
