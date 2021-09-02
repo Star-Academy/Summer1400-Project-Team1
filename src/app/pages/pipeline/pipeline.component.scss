@@ -105,7 +105,7 @@
   main{
     position: relative;
     flex-grow: 1;
-    .graph-template-container{
+    #graph-container{
       position: absolute;
       top: 0;
       right: 0;

@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Subscription } from "rxjs";
-import { Dataset, DatasetRow } from "src/app/modals/dataset";
+import { Dataset, DatasetRow } from "src/app/models/dataset";
 import { DatasetService } from "src/app/services/dataset.service";
 
 @Component({

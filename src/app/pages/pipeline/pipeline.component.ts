@@ -2,8 +2,10 @@ import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { PipelineService } from "src/app/services/pipeline.service";
-import {Subscription} from "rxjs";
-import {PipelineGraphComponent} from "./pipeline-graph/pipeline-graph.component";
+import { Subscription } from "rxjs";
+import { PipelineGraphComponent } from "./pipeline-graph/pipeline-graph.component";
+import { OgmaService } from "../../services/ogma.service";
+import { GraphService } from "../../services/graph.service";
 
 @Component({
   selector: "app-pipeline",
@@ -27,13 +29,16 @@ export class PipelineComponent implements OnInit,OnDestroy {
   processor: string='initial';
   processorSub!: Subscription;
 
+  @ViewChild("graphContainer", { static: true })
+  private container;
 
   constructor(
     public router: Router,
-    private pipelineService: PipelineService
+    private pipelineService: PipelineService,
+    private graphService: GraphService
   ) {}
   ngOnInit(): void {
-    document.onmouseup = ( ) => {
+    document.onmouseup = () => {
       this.previewResize.isResizing = false;
     };
     this.processor = this.pipelineService.currentSidebarProcessor;
@@ -47,9 +52,11 @@ export class PipelineComponent implements OnInit,OnDestroy {
       // this.sidebarProcessorType=expandSidebar.processorType;
     });
     this.sidebarProcessorTypeSub =
-        this.pipelineService.currentSidebarProcessorChanged.subscribe((type:string)=>{
-          this.sidebarProcessorType=type;
-        });
+      this.pipelineService.currentSidebarProcessorChanged.subscribe(
+        (type: string) => {
+          this.sidebarProcessorType = type;
+        }
+      );
   }
 
   editPipelineName(ngForm: NgForm) {
@@ -84,5 +91,9 @@ export class PipelineComponent implements OnInit,OnDestroy {
 
   openChooseProcessorDialog() {
     this.pipelineGraph.onNoDestinationAddNode();
+  }
+
+  ngAfterContentInit(): void {
+    this.graphService.constructGraph(this.container.nativeElement);
   }
 }

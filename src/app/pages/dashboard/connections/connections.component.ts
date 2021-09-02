@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ConnectionRow } from "src/app/modals/connection";
+import { ConnectionRow } from "src/app/models/connection";
 import { ConnectionService } from "src/app/services/connection.service";
 
 @Component({

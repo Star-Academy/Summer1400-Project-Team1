@@ -1,15 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Node, NodeType} from "../../../../modals/node";
-import {MatDialog} from "@angular/material/dialog";
-import {ProcessorDialogComponent} from "./processor-dialog/processor-dialog.component";
-import {AddDestinationDialogComponent} from "../add-destination-dialog/add-destination-dialog.component";
-import {Dataset} from "src/app/modals/dataset";
-import {PipelineService} from "src/app/services/pipeline.service";
-import {Alert} from "src/app/utils/alert";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Filter, FilterNode} from "src/app/modals/filter-node";
-import {Join, JoinNode} from "../../../../modals/join-node";
-import {Aggregate, AggregateNode} from "../../../../modals/aggregate-node";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Node, NodeType } from "../../../../models/node";
+import { MatDialog } from "@angular/material/dialog";
+import { ProcessorDialogComponent } from "./processor-dialog/processor-dialog.component";
+import { AddDestinationDialogComponent } from "../add-destination-dialog/add-destination-dialog.component";
+import { Dataset } from "src/app/models/dataset";
+import { PipelineService } from "src/app/services/pipeline.service";
+import { Alert } from "src/app/utils/alert";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
     selector: "app-node-item",
@@ -53,14 +50,16 @@ export class NodeItemComponent implements OnInit {
         }
         switch (this.node.nodeType) {
             case NodeType.FILTER:
-                this.openFilterSideBar(false);
+                this.openFilterSideBar();
                 break;
             case NodeType.JOIN:
-                this.openJoinSidebar(false);
+                this.openJoinSidebar();
                 break;
             case NodeType.AGGREGATION:
-                this.openAggregateSidebar(false);
+                this.openAggregateSidebar();
                 break;
+
+
         }
 
     }

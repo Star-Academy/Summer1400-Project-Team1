@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Connection, ConnectionRow } from "../modals/connection";
+import { Connection, ConnectionRow } from "../models/connection";
 import { Subject } from "rxjs";
 
 @Injectable({

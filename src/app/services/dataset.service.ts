@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Dataset, DatasetRow } from "../modals/dataset";
+import { Dataset, DatasetRow } from "../models/dataset";
 import { Subject } from "rxjs";
 
 @Injectable({

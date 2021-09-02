@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { DatasetRow } from "src/app/modals/dataset";
+import { DatasetRow } from "src/app/models/dataset";
 import { DatasetService } from "src/app/services/dataset.service";
 
 @Component({

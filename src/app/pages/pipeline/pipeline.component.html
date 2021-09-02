@@ -84,10 +84,35 @@
 </header>
 
 <main (mousemove)="handleResize($event)">
-    <div class="graph-template-container">
-        <app-pipeline-graph></app-pipeline-graph>
-    </div>
+  <div #graphContainer style="position: absolute; top: 0; right: 0; bottom: 0; left: 0">
+  </div>
 
+<!--  <div class="graph-template-container">-->
+<!--    <app-pipeline-graph></app-pipeline-graph>-->
+<!--  </div>-->
+
+  <div
+    class="preview-container"
+    [hidden]="!expandPreview"
+    [ngStyle]="{ height: previewResize.previewHeight + 'px' }"
+  >
+    <div class="preview">
+      <div class="resize-grip" (mousedown)="onStartResize($event)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+          <path
+            d="M3.593 7.943a1.77 1.77 0 1 0-3.539 0 1.77 1.77 0 0 0 3.54 0m2.658 0a1.769 1.769 0 1 0 3.538 0 1.769 1.769 0 0 0-3.538 0m6.205 0a1.77 1.77 0 1 0 3.538 0 1.77 1.77 0 0 0-3.538 0"
+          ></path>
+        </svg>
+      </div>
+      <header class="preview-header">Lorem ipsum.</header>
+      <main>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium
+        aliquam aliquid dolores esse est explicabo fugiat laborum molestiae nam
+        natus neque nulla, quisquam repellendus voluptate? Doloremque esse fuga
+        laudantium.
+      </main>
+    </div>
+  </div>
     <div
             class="preview-container"
             [hidden]="!expandPreview"
@@ -123,4 +148,4 @@
     </div>
 </main>
 
-<app-add-new-operation *ngIf="isModalOpen"></app-add-new-operation>
+<!--<app-add-new-operation *ngIf="true"></app-add-new-operation>-->
