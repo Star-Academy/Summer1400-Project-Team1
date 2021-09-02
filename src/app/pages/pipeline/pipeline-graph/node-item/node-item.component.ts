@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Node, NodeType } from "../../../../models/node";
 import { MatDialog } from "@angular/material/dialog";
-import { ProcessorDialogComponent } from "./processor-dialog/processor-dialog.component";
+import { DialogProcessorSelectDialog } from "./processor-dialog/dialog-processor-select-dialog.component";
 import { AddDestinationDialogComponent } from "../add-destination-dialog/add-destination-dialog.component";
 import { Dataset } from "src/app/models/dataset";
 import { PipelineService } from "src/app/services/pipeline.service";
@@ -89,7 +89,7 @@ export class NodeItemComponent implements OnInit {
 
   openChooseProcessorDialog(): void {
     if (this.pipelineService.hasSourceNode) {
-      const dialogRef = this.dialog.open(ProcessorDialogComponent, {
+      const dialogRef = this.dialog.open(DialogProcessorSelectDialog, {
         width: "250px",
         data: { processorType: this.processorType },
       });

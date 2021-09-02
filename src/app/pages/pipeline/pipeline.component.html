@@ -84,7 +84,7 @@
 </header>
 
 <main (mousemove)="handleResize($event)">
-  <div #graphContainer style="position: absolute; top: 0; right: 0; bottom: 0; left: 0">
+  <div #graphContainer id="graph-container">
   </div>
 
 <!--  <div class="graph-template-container">-->
@@ -148,4 +148,4 @@
     </div>
 </main>
 
-<!--<app-add-new-operation *ngIf="true"></app-add-new-operation>-->
+<!--<app-add-new-operation *ngIf="false"></app-add-new-operation>-->

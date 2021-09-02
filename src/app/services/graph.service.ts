@@ -3,6 +3,8 @@ import { OgmaService } from "./ogma.service";
 import { Node } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
 import { NodeType } from "../models/node";
+import { MatDialog } from "@angular/material/dialog";
+import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/node-item/processor-dialog/dialog-processor-select-dialog.component";
 
 @Injectable({
   providedIn: "root",
@@ -11,7 +13,7 @@ export class GraphService {
   nodes: Node[] = [];
   edges: Edge[] = [];
 
-  constructor(private ogmaService: OgmaService) {}
+  constructor(private ogmaService: OgmaService, public dialog: MatDialog) {}
 
   constructGraph(container: HTMLElement) {
     this.ogmaService.initConfig({
@@ -22,8 +24,8 @@ export class GraphService {
   }
 
   initGraph() {
-    const srcNode = new Node("source", NodeType.SOURCE_LOCAL);
-    const destNode = new Node("destination", NodeType.DESTINATION_LOCAL);
+    const srcNode = new Node("source", 0);
+    const destNode = new Node("destination", 0);
     const initialEdge = new Edge(srcNode, destNode);
     this.addNode(srcNode);
     this.addNode(destNode);
@@ -53,12 +55,22 @@ export class GraphService {
   onNodeClicked(node: Node) {}
 
   onEdgeClicked(edge: Edge) {
-    this.addNodeInBetween(edge);
+    this.promptProcessorSelectDialog(edge);
+  }
+
+  promptProcessorSelectDialog(edge: Edge) {
+    const dialogRef = this.dialog.open(DialogProcessorSelectDialog, {
+      autoFocus: false,
+      width: "67.5rem",
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) this.addNodeInBetween(edge);
+    });
   }
 
   addNodeInBetween(edge: Edge) {
     this.removeEdge(edge);
-    const newNode = new Node("foo", NodeType.SOURCE_LOCAL);
+    const newNode = new Node("foo", 0);
     this.addNode(newNode);
     this.addEdge(new Edge(edge.src, newNode));
     this.addEdge(new Edge(newNode, edge.dest));

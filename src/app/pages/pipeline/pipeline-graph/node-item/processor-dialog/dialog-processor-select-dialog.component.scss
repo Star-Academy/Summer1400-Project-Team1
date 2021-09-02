@@ -1,0 +1,43 @@
+header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.472);
+  padding-bottom: 1rem;
+}
+
+.content {
+  font-size: 1.5rem;
+  & > ul {
+    & > li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.5rem 0;
+      cursor: pointer;
+      padding: 0.7rem 1rem;
+
+      &:hover {
+        background-color: #1031832d;
+        border-radius: 0.2rem;
+      }
+
+      & > span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & > span {
+          margin: 0 1rem;
+        }
+
+        & > svg {
+          width: 1.5rem;
+          height: 1.5rem;
+          fill: #103183;
+        }
+      }
+    }
+  }
+}

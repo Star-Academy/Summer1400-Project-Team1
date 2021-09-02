@@ -1,4 +1,8 @@
-import { NodeType } from "../node";
+export enum NodeType {
+  FILTER = 1,
+  JOIN,
+  AGGREGATE,
+}
 
 export class Node {
   static nodeCounter = 0;

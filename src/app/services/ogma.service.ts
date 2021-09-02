@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import * as Ogma from "../../assets/ogma.min.js";
 import { Node } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
-import { NodeType } from "../models/node";
 
 interface OgmaClass {
   name: string;
@@ -29,6 +28,7 @@ export class OgmaService {
 
   colorPalette = {
     innerStroke: "#103183",
+    nodeHover: "#d6d6d6",
   };
   constructor() {}
 
@@ -60,11 +60,14 @@ export class OgmaService {
     this.ogma.styles.setSelectedNodeAttributes(null);
     this.ogma.styles.setHoveredNodeAttributes(
       {
-        color: "#d6d6d6",
+        color: this.colorPalette.nodeHover,
       },
       true
     );
-    this.ogma.styles.setHoveredEdgeAttributes({ color: "#1342b6" }, true);
+    this.ogma.styles.setHoveredEdgeAttributes(
+      { color: this.colorPalette.innerStroke },
+      true
+    );
   }
 
   initClasses() {
@@ -74,33 +77,17 @@ export class OgmaService {
   }
 
   runLayout(): Promise<void> {
-    return this.ogma.layouts
-      .grid({
-        rows: 6,
-        duration: 300,
-        levelDistance: 4,
-        sortBy: "id",
-      })
-      .then(() => {
-        this.ogma.view.locateGraph({
-          easing: "linear",
-          duration: 300,
-        });
-      });
+    return this.ogma.layouts.force({ locate: true });
   }
 
   addNode(node: Node) {
     const ogmaNode = {
       id: node.id,
-      attributes: {},
+      attributes: {
+        text: "foo",
+      },
     };
-    let ogmaClass;
-    switch (node.nodeType) {
-      case NodeType.SOURCE_LOCAL:
-        ogmaClass = "source";
-        break;
-    }
-    this.ogma.addNode(ogmaNode).addClass(ogmaClass);
+    this.ogma.addNode(ogmaNode);
   }
 
   addEdge(edge: Edge) {

@@ -11,7 +11,7 @@ import { Dataset } from "src/app/models/dataset";
 import { PipelineService } from "src/app/services/pipeline.service";
 import { Node, NodeType } from "../../../models/node";
 import { AddDestinationDialogComponent } from "./add-destination-dialog/add-destination-dialog.component";
-import { ProcessorDialogComponent } from "./node-item/processor-dialog/processor-dialog.component";
+import { DialogProcessorSelectDialog } from "./node-item/processor-dialog/dialog-processor-select-dialog.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Alert } from "../../../utils/alert";
 import {
@@ -116,7 +116,7 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
 
   onNoDestinationAddNode() {
     if (this.hasSourceNode) {
-      const dialogRef = this.dialog.open(ProcessorDialogComponent, {
+      const dialogRef = this.dialog.open(DialogProcessorSelectDialog, {
         width: "250px",
         data: { processorType: this.processorType },
       });
