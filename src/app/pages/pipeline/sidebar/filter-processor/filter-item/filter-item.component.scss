@@ -8,6 +8,7 @@ mat-accordion {
   }
 }
 
+
 .delete {
   margin-left: 1.5rem;
   display: flex;
@@ -57,14 +58,14 @@ section {
   mat-button-toggle-group {
     height: 3rem;
     display: flex;
+    margin-top:.5rem;
     align-items: center;
     justify-content: center;
 
-    mat-button-toggle {
-      :checked {
-        background-color: red;
-      }
-    }
+
+    .mat-button-toggle-checked {
+      background: hsla(6, 75%, 88%, 1);
+     }
   }
 
 }

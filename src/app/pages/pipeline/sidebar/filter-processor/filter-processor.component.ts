@@ -1,8 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
-import {Observable, Subscription} from "rxjs";
-import {map, startWith} from "rxjs/operators";
-import {Operator} from "../../../../utils/operators";
+import { Subscription} from "rxjs";
 import {Filter, FilterNode} from "../../../../modals/filter-node";
 import { PipelineService } from 'src/app/services/pipeline.service';
 

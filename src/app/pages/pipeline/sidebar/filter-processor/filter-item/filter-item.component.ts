@@ -13,18 +13,26 @@ export class FilterItemComponent implements OnInit {
   @Input() index!: number;
   @Input() length!: number;
   @Input() item!: Filter;
-  logicExp?: string;
+
   panelOpenState: boolean = true;
+
   operatorControl = new FormControl('', Validators.required);
-  // operators: Operator[] = Operator.operators
-  operators =[">","<","=="]
+
   myControl = new FormControl();
+  myControl1 = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
+
+  operators =[">","<","=="];
   filteredOptions!: Observable<string[]>;
+
+  logicExp?: string;
+  operator1!: string;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.operator1 = this.item.operator;
+
     this.filteredOptions = this.myControl.valueChanges
         .pipe(
             startWith(''),
@@ -33,7 +41,6 @@ export class FilterItemComponent implements OnInit {
   }
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
   onDelete() {

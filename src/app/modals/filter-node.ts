@@ -1,20 +1,27 @@
-
 export class Filter {
     constructor(
-        public id:number=0,
-        public column:string="",
-        public operator:string="",
-        public value:string="",
+        public id: number = 0,
+        public column: string = "",
+        public operator: string = "",
+        public value: string = "",
     ) {
     }
-    schema():string{
-     return `${this.column} ${this.operator} ${this.value}`;
+
+    schema(): string {
+        let operator ;
+        if (this.operator !== "==") {
+            operator = this.operator === ">" ? "<" : ">";
+        } else {
+            operator = "=="
+        }
+        return `${this.column} ${operator} ${this.value}`;
     }
 }
 
 export class FilterNode {
     constructor(
-        public id:number=0,
+        public id: number = 0,
         public filtersList: Filter[],
-    ) {}
+    ) {
+    }
 }
