@@ -28,7 +28,8 @@ export class OgmaService {
 
   colorPalette = {
     innerStroke: "#103183",
-    nodeHover: "#d6d6d6",
+    nodeHover: "#e4ebea",
+    outerStroke: "#ff6e70",
   };
   constructor() {}
 
@@ -41,9 +42,8 @@ export class OgmaService {
   setInitialStyles() {
     this.ogma.styles.addRule({
       nodeAttributes: {
-        shape: "square",
         innerStroke: {
-          width: "4",
+          width: 4,
           color: this.colorPalette.innerStroke,
         },
         text: {
@@ -52,12 +52,15 @@ export class OgmaService {
         color: "white",
       },
       edgeAttributes: {
-        // shape: {
-        //   head: "arrow",
-        // },
+        shape: {
+          style: "dashed",
+        },
       },
     });
-    this.ogma.styles.setSelectedNodeAttributes(null);
+    this.ogma.styles.setSelectedNodeAttributes(
+      { outerStroke: { color: this.colorPalette.outerStroke } },
+      true
+    );
     this.ogma.styles.setHoveredNodeAttributes(
       {
         color: this.colorPalette.nodeHover,
@@ -65,6 +68,10 @@ export class OgmaService {
       true
     );
     this.ogma.styles.setHoveredEdgeAttributes(
+      { color: this.colorPalette.innerStroke },
+      true
+    );
+    this.ogma.styles.setSelectedEdgeAttributes(
       { color: this.colorPalette.innerStroke },
       true
     );
@@ -84,7 +91,7 @@ export class OgmaService {
     const ogmaNode = {
       id: node.id,
       attributes: {
-        text: "foo",
+        text: node.name,
       },
     };
     this.ogma.addNode(ogmaNode);
@@ -99,5 +106,9 @@ export class OgmaService {
 
   removeEdge(edge: Edge) {
     this.ogma.removeEdge(edge.id);
+  }
+
+  unSelectEdge(edge: Edge) {
+    this.ogma.getEdge(edge.id).setSelected(false);
   }
 }

@@ -2,9 +2,14 @@ import { Injectable } from "@angular/core";
 import { OgmaService } from "./ogma.service";
 import { Node } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
-import { NodeType } from "../models/node";
+import { NodeType } from "../models/graph/node";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/node-item/processor-dialog/dialog-processor-select-dialog.component";
+import { SourceNode } from "../models/graph/source-node";
+import { DestinationNode } from "../models/graph/destination-node";
+import { FilterNode } from "../models/graph/filter-node";
+import { JoinNode } from "../models/graph/join-node";
+import { AggregateNode } from "../models/graph/aggregate-node";
 
 @Injectable({
   providedIn: "root",
@@ -24,8 +29,8 @@ export class GraphService {
   }
 
   initGraph() {
-    const srcNode = new Node("source", 0);
-    const destNode = new Node("destination", 0);
+    const srcNode = new SourceNode("source");
+    const destNode = new DestinationNode("destination");
     const initialEdge = new Edge(srcNode, destNode);
     this.addNode(srcNode);
     this.addNode(destNode);
@@ -64,16 +69,31 @@ export class GraphService {
       width: "67.5rem",
     });
     dialogRef.afterClosed().subscribe((res) => {
-      if (res) this.addNodeInBetween(edge);
+      if (res) this.addProcessor(res, edge);
+      else this.ogmaService.unSelectEdge(edge);
     });
   }
 
-  addNodeInBetween(edge: Edge) {
+  addProcessor(nodeType: NodeType, edge: Edge) {
+    let newNode: Node;
+    switch (nodeType) {
+      case NodeType.FILTER:
+        newNode = new FilterNode("filter");
+        break;
+      case NodeType.JOIN:
+        newNode = new JoinNode("join");
+        break;
+      case NodeType.AGGREGATE:
+        newNode = new AggregateNode("aggregate");
+    }
+    this.addNodeInBetween(newNode!, edge);
+  }
+
+  addNodeInBetween(node: Node, edge: Edge) {
     this.removeEdge(edge);
-    const newNode = new Node("foo", 0);
-    this.addNode(newNode);
-    this.addEdge(new Edge(edge.src, newNode));
-    this.addEdge(new Edge(newNode, edge.dest));
+    this.addNode(node);
+    this.addEdge(new Edge(edge.src, node));
+    this.addEdge(new Edge(node, edge.dest));
     return this.runLayout();
   }
 

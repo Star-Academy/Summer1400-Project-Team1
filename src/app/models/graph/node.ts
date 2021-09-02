@@ -1,13 +1,15 @@
 export enum NodeType {
-  FILTER = 1,
+  SOURCE = 1,
+  DESTINATION,
+  FILTER,
   JOIN,
   AGGREGATE,
 }
 
-export class Node {
+export abstract class Node {
   static nodeCounter = 0;
   public id: number;
-  constructor(public name: string, public nodeType: NodeType) {
+  protected constructor(public name: string) {
     this.id = Node.nodeCounter;
     Node.nodeCounter++;
   }
