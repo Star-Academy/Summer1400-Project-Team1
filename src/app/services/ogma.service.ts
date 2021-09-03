@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import * as Ogma from "../../assets/ogma.min.js";
 import { Node } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
+import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
 
 interface OgmaClass {
   name: string;
@@ -16,14 +17,14 @@ export class OgmaService {
   ogma: Ogma;
   ogmaClasses: OgmaClass[] = [
     {
-      name: "source",
+      name: "terminal",
       nodeAttributes: {
         text: {
           content: "local storage",
         },
+        shape: "square",
       },
     },
-    { name: "destination", nodeAttributes: { color: "red" } },
   ];
 
   colorPalette = {
@@ -94,8 +95,11 @@ export class OgmaService {
         text: node.name,
       },
     };
-    this.ogma.addNode(ogmaNode);
+    let addedNode = this.ogma.addNode(ogmaNode);
+    this.attachClass(addedNode);
   }
+
+  attachClass(ogmaNode: any) {}
 
   addEdge(edge: Edge) {
     const ogmaEdge = { id: edge.id, source: edge.src.id, target: edge.dest.id };

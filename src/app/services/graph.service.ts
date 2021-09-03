@@ -1,15 +1,16 @@
 import { Injectable } from "@angular/core";
 import { OgmaService } from "./ogma.service";
-import { Node } from "../models/graph/node";
+import { Node, NodeType } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
-import { NodeType } from "../models/graph/node";
-import { MatDialog } from "@angular/material/dialog";
+import { SourceNode } from "../models/graph/terminal-nodes/source-node";
+import { DestinationNode } from "../models/graph/terminal-nodes/destination-node";
+import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
 import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/node-item/processor-dialog/dialog-processor-select-dialog.component";
-import { SourceNode } from "../models/graph/source-node";
-import { DestinationNode } from "../models/graph/destination-node";
+import { DialogSelectDatasetDialog } from "../pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import { FilterNode } from "../models/graph/filter-node";
 import { JoinNode } from "../models/graph/join-node";
 import { AggregateNode } from "../models/graph/aggregate-node";
+import { MatDialog } from "@angular/material/dialog";
 
 @Injectable({
   providedIn: "root",
@@ -18,7 +19,9 @@ export class GraphService {
   nodes: Node[] = [];
   edges: Edge[] = [];
 
-  constructor(private ogmaService: OgmaService, public dialog: MatDialog) {}
+  selectedNode?: Node;
+
+  constructor(private ogmaService: OgmaService, private dialog: MatDialog) {}
 
   constructGraph(container: HTMLElement) {
     this.ogmaService.initConfig({
@@ -57,7 +60,21 @@ export class GraphService {
     }
   }
 
-  onNodeClicked(node: Node) {}
+  onNodeClicked(node: Node) {
+    if (node instanceof TerminalNode) {
+      this.onTerminalNodeClicked(node);
+    }
+  }
+
+  onTerminalNodeClicked(terminalNode: TerminalNode) {
+    if (!terminalNode.hasDataset) this.promptDatasetSelectDialog(terminalNode);
+  }
+
+  promptDatasetSelectDialog(node: TerminalNode) {
+    const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
+      width: "50vw",
+    });
+  }
 
   onEdgeClicked(edge: Edge) {
     this.promptProcessorSelectDialog(edge);
@@ -70,7 +87,7 @@ export class GraphService {
     });
     dialogRef.afterClosed().subscribe((res) => {
       if (res) this.addProcessor(res, edge);
-      else this.ogmaService.unSelectEdge(edge);
+      else this.unselectEdge(edge);
     });
   }
 
@@ -85,6 +102,7 @@ export class GraphService {
         break;
       case NodeType.AGGREGATE:
         newNode = new AggregateNode("aggregate");
+        break;
     }
     this.addNodeInBetween(newNode!, edge);
   }
@@ -112,5 +130,9 @@ export class GraphService {
   addEdge(edge: Edge) {
     this.edges.push(edge);
     this.ogmaService.addEdge(edge);
+  }
+
+  unselectEdge(edge: Edge) {
+    this.ogmaService.unSelectEdge(edge);
   }
 }

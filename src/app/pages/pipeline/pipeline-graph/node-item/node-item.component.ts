@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Node, NodeType } from "../../../../models/node";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogProcessorSelectDialog } from "./processor-dialog/dialog-processor-select-dialog.component";
-import { AddDestinationDialogComponent } from "../add-destination-dialog/add-destination-dialog.component";
+import { DialogSelectDatasetDialog } from "../add-destination-dialog/dialog-select-dataset-dialog.component";
 import { Dataset } from "src/app/models/dataset";
 import { PipelineService } from "src/app/services/pipeline.service";
 import { Alert } from "src/app/utils/alert";
@@ -64,7 +64,7 @@ export class NodeItemComponent implements OnInit {
   }
 
   openAddSourceDialog(source: string) {
-    const dialogRef = this.dialog.open(AddDestinationDialogComponent, {
+    const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
       width: "50vw",
       data: this.destinationNode,
     });

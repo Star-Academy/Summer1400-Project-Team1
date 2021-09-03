@@ -6,13 +6,12 @@ import { DatasetService } from "src/app/services/dataset.service";
 
 @Component({
   selector: "app-add-destination-dialog",
-  templateUrl: "./add-destination-dialog.component.html",
-  styleUrls: ["./add-destination-dialog.component.scss"],
+  templateUrl: "./dialog-select-dataset-dialog.component.html",
+  styleUrls: ["./dialog-select-dataset-dialog.component.scss"],
 })
-export class AddDestinationDialogComponent implements OnInit, OnDestroy {
+export class DialogSelectDatasetDialog implements OnInit, OnDestroy {
   constructor(
-    public dialogRef: MatDialogRef<AddDestinationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Dataset,
+    public dialogRef: MatDialogRef<DialogSelectDatasetDialog>,
     private datasetService: DatasetService
   ) {}
 
@@ -34,10 +33,6 @@ export class AddDestinationDialogComponent implements OnInit, OnDestroy {
         this.datasetsRows = datasetsRows;
       }
     );
-  }
-
-  closeDialog() {
-    this.dialogRef.close();
   }
 
   onDatasetClick(row: DatasetRow) {

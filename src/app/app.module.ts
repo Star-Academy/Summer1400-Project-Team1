@@ -26,7 +26,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 
-import { AddDestinationDialogComponent } from "./pages/pipeline/pipeline-graph/add-destination-dialog/add-destination-dialog.component";
+import { DialogSelectDatasetDialog } from "./pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import { PipelineGraphComponent } from "./pages/pipeline/pipeline-graph/pipeline-graph.component";
 import { AddNewOperationComponent } from "./pages/pipeline/add-new-operation/add-new-operation.component";
 import { PipelinesComponent } from "./pages/dashboard/pipelines/pipelines.component";
@@ -55,7 +55,7 @@ import { FilterItemComponent } from "./pages/pipeline/sidebar/filter-processor/f
     AddNewConnectionComponent,
     NodeItemComponent,
     DialogProcessorSelectDialog,
-    AddDestinationDialogComponent,
+    DialogSelectDatasetDialog,
     PipelineGraphComponent,
     SidebarComponent,
     PipelinesComponent,

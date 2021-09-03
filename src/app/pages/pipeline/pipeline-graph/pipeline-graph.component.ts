@@ -10,7 +10,7 @@ import { Subscription } from "rxjs";
 import { Dataset } from "src/app/models/dataset";
 import { PipelineService } from "src/app/services/pipeline.service";
 import { Node, NodeType } from "../../../models/node";
-import { AddDestinationDialogComponent } from "./add-destination-dialog/add-destination-dialog.component";
+import { DialogSelectDatasetDialog } from "./add-destination-dialog/dialog-select-dataset-dialog.component";
 import { DialogProcessorSelectDialog } from "./node-item/processor-dialog/dialog-processor-select-dialog.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Alert } from "../../../utils/alert";
@@ -88,7 +88,7 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
   }
 
   onSourceNodeClick(source: string) {
-    const dialogRef = this.dialog.open(AddDestinationDialogComponent, {
+    const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
       width: "50vw",
       data: this.destinationNode,
     });
