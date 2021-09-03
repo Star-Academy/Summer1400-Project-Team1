@@ -7,7 +7,7 @@ namespace API.Filter
     public class ColumnFilter:IColumnFilter,IPipelineComponent
     {
         private SqlHandler _sqlHandler;
-        private StringBuilder _stringBuilder = new StringBuilder();
+        public StringBuilder StringBuilder = new StringBuilder();
         private Node _root;
         private string _temporaryTableName = "##"+System.Guid.NewGuid();
         
@@ -37,36 +37,40 @@ namespace API.Filter
         private void Traverse(Node node){
             if (node.IsLeaf())
             {
-                _stringBuilder.Append("(" + node.GetKey() + node.GetOperator() + node.GetValue() + ")");
+                StringBuilder.Append("(" + node.GetKey() + node.GetOperator() + node.GetValue() + ")");
             }
             else
             {
-                _stringBuilder.Append("(");
+                StringBuilder.Append("(");
                 for (int i = 0; i < node.GetChildes().Count; i++)
                 {
                     Traverse(node.GetChildes()[i]);
                     if (i<node.GetChildes().Count-1)
                     {
-                        _stringBuilder.Append(node.GetConditionType());
+                        StringBuilder.Append(node.GetConditionType());
                     }
                 }
-                _stringBuilder.Append(")");
+                StringBuilder.Append(")");
             }
         }
 
         private string CreateSelectIntoTemporaryTableQuery(Node root, string sourceDataset)
         {
-            _stringBuilder.Clear();
-            Traverse(root);
-            return "select * into "+_temporaryTableName+" from "+sourceDataset+" where "+ _stringBuilder;
+            if (StringBuilder.Equals(""))
+            {
+                Traverse(root);
+            }
+            return "select * into "+_temporaryTableName+" from "+sourceDataset+" where "+ StringBuilder;
         }
         
         //for test
         private string CreateSelectQuery(Node root, string tableName)
         {
-            _stringBuilder.Clear();
-            Traverse(root);
-            return "select * from "+tableName+" where "+ _stringBuilder;
+            if (StringBuilder.Equals(""))
+            {
+                Traverse(root);
+            }
+            return "select * from "+tableName+" where "+ StringBuilder;
         }
 
         public string Execute(string sourceDataset)
