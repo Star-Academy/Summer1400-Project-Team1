@@ -2,7 +2,9 @@ import { Injectable } from "@angular/core";
 import * as Ogma from "../../assets/ogma.min.js";
 import { Node } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
-import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
+import { JoinNode } from "../models/graph/join-node";
+import { FilterNode } from "../models/graph/filter-node";
+import { AggregateNode } from "../models/graph/aggregate-node";
 
 interface OgmaClass {
   name: string;
@@ -19,11 +21,25 @@ export class OgmaService {
     {
       name: "terminal",
       nodeAttributes: {
+        color: "#f2f2f2",
         text: {
-          content: "local storage",
+          content: "Add +",
+          color: "#7f7f7f",
+        },
+        innerStroke: {
+          color: "#bfbfbf",
         },
         shape: "square",
       },
+    },
+    {
+      name: "filter",
+    },
+    {
+      name: "join",
+    },
+    {
+      name: "aggregate",
     },
   ];
 
@@ -49,12 +65,15 @@ export class OgmaService {
         },
         text: {
           position: "center",
+          size: 25,
         },
         color: "white",
+        radius: 5,
       },
       edgeAttributes: {
         shape: {
           style: "dashed",
+          head: "arrow",
         },
       },
     });
@@ -92,14 +111,32 @@ export class OgmaService {
     const ogmaNode = {
       id: node.id,
       attributes: {
-        text: node.name,
+        text: {
+          content: node.name,
+        },
       },
     };
     let addedNode = this.ogma.addNode(ogmaNode);
-    this.attachClass(addedNode);
+    this.attachClass(addedNode, node);
   }
 
-  attachClass(ogmaNode: any) {}
+  attachClass(ogmaNode: any, node: Node) {
+    let ogmaClass;
+    switch (node.constructor) {
+      case FilterNode:
+        ogmaClass = "filter";
+        break;
+      case JoinNode:
+        ogmaClass = "join";
+        break;
+      case AggregateNode:
+        ogmaClass = "aggregate";
+        break;
+      default:
+        ogmaClass = "terminal";
+    }
+    ogmaNode.addClass(ogmaClass);
+  }
 
   addEdge(edge: Edge) {
     const ogmaEdge = { id: edge.id, source: edge.src.id, target: edge.dest.id };

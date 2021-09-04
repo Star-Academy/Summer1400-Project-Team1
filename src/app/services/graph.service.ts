@@ -67,7 +67,7 @@ export class GraphService {
   }
 
   onTerminalNodeClicked(terminalNode: TerminalNode) {
-    if (!terminalNode.hasDataset) this.promptDatasetSelectDialog(terminalNode);
+    if (!terminalNode.dataset) this.promptDatasetSelectDialog(terminalNode);
   }
 
   promptDatasetSelectDialog(node: TerminalNode) {

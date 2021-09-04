@@ -8,9 +8,13 @@ export enum NodeType {
 
 export abstract class Node {
   static nodeCounter = 0;
-  public id: number;
+  private readonly _id: number;
   protected constructor(public name: string) {
-    this.id = Node.nodeCounter;
+    this._id = Node.nodeCounter;
     Node.nodeCounter++;
+  }
+
+  get id(): number {
+    return this._id;
   }
 }
