@@ -4,7 +4,7 @@ using System.Text;
 
 namespace API.Filter
 {
-    public class ColumnFilter:IColumnFilter,IPipelineComponent
+    public class ColumnFilter:IPipelineComponent
     {
         private SqlHandler _sqlHandler;
         public StringBuilder StringBuilder = new StringBuilder();
