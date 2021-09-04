@@ -2,6 +2,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   .pipeline-header {
     height: 8vh;
     background-color: var(--color-gray-90);
@@ -152,8 +153,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 35rem;
-      height: 100vh;
+      width: 38rem;
+      height: 92vh;
       z-index: 2;
       background-color: white;
       box-shadow: 3px 0 1.5rem var(--color-gray-60);

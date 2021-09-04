@@ -15,12 +15,15 @@ import {Aggregate, AggregateNode} from "../modals/aggregate-node";
 export class PipelineService {
 
 
+
   nodesTemp: Node[] = [
     new Node(-1, "دیتاست مبدا", NodeType.SOURCE_LOCAL),
     new Node(1, "filter", NodeType.FILTER,new FilterNode(1,[
-        new Filter(1,"a",">","2"),
-        new Filter(2,"b","==","5"),
-        new Filter(5,"bc","<","45"),
+        new Filter(1,"1",">","2"),
+        new Filter(2,"2","==","5"),
+        new Filter(5,"3","<","45"),
+      new Filter(2,"4","==","5"),
+        new Filter(5,"5","<","45"),
     ])),
     new Node(4, "filter2", NodeType.FILTER,new FilterNode(2,[
       new Filter(3,"c","<","20"),
@@ -221,3 +224,8 @@ export class PipelineService {
 
   }
 }
+/*
+ A AND B AND C OR D AND E
+
+ A AND A
+*/

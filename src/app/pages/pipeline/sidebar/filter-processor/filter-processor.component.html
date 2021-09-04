@@ -1,19 +1,29 @@
 <div class="main-wrapper">
-    <header>
-        <p>filter</p>
-        <button mat-icon-button>
-            <img (click)="onAddFilter()" src="assets/images/add-black.svg" alt="">
-        </button>
-    </header>
+    <section>
+        <header>
+            <div class="add-filter">
+                <p>filter</p>
+                <button mat-icon-button>
+                    <img (click)="onAddFilter()" src="assets/images/add-black.svg" alt="">
+                </button>
+            </div>
+            <div class="advance-filter">
+                <button mat-stroked-button color="primary">پیشرفته</button>
+            </div>
+        </header>
+        <div class="state-wrapper">
+            <p>(age>20 AND name = hasan) OR height<6ft</p>
+        </div>
 
-    <main>
-        <app-filter-item
-                *ngFor="let item of filtersList;let i = index;let l = count" [index]="i"
-                         [item]="item"
-                            [length]="l"
-        ></app-filter-item>
+        <main>
+            <app-filter-item
+                    *ngFor="let item of filtersList;let i = index;let l = count" [index]="i"
+                    [item]="item"
+                    [length]="l"
+            ></app-filter-item>
 
-    </main>
+        </main>
+    </section>
 
     <div class='actions-wrapper'>
         <div class='validate-wrapper'>
