@@ -1,6 +1,6 @@
 ﻿namespace API.Filter
 {
-    public interface IJsonParser
+    public interface IParser
     {
         Node GetTree();
     }

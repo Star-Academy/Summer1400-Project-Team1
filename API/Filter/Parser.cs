@@ -3,11 +3,11 @@ using Newtonsoft.Json.Linq;
 
 namespace API.Filter
 {
-    public class JsonParser : IJsonParser
+    public class Parser : IParser
     {
         private readonly Node _returnRoot;
         
-        public JsonParser(string jsonString)
+        public Parser(string jsonString)
         {
             var jroot = JObject.Parse(jsonString);
             

@@ -37,6 +37,8 @@ namespace API.Join
             _secondTableMapping = secondTableMapping;
         }
 
+        public int OrderId { get; set; }
+
         public string Execute(string sourceDataset)
         {
             string tempTableName = GetTempTableNameFromSourceDataset(sourceDataset);

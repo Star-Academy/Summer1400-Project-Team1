@@ -73,6 +73,8 @@ namespace API.Filter
             return "select * from "+tableName+" where "+ StringBuilder;
         }
 
+        public int OrderId { get; set; }
+
         public string Execute(string sourceDataset)
         {
             if (!_sqlHandler.IsOpen())

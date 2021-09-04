@@ -19,6 +19,8 @@ namespace API.Aggregation
             _aggregateFunctions = aggregateFunctions;
         }
 
+        public int OrderId { get; set; }
+
         public string Execute(string sourceDataset)
         {
             var sqlString = "SELECT ";
