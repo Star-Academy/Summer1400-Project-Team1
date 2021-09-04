@@ -11,6 +11,7 @@ import { FilterNode } from "../models/graph/filter-node";
 import { JoinNode } from "../models/graph/join-node";
 import { AggregateNode } from "../models/graph/aggregate-node";
 import { MatDialog } from "@angular/material/dialog";
+import { Dataset } from "../models/dataset";
 
 @Injectable({
   providedIn: "root",
@@ -64,15 +65,20 @@ export class GraphService {
     if (node instanceof TerminalNode) {
       this.onTerminalNodeClicked(node);
     }
+    this.selectedNode = node;
   }
 
   onTerminalNodeClicked(terminalNode: TerminalNode) {
     if (!terminalNode.dataset) this.promptDatasetSelectDialog(terminalNode);
   }
 
-  promptDatasetSelectDialog(node: TerminalNode) {
+  promptDatasetSelectDialog(terminalNode: TerminalNode) {
     const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
       width: "50vw",
+    });
+    dialogRef.afterClosed().subscribe((dataset: Dataset) => {
+      terminalNode.dataset = dataset;
+      this.ogmaService.updateTerminalNode(terminalNode);
     });
   }
 

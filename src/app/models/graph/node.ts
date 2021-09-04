@@ -9,7 +9,7 @@ export enum NodeType {
 export abstract class Node {
   static nodeCounter = 0;
   private readonly _id: number;
-  protected constructor(public name: string) {
+  protected constructor(public name: string, public nodeType: NodeType) {
     this._id = Node.nodeCounter;
     Node.nodeCounter++;
   }

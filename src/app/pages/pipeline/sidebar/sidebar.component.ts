@@ -1,23 +1,26 @@
-import {Component, Input, OnInit, Output} from "@angular/core";
-import {EventEmitter} from "@angular/core";
+import { Component, Input, OnInit, Output } from "@angular/core";
+import { EventEmitter } from "@angular/core";
+import { Node, NodeType } from "../../../models/graph/node";
 
 @Component({
-    selector: "app-sidebar",
-    templateUrl: "./sidebar.component.html",
-    styleUrls: ["./sidebar.component.scss"],
+  selector: "app-sidebar",
+  templateUrl: "./sidebar.component.html",
+  styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
-    @Input() processType!: string;
-    @Output() openChooseProcessorDialog = new EventEmitter<void>();
+  @Input() selectedNode?: Node;
 
-    constructor() {
-    }
+  @Output() openChooseProcessorDialog = new EventEmitter<void>();
 
-    ngOnInit(): void {
-    }
+  constructor() {}
 
+  ngOnInit(): void {}
 
-    openDialog() {
-        this.openChooseProcessorDialog.emit();
-    }
+  openDialog() {
+    this.openChooseProcessorDialog.emit();
+  }
+
+  get NodeType() {
+    return NodeType;
+  }
 }

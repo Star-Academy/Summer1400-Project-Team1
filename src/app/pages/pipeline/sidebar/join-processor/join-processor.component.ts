@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { PipelineService } from "../../../../services/pipeline.service";
-import { Join, JoinNode } from "../../../../models/join-node";
+import { Join } from "../../../../models/join-node";
+import { JoinNode } from "../../../../models/graph/join-node";
 interface JoinType {
   name: string;
 }
@@ -14,6 +15,8 @@ interface JoinType {
   styleUrls: ["./join-processor.component.scss"],
 })
 export class JoinProcessorComponent implements OnInit, OnDestroy {
+  @Input() joinNode!: JoinNode;
+
   panelOpenState: boolean = true;
   joinTypeControl = new FormControl("", Validators.required);
   joinTypes: JoinType[] = [
@@ -36,9 +39,9 @@ export class JoinProcessorComponent implements OnInit, OnDestroy {
       startWith(""),
       map((value) => this._filter(value))
     );
-    this.joinList = (
-      this.pipelineService.currentSidebarProcessorDetail as JoinNode
-    ).joinsList;
+    // this.joinList = (
+    //   this.pipelineService.currentSidebarProcessorDetail as JoinNode
+    // ).joinsList;
     this.joinListSub =
       this.pipelineService.currentSidebarProcessorDetailChanged.subscribe(
         (details: any) => {

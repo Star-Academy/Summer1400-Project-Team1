@@ -1,7 +1,7 @@
-import { Node } from "./node";
+import { Node, NodeType } from "./node";
 
 export class AggregateNode extends Node {
   constructor(name: string) {
-    super(name);
+    super(name, NodeType.AGGREGATE);
   }
 }

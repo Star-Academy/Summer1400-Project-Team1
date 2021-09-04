@@ -1,10 +1,8 @@
 import { Injectable } from "@angular/core";
 import * as Ogma from "../../assets/ogma.min.js";
-import { Node } from "../models/graph/node";
+import { Node, NodeType } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
-import { JoinNode } from "../models/graph/join-node";
-import { FilterNode } from "../models/graph/filter-node";
-import { AggregateNode } from "../models/graph/aggregate-node";
+import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
 
 interface OgmaClass {
   name: string;
@@ -19,7 +17,7 @@ export class OgmaService {
   ogma: Ogma;
   ogmaClasses: OgmaClass[] = [
     {
-      name: "terminal",
+      name: "terminal empty",
       nodeAttributes: {
         color: "#f2f2f2",
         text: {
@@ -29,6 +27,14 @@ export class OgmaService {
         innerStroke: {
           color: "#bfbfbf",
         },
+        shape: "square",
+      },
+    },
+    {
+      name: "terminal filled",
+      nodeAttributes: {
+        color: "#17d0c3",
+        text: "filled",
         shape: "square",
       },
     },
@@ -116,26 +122,36 @@ export class OgmaService {
         },
       },
     };
-    let addedNode = this.ogma.addNode(ogmaNode);
-    this.attachClass(addedNode, node);
+    this.ogma.addNode(ogmaNode);
+    this.attachClass(node);
   }
 
-  attachClass(ogmaNode: any, node: Node) {
+  attachClass(node: Node) {
+    let ogmaNode = this.ogma.getNode(node.id);
     let ogmaClass;
-    switch (node.constructor) {
-      case FilterNode:
+    switch (node.nodeType) {
+      case NodeType.FILTER:
         ogmaClass = "filter";
         break;
-      case JoinNode:
+      case NodeType.JOIN:
         ogmaClass = "join";
         break;
-      case AggregateNode:
+      case NodeType.AGGREGATE:
         ogmaClass = "aggregate";
         break;
       default:
-        ogmaClass = "terminal";
+        const terminalNode = node as TerminalNode;
+        ogmaClass = terminalNode.dataset ? "terminal filled" : "terminal empty";
     }
     ogmaNode.addClass(ogmaClass);
+  }
+
+  updateTerminalNode(node: TerminalNode) {
+    const prevClass = !node.dataset ? "terminal filled" : "terminal empty";
+    const newClass = node.dataset ? "terminal filled" : "terminal empty";
+    const ogmaNode = this.ogma.getNode(node.id);
+    ogmaNode.removeClass(prevClass);
+    ogmaNode.addClass(newClass);
   }
 
   addEdge(edge: Edge) {

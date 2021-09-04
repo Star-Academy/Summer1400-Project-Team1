@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { PipelineService } from "../../../../services/pipeline.service";
-import { Aggregate, AggregateNode } from "../../../../models/aggregate-node";
+import { Aggregate } from "../../../../models/aggregate-node";
+import { AggregateNode } from "../../../../models/graph/aggregate-node";
 
 interface AggregateType {
   name: string;
@@ -15,6 +16,8 @@ interface AggregateType {
   styleUrls: ["./aggregate-processor.component.scss"],
 })
 export class AggregateProcessorComponent implements OnInit {
+  @Input() aggregateNode!: AggregateNode;
+
   panelOpenState: boolean = true;
   aggregateTypeControl = new FormControl("", Validators.required);
   aggregateTypes: AggregateType[] = [
@@ -38,9 +41,9 @@ export class AggregateProcessorComponent implements OnInit {
       startWith(""),
       map((value) => this._filter(value))
     );
-    this.aggregatesList = (
-      this.pipelineService.currentSidebarProcessorDetail as AggregateNode
-    ).aggregateList;
+    // this.aggregatesList = (
+    //   this.pipelineService.currentSidebarProcessorDetail as AggregateNode
+    // ).aggregateList;
     this.aggregatesListSub =
       this.pipelineService.currentSidebarProcessorDetailChanged.subscribe(
         (details: any) => {

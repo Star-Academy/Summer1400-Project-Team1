@@ -6,6 +6,7 @@ import { Subscription } from "rxjs";
 import { PipelineGraphComponent } from "./pipeline-graph/pipeline-graph.component";
 import { OgmaService } from "../../services/ogma.service";
 import { GraphService } from "../../services/graph.service";
+import { NodeType } from "../../models/graph/node";
 
 @Component({
   selector: "app-pipeline",
@@ -93,6 +94,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   openChooseProcessorDialog() {
     this.pipelineGraph.onNoDestinationAddNode();
+  }
+
+  get selectedNode() {
+    return this.graphService.selectedNode;
+  }
+
+  get NodeType() {
+    return NodeType;
   }
 
   ngAfterContentInit(): void {

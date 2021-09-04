@@ -1,23 +1,24 @@
-<div [ngSwitch]="processType">
+<ng-container *ngIf="selectedNode else noNodeSelected">
+    <div [ngSwitch]="selectedNode.nodeType">
 
-    <div *ngSwitchCase="'filter'">
-        <app-filter-processor></app-filter-processor>
-    </div>
-    <div *ngSwitchCase="'join'">
-        <app-join-processor></app-join-processor>
-    </div>
-    <div *ngSwitchCase="'aggregate'">
-        <app-aggregate-processor></app-aggregate-processor>
-    </div>
-    <div *ngSwitchCase="'initial'">
-        <main>
-            <p>پردازه‌ای انتخاب نشده</p>
-            <button mat-raised-button color='primary' (click)="openDialog()">انتخاب</button>
-        </main>
-    </div>
-</div>
+        <div *ngSwitchCase="NodeType.FILTER">
+            <app-filter-processor [filterNode]="selectedNode"></app-filter-processor>
+        </div>
+        <div *ngSwitchCase="NodeType.JOIN">
+            <app-join-processor [joinNode]="selectedNode"></app-join-processor>
+        </div>
+        <div *ngSwitchCase="NodeType.AGGREGATE">
+            <app-aggregate-processor [aggregateNode]="selectedNode"></app-aggregate-processor>
+        </div>
+    </div >
+</ng-container>
 
-
+<ng-template #noNodeSelected>
+    <main>
+        <p>پردازه‌ای انتخاب نشده</p>
+        <button mat-raised-button color='primary' (click)="openDialog()">انتخاب</button>
+    </main>
+</ng-template>
 
 
 

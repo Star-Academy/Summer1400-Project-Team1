@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { Filter, FilterNode } from "../../../../models/filter-node";
+import { Filter } from "../../../../models/filter-node";
 import { PipelineService } from "src/app/services/pipeline.service";
+import { FilterNode } from "../../../../models/graph/filter-node";
 
 @Component({
   selector: "app-filter-processor",
@@ -9,14 +10,16 @@ import { PipelineService } from "src/app/services/pipeline.service";
   styleUrls: ["./filter-processor.component.scss"],
 })
 export class FilterProcessorComponent implements OnInit, OnDestroy {
+  @Input() filterNode!: FilterNode;
+
   filtersList: Filter[] = [];
   filtersListSub!: Subscription;
   constructor(private pipelineService: PipelineService) {}
 
   ngOnInit(): void {
-    this.filtersList = (
-      this.pipelineService.currentSidebarProcessorDetail as FilterNode
-    ).filtersList;
+    // this.filtersList = (
+    //   this.pipelineService.currentSidebarProcessorDetail as FilterNode
+    // ).filtersList;
     this.filtersListSub =
       this.pipelineService.currentSidebarProcessorDetailChanged.subscribe(
         (details: any) => {

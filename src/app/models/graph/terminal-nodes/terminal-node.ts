@@ -1,11 +1,11 @@
-import { Node } from "../node";
+import { Node, NodeType } from "../node";
 import { Dataset } from "../../dataset";
 
 export abstract class TerminalNode extends Node {
   protected _dataset!: Dataset;
 
-  protected constructor(name: string) {
-    super(name);
+  protected constructor(name: string, nodeType: NodeType) {
+    super(name, nodeType);
   }
 
   get dataset() {
