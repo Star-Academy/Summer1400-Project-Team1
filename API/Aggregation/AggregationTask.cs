@@ -58,7 +58,6 @@ namespace API.Aggregation
             var stream = command.ExecuteReader();
             DataTable table = new DataTable();
             table.Load(stream);
-            _sqlHandler.Close();
 
             return destinationName;
         }
