@@ -7,9 +7,9 @@ import { DestinationNode } from "../models/graph/terminal-nodes/destination-node
 import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
 import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/node-item/processor-dialog/dialog-processor-select-dialog.component";
 import { DialogSelectDatasetDialog } from "../pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
-import { FilterNode } from "../models/graph/filter-node";
-import { JoinNode } from "../models/graph/join-node";
-import { AggregateNode } from "../models/graph/aggregate-node";
+import { FilterNode } from "../models/graph/processor-nodes/filter-node";
+import { JoinNode } from "../models/graph/processor-nodes/join-node";
+import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
 import { MatDialog } from "@angular/material/dialog";
 import { Dataset } from "../models/dataset";
 

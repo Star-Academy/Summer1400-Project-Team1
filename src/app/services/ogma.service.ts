@@ -21,7 +21,8 @@ export class OgmaService {
       nodeAttributes: {
         color: "#f2f2f2",
         text: {
-          content: "Add +",
+          position: "center",
+          content: "Add dataset +",
           color: "#7f7f7f",
         },
         innerStroke: {
@@ -33,25 +34,50 @@ export class OgmaService {
     {
       name: "terminal filled",
       nodeAttributes: {
-        color: "#17d0c3",
-        text: "filled",
+        image: {
+          url: "../../assets/images/local-storage.svg",
+          scale: 0.5,
+        },
+        color: "#89c9db",
+        text: {
+          content: "filled",
+          position: "bottom",
+        },
         shape: "square",
       },
     },
     {
       name: "filter",
+      nodeAttributes: {
+        image: {
+          url: "../../assets/images/filter.svg",
+          scale: 0.5,
+        },
+      },
     },
     {
       name: "join",
+      nodeAttributes: {
+        image: {
+          url: "../../assets/images/join.svg",
+          scale: 0.5,
+        },
+      },
     },
     {
       name: "aggregate",
+      nodeAttributes: {
+        image: {
+          url: "../../assets/images/aggregate.svg",
+          scale: 0.5,
+        },
+      },
     },
   ];
 
   colorPalette = {
     innerStroke: "#103183",
-    nodeHover: "#e4ebea",
+    processorNodes: "#e4ebea",
     outerStroke: "#ff6e70",
   };
   constructor() {}
@@ -66,14 +92,13 @@ export class OgmaService {
     this.ogma.styles.addRule({
       nodeAttributes: {
         innerStroke: {
-          width: 4,
           color: this.colorPalette.innerStroke,
         },
         text: {
-          position: "center",
           size: 25,
+          minVisibleSize: 50,
         },
-        color: "white",
+        color: this.colorPalette.processorNodes,
         radius: 5,
       },
       edgeAttributes: {
@@ -89,7 +114,9 @@ export class OgmaService {
     );
     this.ogma.styles.setHoveredNodeAttributes(
       {
-        color: this.colorPalette.nodeHover,
+        innerStroke: {
+          width: 4,
+        },
       },
       true
     );
