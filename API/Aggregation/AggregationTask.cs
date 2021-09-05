@@ -34,7 +34,7 @@ namespace API.Aggregation
                 sqlString += function;
             }
             
-            var destinationName = "##Aggregation";
+            var destinationName = "##Aggregation" + new Random().Next();
             sqlString += "INTO " + destinationName + " ";
 
             sqlString += "FROM " + sourceDataset + " ";
