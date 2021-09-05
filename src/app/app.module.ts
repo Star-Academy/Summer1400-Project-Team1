@@ -39,6 +39,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { FilterItemComponent } from "./pages/pipeline/sidebar/filter-processor/filter-item/filter-item.component";
+import { TableInputOutputComponent } from "./pages/pipeline/table-input-output/table-input-output.component";
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { FilterItemComponent } from "./pages/pipeline/sidebar/filter-processor/f
     JoinProcessorComponent,
     AggregateProcessorComponent,
     FilterItemComponent,
+    TableInputOutputComponent,
   ],
   imports: [
     BrowserModule,
