@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
@@ -9,14 +10,20 @@ namespace API.Filter
         private SqlHandler _sqlHandler;
         public StringBuilder StringBuilder = new StringBuilder();
         private Node _root;
-        private string _temporaryTableName = "##"+System.Guid.NewGuid();
+        private string _temporaryTableName;
         
         public ColumnFilter(SqlHandler sqlHandler,Node root)
         {
             _sqlHandler = sqlHandler;
             _root = root;
+            _temporaryTableName = RandomNameGenerator();
         }
-        
+
+        private string RandomNameGenerator()
+        {
+            return "##TableFilter" + Guid.NewGuid().ToString().Replace("-", "");
+        }
+
         //for test
         public DataTable GetConditionResult(string tableName)
         {
@@ -85,10 +92,8 @@ namespace API.Filter
             string query = CreateSelectIntoTemporaryTableQuery(_root,sourceDataset);
             
             SqlCommand command = new SqlCommand(query, _sqlHandler.Connection);
-            command.Connection.Open();
             command.ExecuteNonQuery();
-            _sqlHandler.Close();
-            
+
             return _temporaryTableName;
         }
     }
