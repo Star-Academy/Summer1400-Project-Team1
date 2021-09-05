@@ -1,9 +1,9 @@
-<mat-accordion >
-    <mat-expansion-panel [expanded]="index===0" (opened)='panelOpenState = true'
+<mat-accordion>
+    <mat-expansion-panel (opened)='panelOpenState = true'
                          (closed)='panelOpenState = false'>
 
         <mat-expansion-panel-header>
-            <mat-panel-title  >
+            <mat-panel-title>
                 <p>{{item.schema()}}</p>
             </mat-panel-title>
 
@@ -14,15 +14,15 @@
         </mat-expansion-panel-header>
 
         <div class='panel-body'>
-            <form #form="ngForm">
-                <mat-form-field   appearance="fill">
+             <form  class='form'>
+                <mat-form-field appearance="fill">
                     <mat-label>نام ستون</mat-label>
                     <input type="text"
                            aria-label="ستون"
                            matInput
                            required
                            [(ngModel)]="item.column"
-                           [formControl]="myControl"
+                           [ngModelOptions]="{standalone: true}"
                            [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let option of filteredOptions | async">
@@ -30,14 +30,16 @@
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
-                <mat-form-field class="operator-select" appearance="fill" >
+                <mat-form-field class="operator-select"
+
+                                appearance="fill">
                     <mat-label>شرط</mat-label>
                     <mat-select
                             [(value)]="item.operator"
-                                required >
+                            required>
                         <mat-option
                                 *ngFor="let operator of operators"
-                                    [value]="operator"
+                                [value]="operator"
 
                         >
                             {{operator}}
@@ -47,13 +49,13 @@
                 </mat-form-field>
 
                 <!--  <p>{{Control.value.name}}</p>-->
-                <mat-form-field  appearance="fill">
+                <mat-form-field appearance="fill">
                     <mat-label>مقدار</mat-label>
                     <input type="text"
                            aria-label="مقدار"
                            matInput
                            required
-                           [formControl]="myControl1"
+                           [ngModelOptions]="{standalone: true}"
                            [(ngModel)]="item.value"
                     >
                 </mat-form-field>
@@ -61,10 +63,10 @@
 
         </div>
     </mat-expansion-panel>
-    <section *ngIf="index!==length-1">
-        <mat-button-toggle-group [(ngModel)]="logicExp" aria-label="Font Style">
-            <mat-button-toggle value="bold">AND</mat-button-toggle>
-            <mat-button-toggle value="italic">OR</mat-button-toggle>
-        </mat-button-toggle-group>
-    </section>
+    <!--    <section *ngIf="index!==length-1">-->
+    <!--        <mat-button-toggle-group [(ngModel)]="logicExp" aria-label="Font Style">-->
+    <!--            <mat-button-toggle value="bold">AND</mat-button-toggle>-->
+    <!--            <mat-button-toggle value="italic">OR</mat-button-toggle>-->
+    <!--        </mat-button-toggle-group>-->
+    <!--    </section>-->
 </mat-accordion>

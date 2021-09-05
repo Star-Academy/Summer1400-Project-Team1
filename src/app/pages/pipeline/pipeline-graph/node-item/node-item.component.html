@@ -6,6 +6,9 @@
         <button
                 class="add-icon"
                 mat-icon-button
+                matTooltip="اضافه کردن پردازه"
+                [matTooltipShowDelay]="1000"
+                [matTooltipPosition]="'below'"
                 [ngStyle]="{ visibility: node.id === -1 ? 'hidden' : '' }"
                 (click)="openChooseProcessorDialog()"
         >

@@ -27,15 +27,15 @@ export class NodeItemComponent implements OnInit {
     destinationNode!: Dataset;
     private processorType: any;
 
-    constructor(
-        public dialog: MatDialog,
-        private pipelineService: PipelineService,
-        private snackBar: MatSnackBar
-    ) {
-    }
-
     ngOnInit(): void {
         this.nodeType = this.node.nodeType;
+    }
+
+    constructor(
+        private pipelineService: PipelineService,
+        public dialog: MatDialog,
+        private snackBar: MatSnackBar
+    ) {
     }
 
     onDeleteNode() {
@@ -167,8 +167,7 @@ export class NodeItemComponent implements OnInit {
                 new Filter()
             ]);
         } else {
-            console.log(this.node.NodeDetail);
-            this.pipelineService.currentSidebarProcessorDetail =
+             this.pipelineService.currentSidebarProcessorDetail =
                 this.node.NodeDetail || new FilterNode(Math.floor(Math.random() * 1000), []);
         }
     }

@@ -1,21 +1,51 @@
 <div class="main-wrapper">
     <section>
         <header>
-            <div class="add-filter">
-                <p>filter</p>
-                <button mat-icon-button>
-                    <img (click)="onAddFilter()" src="assets/images/add-black.svg" alt="">
+            <div class="title">
+                <p>فیلتر</p>
+            </div>
+                <button mat-icon-button
+                        matTooltip="ویرایش یا اضافه کردن فیلتر"
+                        [matTooltipPosition]="'below'"
+                        (click)="openAddFilterDialog()"
+                >
+                    <img   src="assets/images/edit.svg" alt="">
                 </button>
-            </div>
-            <div class="advance-filter">
-                <button mat-stroked-button color="primary">پیشرفته</button>
-            </div>
+
         </header>
         <div class="state-wrapper">
             <p>(age>20 AND name = hasan) OR height<6ft</p>
         </div>
 
         <main>
+<!--            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">-->
+<!--                <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>-->
+<!--                    <button mat-icon-button disabled></button>-->
+<!--                    <button mat-flat-button >{{node.item}}***</button>-->
+<!--                </mat-tree-node>-->
+
+<!--                <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>-->
+<!--                    <button mat-icon-button disabled></button>-->
+<!--                    <mat-form-field appearance="fill">-->
+<!--                        <mat-label>New item...</mat-label>-->
+<!--                        <input matInput #itemValue placeholder="Ex. Lettuce">-->
+<!--                    </mat-form-field>-->
+<!--                    <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>-->
+<!--                </mat-tree-node>-->
+
+<!--                <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>-->
+<!--                    <button mat-icon-button matTreeNodeToggle-->
+<!--                            [attr.aria-label]="'Toggle ' + node.item">-->
+<!--                        <mat-icon class="mat-icon-rtl-mirror">-->
+<!--                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}-->
+<!--                        </mat-icon>-->
+<!--                    </button>-->
+<!--                    <button mat-flat-button>{{node.item}}</button>-->
+
+<!--                    <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>-->
+<!--                </mat-tree-node>-->
+<!--            </mat-tree>-->
+
             <app-filter-item
                     *ngFor="let item of filtersList;let i = index;let l = count" [index]="i"
                     [item]="item"
@@ -29,6 +59,6 @@
         <div class='validate-wrapper'>
             <button type="submit" mat-raised-button color='primary'>اعمال</button>
         </div>
-        <button mat-stroked-button color='primary' (click)='onClose()'>لغو</button>
+        <button mat-stroked-button color='primary'>لغو</button>
     </div>
 </div>

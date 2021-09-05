@@ -1,13 +1,9 @@
 export class Filter {
     constructor(
         public id: number = 0,
-        public isLeaf: boolean =false,
-        public conditionType: number =0,
         public column: string = "",
         public operator: string = "",
         public value: string = "",
-        public childes: Filter[],
-
 
     ) {
     }

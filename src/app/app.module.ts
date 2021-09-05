@@ -39,6 +39,11 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { FilterItemComponent } from './pages/pipeline/sidebar/filter-processor/filter-item/filter-item.component';
+import {MatTreeModule} from "@angular/material/tree";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { AddFilterDialogComponent } from './pages/pipeline/sidebar/filter-processor/add-filter-dialog/add-filter-dialog.component';
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -62,7 +67,8 @@ import { FilterItemComponent } from './pages/pipeline/sidebar/filter-processor/f
     FilterProcessorComponent,
     JoinProcessorComponent,
     AggregateProcessorComponent,
-    FilterItemComponent
+    FilterItemComponent,
+    AddFilterDialogComponent
   ],
     imports: [
         BrowserModule,
@@ -82,7 +88,11 @@ import { FilterItemComponent } from './pages/pipeline/sidebar/filter-processor/f
         ReactiveFormsModule,
         MatAutocompleteModule,
         DragDropModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatTreeModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        MatMenuModule
     ],
 
   providers: [],

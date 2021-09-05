@@ -1,0 +1,54 @@
+
+.main-wrapper {
+  min-width: 45vw;
+  max-width: 80vw;
+  min-height: 25vh;
+  max-height: 85vh;
+  overflow-y: auto;
+   img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  header {
+    height: 5vh;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+
+    .close {
+      padding: .5rem;
+      border-radius: 50%;
+      cursor: pointer;
+
+      img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+
+  }
+  .add-root{
+    display: flex;
+    flex-direction:column;
+    gap:0.5rem ;
+
+    .actions{
+      display: flex;
+      gap:1rem ;
+    }
+  }
+
+  mat-menu{
+    display: flex;
+    flex-direction: column;
+  }
+  mat-tree-node{
+    margin: .5rem;
+  }
+}
