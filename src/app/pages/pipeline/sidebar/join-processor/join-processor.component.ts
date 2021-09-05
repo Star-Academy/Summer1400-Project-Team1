@@ -4,7 +4,7 @@ import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { PipelineService } from "../../../../services/pipeline.service";
 import { Join } from "../../../../models/join-node";
-import { JoinNode } from "../../../../models/graph/join-node";
+import { JoinNode } from "../../../../models/graph/processor-nodes/join-node";
 interface JoinType {
   name: string;
 }

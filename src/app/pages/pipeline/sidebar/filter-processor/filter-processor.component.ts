@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Filter } from "../../../../models/filter-node";
 import { PipelineService } from "src/app/services/pipeline.service";
-import { FilterNode } from "../../../../models/graph/filter-node";
+import { FilterNode } from "../../../../models/graph/processor-nodes/filter-node";
 
 @Component({
   selector: "app-filter-processor",

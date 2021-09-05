@@ -4,7 +4,7 @@ import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { PipelineService } from "../../../../services/pipeline.service";
 import { Aggregate } from "../../../../models/aggregate-node";
-import { AggregateNode } from "../../../../models/graph/aggregate-node";
+import { AggregateNode } from "../../../../models/graph/processor-nodes/aggregate-node";
 
 interface AggregateType {
   name: string;
