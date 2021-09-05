@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material/dialog";
-import { NodeType } from "../../../../../models/graph/node";
-import { GraphService } from "../../../../../services/graph.service";
+import { NodeType } from "../../../../models/graph/node";
+import { GraphService } from "../../../../services/graph.service";
 
 @Component({
   selector: "app-processor-dialog",

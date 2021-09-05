@@ -5,7 +5,7 @@ import { Edge } from "../models/graph/edge";
 import { SourceNode } from "../models/graph/terminal-nodes/source-node";
 import { DestinationNode } from "../models/graph/terminal-nodes/destination-node";
 import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
-import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/node-item/processor-dialog/dialog-processor-select-dialog.component";
+import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/processor-dialog/dialog-processor-select-dialog.component";
 import { DialogSelectDatasetDialog } from "../pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import { FilterNode } from "../models/graph/processor-nodes/filter-node";
 import { JoinNode } from "../models/graph/processor-nodes/join-node";
@@ -121,7 +121,10 @@ export class GraphService {
     return this.runLayout();
   }
 
-  removeNode(node: Node) {}
+  removeNode(node: Node) {
+    this.nodes = this.nodes.filter((el) => el !== node);
+    this.ogmaService.removeNode(node);
+  }
 
   removeEdge(edge: Edge) {
     this.edges = this.edges.filter((el) => el !== edge);
@@ -140,5 +143,13 @@ export class GraphService {
 
   unselectEdge(edge: Edge) {
     this.ogmaService.unSelectEdge(edge);
+  }
+
+  zoomIn() {
+    this.ogmaService.zoomIn();
+  }
+
+  zoomOut() {
+    this.ogmaService.zoomOut();
   }
 }

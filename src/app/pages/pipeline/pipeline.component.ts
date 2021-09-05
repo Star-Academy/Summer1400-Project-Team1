@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { PipelineService } from "src/app/services/pipeline.service";
 import { Subscription } from "rxjs";
 import { PipelineGraphComponent } from "./pipeline-graph/pipeline-graph.component";
-import { OgmaService } from "../../services/ogma.service";
 import { GraphService } from "../../services/graph.service";
 import { NodeType } from "../../models/graph/node";
 
@@ -26,41 +25,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
     previewHeight: 300,
     lastYPosition: 0,
   };
-  @ViewChild(PipelineGraphComponent) pipelineGraph!: PipelineGraphComponent;
   processor: string = "initial";
   processorSub!: Subscription;
 
   @ViewChild("graphContainer", { static: true })
   private container;
 
-  constructor(
-    public router: Router,
-    private pipelineService: PipelineService,
-    private graphService: GraphService
-  ) {}
+  constructor(public router: Router, private graphService: GraphService) {}
   ngOnInit(): void {
     document.onmouseup = () => {
       this.previewResize.isResizing = false;
     };
-    this.processor = this.pipelineService.currentSidebarProcessor;
-    this.processorSub =
-      this.pipelineService.currentSidebarProcessorChanged.subscribe(
-        (processor: string) => {
-          this.processor = processor;
-        }
-      );
-    this.sidebarProcessorType = this.pipelineService.currentSidebarProcessor;
-    this.pipelineService.toggleSideBar.next(this.expandSidebar);
-    this.pipelineService.toggleSideBar.subscribe((isOpen: boolean) => {
-      this.expandSidebar = isOpen;
-      // this.sidebarProcessorType=expandSidebar.processorType;
-    });
-    this.sidebarProcessorTypeSub =
-      this.pipelineService.currentSidebarProcessorChanged.subscribe(
-        (type: string) => {
-          this.sidebarProcessorType = type;
-        }
-      );
   }
 
   editPipelineName(ngForm: NgForm) {
@@ -84,16 +59,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
   toggleSidebar() {
     this.expandSidebar = !this.expandSidebar;
     //TODO empty side bar
-    this.pipelineService.toggleSideBar.next(this.expandSidebar);
   }
 
   ngOnDestroy(): void {
     this.sidebarProcessorTypeSub.unsubscribe();
     this.processorSub.unsubscribe();
-  }
-
-  openChooseProcessorDialog() {
-    this.pipelineGraph.onNoDestinationAddNode();
   }
 
   get selectedNode() {
@@ -102,9 +72,5 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   get NodeType() {
     return NodeType;
-  }
-
-  ngAfterContentInit(): void {
-    this.graphService.constructGraph(this.container.nativeElement);
   }
 }

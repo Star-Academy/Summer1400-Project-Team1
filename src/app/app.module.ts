@@ -20,15 +20,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
 import { AddNewConnectionComponent } from "./pages/dashboard/connections/add-new-connection/add-new-connection.component";
-import { NodeItemComponent } from "./pages/pipeline/pipeline-graph/node-item/node-item.component";
-import { DialogProcessorSelectDialog } from "./pages/pipeline/pipeline-graph/node-item/processor-dialog/dialog-processor-select-dialog.component";
+import { DialogProcessorSelectDialog } from "./pages/pipeline/pipeline-graph/processor-dialog/dialog-processor-select-dialog.component";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 import { DialogSelectDatasetDialog } from "./pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import { PipelineGraphComponent } from "./pages/pipeline/pipeline-graph/pipeline-graph.component";
-import { AddNewOperationComponent } from "./pages/pipeline/add-new-operation/add-new-operation.component";
 import { PipelinesComponent } from "./pages/dashboard/pipelines/pipelines.component";
 import { SidebarComponent } from "./pages/pipeline/sidebar/sidebar.component";
 import { FilterProcessorComponent } from "./pages/pipeline/sidebar/filter-processor/filter-processor.component";
@@ -52,9 +50,7 @@ import { TableInputOutputComponent } from "./pages/pipeline/table-input-output/t
     DatasetItemComponent,
     AddNewDatasetComponent,
     AddNewConnectionComponent,
-    AddNewOperationComponent,
     AddNewConnectionComponent,
-    NodeItemComponent,
     DialogProcessorSelectDialog,
     DialogSelectDatasetDialog,
     PipelineGraphComponent,

@@ -117,6 +117,11 @@ export class OgmaService {
         innerStroke: {
           width: 4,
         },
+        badges: {
+          topRight: {
+            color: "#fff",
+          },
+        },
       },
       true
     );
@@ -186,7 +191,9 @@ export class OgmaService {
     this.ogma.addEdge(ogmaEdge);
   }
 
-  removeNode(node: Node) {}
+  removeNode(node: Node) {
+    this.ogma.removeNode(node.id);
+  }
 
   removeEdge(edge: Edge) {
     this.ogma.removeEdge(edge.id);
@@ -194,5 +201,13 @@ export class OgmaService {
 
   unSelectEdge(edge: Edge) {
     this.ogma.getEdge(edge.id).setSelected(false);
+  }
+
+  zoomIn() {
+    this.ogma.view.zoomIn();
+  }
+
+  zoomOut() {
+    this.ogma.view.zoomOut();
   }
 }

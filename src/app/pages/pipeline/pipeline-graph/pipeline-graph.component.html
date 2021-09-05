@@ -1,46 +1,11 @@
-
-
-<div class='pipeline-graph-wrapper '
-
-     [ngClass]="{'side-menu-open':isSideBarOpen}">
-    <div *ngIf="!hasSourceNode" class='start-node-wrapper'>
-        <button class='node'
-                mat-stroked-button (click)='onSourceNodeClick("source")'>
-            منبع ورودی +
-        </button>
-    </div>
-    <app-node-item *ngFor='let nodeItem of nodes;let i =index'
-                   [node]='nodeItem'
-                   [index]='i'
-                   [nodesLength]='nodes.length'
-                   (deleteNode)='deleteNode($event)'
-                   (addNode)='addNode($event)'
-
-    >
-        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-    </app-node-item>
-
-    <div *ngIf="!hasDestinationNode" class='end-node-wrapper'>
-        <div class="edge">
-            <div class="arrow-icon">
-                <img src="assets/images/left-arrow.svg" alt=" "/>
-            </div>
-            <button
-                    class="add-icon"
-                    mat-icon-button
-                    (click)="onNoDestinationAddNode()"
-            >
-                <img src="assets/images/add-black.svg" alt=" "/>
-            </button>
-            <div class="arrow-icon">
-                <img src="assets/images/left-arrow.svg" alt=" "/>
-            </div>
-        </div>
-
-        <button class='node'
-                mat-stroked-button (click)='onSourceNodeClick("destination")'>
-            منبع خروجی +
-        </button>
-    </div>
+<div class="zoom-buttons">
+    <button mat-mini-fab color="accent" (click)="zoomIn()">
+        <mat-icon>add</mat-icon>
+    </button>
+    <button mat-mini-fab color="accent" (click)="zoomOut()">
+        <mat-icon>remove</mat-icon>
+    </button>
+</div>
+<div #graphContainer id="graphContainer">
 
 </div>
