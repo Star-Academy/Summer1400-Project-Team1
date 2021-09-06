@@ -4,6 +4,12 @@ using API.Models;
 
 namespace API
 {
+    enum ComponentType
+    {
+        Aggregation,
+        Filter,
+        Join
+    }
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
