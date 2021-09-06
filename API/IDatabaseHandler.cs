@@ -12,7 +12,7 @@ namespace API
         List<string> GetDatabases(int connectionId);
         List<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
-        void AddSqlDataset(int connectionId, string databaseName, string tableName);
+        void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
         void AddCsvDataset(string pathToCsv);
         string GetCsvDataset(int datasetId);
         List<PipelineModel> GetPipelines();

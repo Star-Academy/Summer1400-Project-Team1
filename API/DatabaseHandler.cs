@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using API.Models;
+using API.SqlIOHandler;
+using Microsoft.Data.SqlClient;
 
 namespace API
 {
@@ -13,6 +17,7 @@ namespace API
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
+        private readonly ILinkedServerHandler _linkedServerHandler;
 
         public DatabaseHandler(ApiContext apiContext)
         {
@@ -31,23 +36,14 @@ namespace API
 
         public int AddConnection(string name, string server, string username, string password)
         {
-            var connection = new ConnectionModel()
+            var newConnection = new ConnectionModel()
             {
                 Name = name, Server = server, Username = username, Password = password
             };
-            _context.Connection.Add(connection);
+            _context.Connection.Add(newConnection);
             _context.SaveChanges();
-            connection.BuildConnectionString();
-            using var sourceServer = new SqlConnection(connection.ConnectionString);
-            try
-            {
-                sourceServer.Open();
-                return connection.Id;
-            }
-            catch (SqlException)
-            {
-                return 0;
-            }
+            newConnection.BuildConnectionString();
+            return newConnection.Id;
         }
 
         public List<string> GetDatabases(int connectionId)
@@ -63,8 +59,7 @@ namespace API
 
         public List<string> GetTables(int connectionId, string databaseName)
         {
-            var connectionStringToDatabase = _context.Connection.Find(connectionId).ConnectionString +
-                                             $"Database={databaseName};";
+            var connectionStringToDatabase = _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
             using var sourceConnection = new SqlConnection(connectionStringToDatabase);
             sourceConnection.Open();
             var tables = sourceConnection.GetSchema("Tables");
@@ -76,10 +71,10 @@ namespace API
 
         public List<DatasetModel> GetDatasets()
         {
-            throw new NotImplementedException();
+            return _context.Dataset.ToList();
         }
 
-        public void AddSqlDataset(int connectionId, string databaseName, string tableName)
+        public void AddSqlDataset(string datasetName,int connectionId, string databaseName, string tableName)
         {
             var server = _context.Connection.Find(connectionId).Server;
             var username = _context.Connection.Find(connectionId).Username;
@@ -87,6 +82,11 @@ namespace API
             _linkedServerHandler.AddLinkedServer(server,username,password);
             _linkedServerHandler.ImportToNewTable(server,databaseName,tableName);
             _linkedServerHandler.DropLinkedServer(server);
+            _context.Dataset.Add(new DatasetModel()
+            {
+                Connection = _context.Connection.Find(connectionId), Name = datasetName,
+                DateCreated = DateTime.Now
+            });
         }
 
         public void AddCsvDataset(string pathToCsv)
