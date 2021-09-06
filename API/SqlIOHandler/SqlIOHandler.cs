@@ -49,30 +49,7 @@ namespace API.SqlIOHandler
             
             return tablesName;
         }
-
-        public void ImportToNewTable(string sourceServer, string sourceDataBase, string sourceTable)
-        {
-            _linkedServerHandler.AddLinkedServer(sourceServer);
-            _linkedServerHandler.ImportToNewTable(sourceServer,sourceDataBase,sourceTable);
-            _linkedServerHandler.DropLinkedServer(sourceServer);
-            
-        }
         
-        public void ExportToNewTable(string desServer, string desDataBase,string desTable, string sourceTable)
-        {
-            _linkedServerHandler.AddLinkedServer(desServer);
-            _linkedServerHandler.ExportToNewTable(desServer,desDataBase,desTable,sourceTable);
-            _linkedServerHandler.DropLinkedServer(desServer);
-            
-        }
-        
-        public void ExportToSelectedTable(string desServer, string desDataBase,string desTable, string sourceTable)
-        {
-            _linkedServerHandler.AddLinkedServer(desServer);
-            _linkedServerHandler.ExportDataToSelectedTable(desServer,desDataBase,desTable,sourceTable);
-            _linkedServerHandler.DropLinkedServer(desServer);
-            
-        }
 
     }
 }
