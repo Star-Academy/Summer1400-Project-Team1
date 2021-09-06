@@ -8,13 +8,6 @@ namespace API.SqlIOHandler
 {
     public class SqlIOHandler : ISqlIOHandler
     {
-        private readonly ApiContext _apiContext;
-
-        public SqlIOHandler(ApiContext apiContext)
-        {
-            _apiContext = apiContext;
-        }
-
         public bool AddConnection(string sourceConnectionString)
         {
             using var sourceServer = new SqlConnection(sourceConnectionString);
