@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using API.Models;
 
 namespace API
 {
     enum ComponentType
     {
-        Aggregation,
-        Filter,
-        Join
+        Aggregation = 0,
+        Filter = 1,
+        Join = 2
     }
     public class DatabaseHandler : IDatabaseHandler
     {
@@ -84,9 +85,27 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public void AddFilterComponent(int pipelineId, FilterModel filterModel, int orderId)
+        public void AddFilterComponent(int pipelineId, string body,string name, int orderId)
         {
-            throw new NotImplementedException();
+            var newFilterComponent = new FilterModel()
+            {
+                Query = body
+            };
+
+            _context.FilterComponent.Add(newFilterComponent);
+            _context.SaveChanges();
+            var filterId = newFilterComponent.Id;
+            
+            var newComponentModel = new ComponentModel()
+            {
+                Name = name,
+                Type = (int)ComponentType.Filter,
+                OrderId = orderId,
+                RelatedComponentId = filterId
+            };
+            
+            _context.Pipeline.Find(pipelineId).Components.Add(newComponentModel);
+
         }
 
         public void AddJoinComponent(int pipelineId, JoinModel joinModel, int orderId)
@@ -106,7 +125,7 @@ namespace API
 
         public FilterModel GetFilterComponent(int componentId)
         {
-            throw new NotImplementedException();
+            return _context.FilterComponent.Find(componentId);
         }
 
         public JoinModel GetJoinComponent(int componentId)

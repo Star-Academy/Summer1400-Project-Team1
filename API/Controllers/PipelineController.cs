@@ -7,6 +7,12 @@ namespace API.Controllers
     [Route("api/v1/[controller]")]
     public class PipelineController : ControllerBase
     {
+        private DatabaseHandler _handler;
+        public PipelineController(DatabaseHandler databaseHandler)
+        {
+            _handler = databaseHandler;
+        }
+        
         [HttpGet]
         public IActionResult Get()
         {
@@ -40,6 +46,7 @@ namespace API.Controllers
         
         void AddFilter(int pipelineId, int orderId,string name, string body)
         {
+            _handler.AddFilterComponent(pipelineId,body,name,orderId);
         }
         
         void AddJoin(int pipelineId, int orderId,string name, string body)
