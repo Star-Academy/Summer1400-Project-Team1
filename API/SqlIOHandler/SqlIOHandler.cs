@@ -2,19 +2,20 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using API.Models;
 
 namespace API.SqlIOHandler
 {
     public class SqlIOHandler : ISqlIOHandler
     {
-        private readonly ILinkedServerHandler _linkedServerHandler;
+        private readonly ApiContext _apiContext;
 
-        public SqlIOHandler(ILinkedServerHandler linkedServerHandler)
+        public SqlIOHandler(ApiContext apiContext)
         {
-            _linkedServerHandler = linkedServerHandler;
+            _apiContext = apiContext;
         }
 
-        public bool IsServerConnected(string sourceConnectionString)
+        public bool AddConnection(string sourceConnectionString)
         {
             using var sourceServer = new SqlConnection(sourceConnectionString);
             try

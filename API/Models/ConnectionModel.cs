@@ -14,7 +14,11 @@ namespace API.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public DateTime DateCreated { get; set; }
-        
-        
+        public string ConnectionString { get; set; }
+
+        public void BuildConnectionString()
+        {
+            ConnectionString = $"Server={Server};User Id={Username}; Password={Password};";
+        }
     }
 }

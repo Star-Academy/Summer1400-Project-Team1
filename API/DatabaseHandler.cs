@@ -1,41 +1,77 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using API.Models;
+using API.SqlIOHandler;
+using Microsoft.Data.SqlClient;
 
 namespace API
 {
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
+        private readonly ILinkedServerHandler _linkedServerHandler;
 
-        public DatabaseHandler(ApiContext apiContext)
+        public DatabaseHandler(ApiContext apiContext, ILinkedServerHandler linkedServerHandler)
         {
             _context = apiContext;
+            _linkedServerHandler = linkedServerHandler;
         }
 
         public List<ConnectionModel> GetConnections()
         {
-            throw new NotImplementedException();
+            return _context.Connection.ToList();
         }
 
         public ConnectionModel GetConnection(int connectionId)
         {
-            throw new NotImplementedException();
+            return _context.Connection.Find(connectionId);
         }
 
         public int AddConnection(string name, string server, string username, string password)
         {
-            throw new NotImplementedException();
+            var connection = new ConnectionModel()
+            {
+                Name = name, Server = server, Username = username, Password = password
+            };
+            _context.Connection.Add(connection);
+            _context.SaveChanges();
+            connection.BuildConnectionString();
+            using var sourceServer = new SqlConnection(connection.ConnectionString);
+            try
+            {
+                sourceServer.Open();
+                return connection.Id;
+            }
+            catch (SqlException)
+            {
+                return 0;
+            }
         }
 
-        public Dictionary<int, string> GetDatabases(int connectionId)
+        public List<string> GetDatabases(int connectionId)
         {
-            throw new NotImplementedException();
+            using var sourceConnection = new SqlConnection(_context.Connection.Find(connectionId).ConnectionString);
+            sourceConnection.Open();
+            var databases = sourceConnection.GetSchema("Databases");
+            var databasesName = (from DataRow database in databases.Rows 
+                select database.Field<string>("database_name")).ToList();
+            
+            return databasesName;
         }
 
-        public Dictionary<int, string> GetTables(int connectionId, int databaseId)
+        public List<string> GetTables(int connectionId, string databaseName)
         {
-            throw new NotImplementedException();
+            var connectionStringToDatabase = _context.Connection.Find(connectionId).ConnectionString +
+                                             $"Database={databaseName};";
+            using var sourceConnection = new SqlConnection(connectionStringToDatabase);
+            sourceConnection.Open();
+            var tables = sourceConnection.GetSchema("Tables");
+            var tablesName = (from DataRow table in tables.Rows 
+                select table.Field<string>("TABLE_NAME")).ToList();
+            
+            return tablesName;
         }
 
         public List<DatasetModel> GetDatasets()
@@ -43,9 +79,14 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public void AddSqlDataset(int connectionId, int databaseId, int tableId)
+        public void AddSqlDataset(int connectionId, string databaseName, string tableName)
         {
-            throw new NotImplementedException();
+            var server = _context.Connection.Find(connectionId).Server;
+            var username = _context.Connection.Find(connectionId).Username;
+            var password = _context.Connection.Find(connectionId).Password;
+            _linkedServerHandler.AddLinkedServer(server,username,password);
+            _linkedServerHandler.ImportToNewTable(server,databaseName,tableName);
+            _linkedServerHandler.DropLinkedServer(server);
         }
 
         public void AddCsvDataset(string pathToCsv)
