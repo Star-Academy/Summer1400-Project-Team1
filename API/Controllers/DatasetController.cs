@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using API.Filter;
-using API.Models;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
@@ -14,6 +7,27 @@ namespace API.Controllers
     [Route("api/v1/[controller]")]
     public class DatasetController : ControllerBase
     {
-        
+        private readonly IDatabaseHandler _databaseHandler;
+
+        public DatasetController(IDatabaseHandler databaseHandler)
+        {
+            _databaseHandler = databaseHandler;
+        }
+
+        [HttpGet]
+        public IActionResult GetDatasets()
+        {
+            var datasets = _databaseHandler.GetDatasets().ToList();
+            return Ok(datasets);
+        }
+
+        [HttpPost]
+        [Route("sql")]
+        public IActionResult AddSqlDataset(string name, int connectionId, 
+            string databaseName, string tableName)
+        {
+            _databaseHandler.AddSqlDataset(name,connectionId,databaseName,tableName);
+            return Ok();
+        }
     }
 }
