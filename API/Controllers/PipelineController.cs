@@ -7,6 +7,12 @@ namespace API.Controllers
     [Route("api/v1/[controller]")]
     public class PipelineController : ControllerBase
     {
+        private DatabaseHandler _handler;
+        public PipelineController(DatabaseHandler databaseHandler)
+        {
+            _handler = databaseHandler;
+        }
+        
         [HttpGet]
         public IActionResult Get()
         {
@@ -34,37 +40,38 @@ namespace API.Controllers
             Console.WriteLine("id is :"+id);
         }
 
-        void AddAggregate(int pipelineId, int orderId, string body)
+        void AddAggregate(int pipelineId, int orderId,string name, string body)
         {
         }
         
-        void AddFilter(int pipelineId, int orderId, string body)
+        void AddFilter(int pipelineId, int orderId,string name, string body)
         {
+            _handler.AddFilterComponent(pipelineId,body,name,orderId);
         }
         
-        void AddJoin(int pipelineId, int orderId, string body)
+        void AddJoin(int pipelineId, int orderId,string name, string body)
         {
         }
 
         [HttpPost]
         [Route("{id}/component")]
-        public void PostComponent(int id,string type, int index)
+        public void PostComponent(int id,string type, int index,string name)
         {
             switch (type)
             {
                 case "join":
                 {
-                    AddJoin(id,index,Response.Body.ToString());
+                    AddJoin(id,index,name,Response.Body.ToString());
                     break;
                 }
                 case "aggregate":
                 {
-                    AddAggregate(id,index,Response.Body.ToString());
+                    AddAggregate(id,index,name,Response.Body.ToString());
                     break;
                 }
                 case "filter":
                 {
-                    AddFilter(id,index,Response.Body.ToString());
+                    AddFilter(id,index,name,Response.Body.ToString());
                     break;
                 }
             }

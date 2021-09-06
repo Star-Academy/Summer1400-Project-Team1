@@ -19,7 +19,7 @@ namespace API
         int AddPipeline(string name);
         List<ComponentModel> GetComponents(int pipelineId);
         void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId);
-        void AddFilterComponent(int pipelineId, FilterModel filterModel, int orderId);
+        void AddFilterComponent(int pipelineId, string body,string name, int orderId);
         void AddJoinComponent(int pipelineId, JoinModel joinModel, int orderId);
         Tuple<int,int> GetComponent(int pipelineId, int orderId);
         AggregationModel GetAggregateComponent(int componentId);
