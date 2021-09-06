@@ -1,13 +1,30 @@
-
 .main-wrapper {
   min-width: 45vw;
   max-width: 80vw;
   min-height: 25vh;
   max-height: 85vh;
   overflow-y: auto;
-   img {
+  position: relative;
+  padding: 1rem;
+
+  img {
     width: 2rem;
     height: 2rem;
+  }
+
+  .save {
+    background-color: var(--color-gray-95);
+  }
+  .cancel {
+    background-color: var(--color-gray-95);
+  }
+  .save_cancel {
+    display: flex;
+    gap: 2rem;
+    position: absolute;
+
+    left: 0;
+    margin-left: 1rem;
   }
 
   header {
@@ -19,10 +36,8 @@
     align-items: center;
     justify-content: space-between;
 
-
-
     .close {
-      padding: .5rem;
+      padding: 0.5rem;
       border-radius: 50%;
       cursor: pointer;
 
@@ -31,24 +46,23 @@
         height: 1.5rem;
       }
     }
-
   }
-  .add-root{
+  .add-root {
     display: flex;
-    flex-direction:column;
-    gap:0.5rem ;
+    flex-direction: column;
+    gap: 0.5rem;
 
-    .actions{
+    .actions {
       display: flex;
-      gap:1rem ;
+      gap: 1rem;
     }
   }
 
-  mat-menu{
+  mat-menu {
     display: flex;
     flex-direction: column;
   }
-  mat-tree-node{
-    margin: .5rem;
+  mat-tree-node {
+    margin: 0.5rem;
   }
 }
