@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Filter} from "../../../../../modals/filter-node";
-import {FormControl, Validators} from "@angular/forms";
+import {FormControl, NgForm, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {map, startWith} from "rxjs/operators";
 
@@ -10,9 +10,11 @@ import {map, startWith} from "rxjs/operators";
   styleUrls: ['./filter-item.component.scss']
 })
 export class FilterItemComponent implements OnInit {
+  @ViewChild('form', {static: false}) form!: NgForm;
   @Input() index!: number;
   @Input() length!: number;
   @Input() item!: Filter;
+  @Output() applyChangesEvent= new EventEmitter<Filter>();
 
   panelOpenState: boolean = true;
 
@@ -22,7 +24,7 @@ export class FilterItemComponent implements OnInit {
   myControl1 = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
 
-  operators =[">","<","=="];
+  operators =[">","<","="];
   filteredOptions!: Observable<string[]>;
 
   logicExp?: string;
@@ -44,6 +46,13 @@ export class FilterItemComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
   onDelete() {
+
+  }
+
+  //TODO validity check
+  onSubmit() {
+
+    this.applyChangesEvent.emit(this.item)
 
   }
 }

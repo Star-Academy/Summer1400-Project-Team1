@@ -1,33 +1,47 @@
 
 
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import { Dataset } from "../modals/dataset";
 import { Node, NodeType } from "../modals/node";
 import {Pipeline, PipelineRow} from "../modals/pipeline";
-import {Filter, FilterNode} from "../modals/filter-node";
+import {ConditionType, Filter,   Operator} from "../modals/filter-node";
 import {Join, JoinNode} from "../modals/join-node";
 import {Aggregate, AggregateNode} from "../modals/aggregate-node";
+
+
 
 @Injectable({
   providedIn: "root",
 })
 export class PipelineService {
 
-
-
   nodesTemp: Node[] = [
     new Node(-1, "دیتاست مبدا", NodeType.SOURCE_LOCAL),
-    new Node(1, "filter", NodeType.FILTER,new FilterNode(1,[
-        new Filter(1,"1",">","2"),
-        new Filter(2,"2","==","5"),
-        new Filter(5,"3","<","45"),
-      new Filter(2,"4","==","5"),
-        new Filter(5,"5","<","45"),
-    ])),
-    new Node(4, "filter2", NodeType.FILTER,new FilterNode(2,[
-      new Filter(3,"c","<","20"),
-     ])),
+    new Node(1, "filter", NodeType.FILTER, new Filter(0,
+        ConditionType.AND, [
+          new Filter(0, ConditionType.OR, [
+            new Filter(1, undefined, undefined, "age", Operator.LESS_THAN, "100"),
+            new Filter(2, undefined, undefined, "weight", Operator.LESS_THAN, "50"),
+          ]),
+          new Filter(0, ConditionType.OR, [
+            new Filter(0, undefined, undefined, "ff", Operator.LESS_THAN, "100s"),
+            new Filter(0, undefined, undefined, "wefffight", Operator.LESS_THAN, "5d0"),
+          ]),
+        ])
+    ),
+    new Node(4, "filter2", NodeType.FILTER, new Filter(0,
+        ConditionType.OR, [
+          new Filter(0, ConditionType.AND, [
+            new Filter(1, undefined, undefined, "zzz", Operator.LESS_THAN, "100"),
+            new Filter(2, undefined, undefined, "ccc", Operator.LESS_THAN, "50"),
+          ]),
+          new Filter(0, ConditionType.AND, [
+            new Filter(0, undefined, undefined, "qqq", Operator.LESS_THAN, "100s"),
+            new Filter(0, undefined, undefined, "rrr", Operator.LESS_THAN, "5d0"),
+          ]),
+        ])
+    ),
     new Node(2, "join", NodeType.JOIN,new JoinNode(1,[
         new Join(1,new Dataset(),"Inner join","q"),
       new Join(2,new Dataset(),"Outer join","p"),
@@ -50,9 +64,9 @@ export class PipelineService {
   private _hasSourceNode: boolean = false;
   private _hasDestinationNode: boolean = false;
   private _currentSidebarProcessor:string = "initial";
-  private _currentSidebarProcessorDetail!:FilterNode|JoinNode|AggregateNode ;
+  private _currentSidebarProcessorDetail!:Filter|JoinNode|AggregateNode ;
   currentSidebarProcessorChanged = new Subject<string>();
-  currentSidebarProcessorDetailChanged = new Subject<FilterNode|JoinNode|AggregateNode>(); //
+  currentSidebarProcessorDetailChanged = new BehaviorSubject<Filter|JoinNode|AggregateNode>(this.currentSidebarProcessorDetail); //
   nodesChanged = new Subject<Node[]>();
   hasSourceNodeChanged = new Subject<boolean>();
   hasDestinationNodeChanged = new Subject<boolean>();
@@ -70,11 +84,11 @@ export class PipelineService {
   pipelineChanged = new Subject<Pipeline[]>();
   pipelineRowsChanged = new Subject<PipelineRow[]>();
 
-  get currentSidebarProcessorDetail(): FilterNode | JoinNode | AggregateNode {
+  get currentSidebarProcessorDetail(): Filter | JoinNode | AggregateNode {
     return this._currentSidebarProcessorDetail;
   }
 
-  set currentSidebarProcessorDetail(value: FilterNode | JoinNode | AggregateNode) {
+  set currentSidebarProcessorDetail(value: Filter | JoinNode | AggregateNode) {
     this._currentSidebarProcessorDetail = value;
     this.currentSidebarProcessorDetailChanged.next(value);
   }

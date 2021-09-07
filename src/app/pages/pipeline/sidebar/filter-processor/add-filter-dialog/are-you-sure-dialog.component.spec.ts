@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddFilterDialogComponent } from './add-filter-dialog.component';
+import { AreYouSureDialog } from './are-you-sure-dialog.component';
 
 describe('AddFilterDialogComponent', () => {
-  let component: AddFilterDialogComponent;
-  let fixture: ComponentFixture<AddFilterDialogComponent>;
+  let component: AreYouSureDialog;
+  let fixture: ComponentFixture<AreYouSureDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddFilterDialogComponent ]
+      declarations: [ AreYouSureDialog ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddFilterDialogComponent);
+    fixture = TestBed.createComponent(AreYouSureDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

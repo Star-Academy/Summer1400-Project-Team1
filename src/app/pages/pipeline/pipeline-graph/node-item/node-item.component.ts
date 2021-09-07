@@ -7,9 +7,9 @@ import {Dataset} from "src/app/modals/dataset";
 import {PipelineService} from "src/app/services/pipeline.service";
 import {Alert} from "src/app/utils/alert";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Filter, FilterNode} from "src/app/modals/filter-node";
-import {Join, JoinNode} from "../../../../modals/join-node";
+ import {Join, JoinNode} from "../../../../modals/join-node";
 import {Aggregate, AggregateNode} from "../../../../modals/aggregate-node";
+import {Filter} from "../../../../modals/filter-node";
 
 @Component({
     selector: "app-node-item",
@@ -163,12 +163,10 @@ export class NodeItemComponent implements OnInit {
         this.pipelineService.toggleSideBar.next(true);
         this.pipelineService.currentSidebarProcessor = "filter"
         if (isNew) {
-            this.pipelineService.currentSidebarProcessorDetail = new FilterNode(Math.floor(Math.random() * 1000), [
-                new Filter()
-            ]);
+            this.pipelineService.currentSidebarProcessorDetail = new Filter(-1);
         } else {
              this.pipelineService.currentSidebarProcessorDetail =
-                this.node.NodeDetail || new FilterNode(Math.floor(Math.random() * 1000), []);
+                this.node.NodeDetail || new Filter(-1);
         }
     }
 }

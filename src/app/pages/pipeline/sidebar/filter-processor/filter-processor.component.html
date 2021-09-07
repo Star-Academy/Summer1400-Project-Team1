@@ -4,53 +4,101 @@
             <div class="title">
                 <p>فیلتر</p>
             </div>
-                <button mat-icon-button
-                        matTooltip="ویرایش یا اضافه کردن فیلتر"
-                        [matTooltipPosition]="'below'"
-                        (click)="openAddFilterDialog()"
-                >
-                    <img   src="assets/images/edit.svg" alt="">
-                </button>
+
 
         </header>
-        <div class="state-wrapper">
-            <p>(age>20 AND name = hasan) OR height<6ft</p>
+        <div *ngIf="!isEmpty && !isSingleFilter" class="state-wrapper">
+                <div [innerHTML]="stateString"></div>
+        </div>
+        <div *ngIf="!isEmpty && isSingleFilter" class="add-logic-wrapper">
+            <p>اضافه کردن فیلتر با منطق:</p>
+            <div class="actions">
+                <button mat-stroked-button color="primary" (click)="addRoot('AND')">AND</button>
+                <button mat-stroked-button color="accent" (click)="addRoot('OR')">OR</button>
+            </div>
         </div>
 
         <main>
-<!--            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">-->
-<!--                <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>-->
-<!--                    <button mat-icon-button disabled></button>-->
-<!--                    <button mat-flat-button >{{node.item}}***</button>-->
-<!--                </mat-tree-node>-->
+            <div *ngIf="isEmpty" class="empty-tree-action">
+                <h2>فیلتری وجود ندارد</h2>
 
-<!--                <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>-->
-<!--                    <button mat-icon-button disabled></button>-->
-<!--                    <mat-form-field appearance="fill">-->
-<!--                        <mat-label>New item...</mat-label>-->
-<!--                        <input matInput #itemValue placeholder="Ex. Lettuce">-->
-<!--                    </mat-form-field>-->
-<!--                    <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>-->
-<!--                </mat-tree-node>-->
+                    <button mat-stroked-button (click)="createRoot('FILTER')">
+                    اضافه کردن فیلتر
+                    <img src="assets/images/add-black.svg" alt="">
+                </button>
 
-<!--                <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>-->
-<!--                    <button mat-icon-button matTreeNodeToggle-->
-<!--                            [attr.aria-label]="'Toggle ' + node.item">-->
-<!--                        <mat-icon class="mat-icon-rtl-mirror">-->
-<!--                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}-->
-<!--                        </mat-icon>-->
-<!--                    </button>-->
-<!--                    <button mat-flat-button>{{node.item}}</button>-->
+                <h2>یا</h2>
+                <h2>انتخاب منطق اولیه</h2>
+                <div class="actions">
+                    <button mat-stroked-button (click)="createRoot('AND')">
+                        AND
+                    </button>
+                    <button mat-stroked-button (click)="createRoot('OR')">
+                        OR
+                    </button>
+                </div>
+            </div>
+            <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" class="filter-tree">
+                <mat-tree-node *matTreeNodeDef="let filter " matTreeNodeToggle>
+                    <app-filter-item
+                            *ngIf="filter.id !==-1"
+                             [item]="filter"
+                            [length]="2"
+                            (applyChangesEvent)="applyChanges($event,filter)"
+                    ></app-filter-item>
+                </mat-tree-node>
+                <mat-nested-tree-node *matTreeNodeDef="let filter; when: hasChild ">
+                         <div class="mat-tree-node">
+                            <button mat-icon-button matTreeNodeToggle
+                            >
+                                <mat-icon class="mat-icon-rtl-mirror">
+                                    {{treeControl.isExpanded(filter) ? 'expand_more' : 'chevron_right'}}
+                                </mat-icon>
+                            </button>
+                            <button mat-stroked-button [color]="filter.conditionType==='AND'?'primary':
+                              filter.conditionType==='OR'?'accent'
+                              :undefined">{{filter.conditionType}}</button>
 
-<!--                    <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>-->
-<!--                </mat-tree-node>-->
-<!--            </mat-tree>-->
+                            <button mat-icon-button
+                                    matTooltip="اضافه کردن فیلتر"
+                                    [matTooltipPosition]="'below'"
+                                    [matTooltipShowDelay]="1000"
+                                    (click)="onAddFilter(filter)"
+                            >
+                                <img src="assets/images/filter.svg" alt="">
+                            </button>
+                            <button mat-icon-button
+                                    matTooltip="اضافه کردن منطق"
+                                    [matTooltipPosition]="'below'"
+                                    [matTooltipShowDelay]="1000"
+                                    [matMenuTriggerFor]="menu">
+                                <img src="assets/images/add-black.svg" alt="">
+                            </button>
+                            <mat-menu #menu="matMenu" yPosition="above">
+                                <button mat-menu-item (click)="addParentFilter(filter,'AND')">
+                                    <mat-icon>add</mat-icon>
+                                    <span>AND</span>
+                                </button>
+                                <button mat-menu-item (click)="addParentFilter(filter,'OR')">
+                                    <mat-icon>add</mat-icon>
+                                    <span>OR</span>
+                                </button>
+                            </mat-menu>
+                            <button mat-icon-button (click)="onDeleteParentFilter(filter)">
+                                <img src="assets/images/delete.svg" alt="">
+                            </button>
 
-            <app-filter-item
-                    *ngFor="let item of filtersList;let i = index;let l = count" [index]="i"
-                    [item]="item"
-                    [length]="l"
-            ></app-filter-item>
+
+                        </div>
+
+                        <div [class.filter-tree-invisible]="!treeControl.isExpanded(filter)"
+                             role="group">
+                            <ng-container matTreeNodeOutlet></ng-container>
+                        </div>
+
+                </mat-nested-tree-node>
+            </mat-tree>
+
 
         </main>
     </section>

@@ -1,9 +1,13 @@
 mat-accordion {
+  .mat-expansion-panel-body{
+    width: 25rem !important;
+  }
   .form {
     width: 100%;
     display: flex;
     flex-direction: column;
      font-size: 1.5rem;
+
 
   }
 }
@@ -35,22 +39,3 @@ img {
 
 }
 
-//section {
-//  display: flex;
-//  align-items: center;
-//  justify-content: center;
-//
-//  mat-button-toggle-group {
-//    height: 3rem;
-//    display: flex;
-//    margin-top:.5rem;
-//    align-items: center;
-//    justify-content: center;
-//
-//
-//    .mat-button-toggle-checked {
-//      background: hsla(6, 75%, 88%, 1);
-//     }
-//  }
-//
-//}

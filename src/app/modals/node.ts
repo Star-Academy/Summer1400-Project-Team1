@@ -1,4 +1,4 @@
-import {FilterNode} from "./filter-node";
+import {Filter } from "./filter-node";
 import {JoinNode} from "./join-node";
 import {AggregateNode} from "./aggregate-node";
 
@@ -18,6 +18,6 @@ export class Node{
         public id:number,
         public name:string,
         public nodeType:NodeType,
-        public NodeDetail?:FilterNode|JoinNode|AggregateNode
+        public NodeDetail?:Filter|JoinNode|AggregateNode
      ){}
 }

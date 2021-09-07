@@ -1,4 +1,3 @@
-
 @use '~@angular/material' as mat;
 
 @include mat.core();
@@ -38,17 +37,17 @@ $finalProject-theme: mat.define-light-theme(
   --color-bg-destination: hsla(0, 0%, 27%, .3);
   --color-border-destination: hsla(0, 0%, 27%, .8);
 
-  --color-bg-filter:hsla(178, 46%, 67%, 0.5);
-  --color-border-filter:hsla(178, 46%, 67%, 1);
-  --color-sidebar-filter:hsla(178, 46%, 90%, 1);
+  --color-bg-filter: hsla(178, 46%, 67%, 0.5);
+  --color-border-filter: hsla(178, 46%, 67%, 1);
+  --color-sidebar-filter: hsla(178, 46%, 90%, 1);
 
-  --color-bg-join:hsla(209, 78%, 35%, .3) ;
-  --color-border-join:hsla(209, 78%, 35%, 1);
-  --color-sidebar-join:hsla(209, 78%, 90%, 1);
+  --color-bg-join: hsla(209, 78%, 35%, .3);
+  --color-border-join: hsla(209, 78%, 35%, 1);
+  --color-sidebar-join: hsla(209, 78%, 90%, 1);
 
-  --color-bg-aggregate:hsla(196, 67%, 45%, .3);
-  --color-border-aggregate:hsla(196, 67%, 45%, 1);
-  --color-sidebar-aggregate:hsla(196, 67%, 90%, 1);
+  --color-bg-aggregate: hsla(196, 67%, 45%, .3);
+  --color-border-aggregate: hsla(196, 67%, 45%, 1);
+  --color-sidebar-aggregate: hsla(196, 67%, 90%, 1);
 
   --color-white: #ffffff;
   --color-gray-98: #fafafa;
@@ -90,6 +89,14 @@ $finalProject-theme: mat.define-light-theme(
   box-sizing: border-box;
 }
 
+.primary {
+  color: #3f51b5;
+}
+
+.accent {
+  color: #ff4081;
+}
+
 html {
   font-size: 62.5%;
   overflow: hidden;
@@ -102,8 +109,9 @@ body {
   min-height: 100%;
   font-family: "iransans", 'sans-serif' !important;
 }
+
 * {
-  font-family: "iransans", sans-serif  ;
+  font-family: "iransans", sans-serif;
 }
 
 a {
@@ -121,8 +129,9 @@ ul {
     color: var(--color-error);
   }
 }
-.add-filter-dialog{
-  background-color:transparent !important;
+
+.add-filter-dialog {
+  background-color: transparent !important;
 }
 
 

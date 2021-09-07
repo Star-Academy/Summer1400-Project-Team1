@@ -14,14 +14,15 @@
         </mat-expansion-panel-header>
 
         <div class='panel-body'>
-             <form  class='form'>
+             <form  #form="ngForm" (ngSubmit)="onSubmit()">
                 <mat-form-field appearance="fill">
                     <mat-label>نام ستون</mat-label>
                     <input type="text"
                            aria-label="ستون"
                            matInput
                            required
-                           [(ngModel)]="item.column"
+                           ngModel name="key" #key="ngModel"
+                           [(ngModel)]="item.key"
                            [ngModelOptions]="{standalone: true}"
                            [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete">
@@ -36,7 +37,7 @@
                     <mat-label>شرط</mat-label>
                     <mat-select
                             [(value)]="item.operator"
-                            required>
+                             required>
                         <mat-option
                                 *ngFor="let operator of operators"
                                 [value]="operator"
@@ -54,11 +55,17 @@
                     <input type="text"
                            aria-label="مقدار"
                            matInput
+                           name="value" #value="ngModel"
                            required
                            [ngModelOptions]="{standalone: true}"
                            [(ngModel)]="item.value"
                     >
                 </mat-form-field>
+                 <button
+                         type="submit"
+                         mat-raised-button color="primary"
+
+                 >اعمال تغییرات</button>
             </form>
 
         </div>

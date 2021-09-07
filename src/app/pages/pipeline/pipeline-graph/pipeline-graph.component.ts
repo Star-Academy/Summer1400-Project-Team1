@@ -10,6 +10,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Alert} from "../../../utils/alert";
 import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray} from "@angular/cdk/drag-drop";
 import {ViewportRuler} from "@angular/cdk/overlay";
+import {Aggregate, AggregateNode} from "../../../modals/aggregate-node";
+import {Join, JoinNode} from "../../../modals/join-node";
+import {Filter} from "../../../modals/filter-node";
 
 @Component({
     selector: "app-pipeline-graph",
@@ -129,19 +132,15 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
                     switch (result) {
                         case "filter":
                             processorType = NodeType.FILTER;
-                            this.pipelineService.toggleSideBar.next(true);
-                            this.pipelineService.currentSidebarProcessor = "filter"
+                            this.openFilterSideBar();
                             break;
                         case "join":
                             processorType = NodeType.JOIN;
-                            this.pipelineService.toggleSideBar.next(true);
-                            this.pipelineService.currentSidebarProcessor = "join"
+                            this.openJoinSidebar();
                             break;
                         case "aggregation":
                             processorType = NodeType.AGGREGATION;
-                            this.pipelineService.toggleSideBar.next(true);
-                            this.pipelineService.currentSidebarProcessor = "aggregate"
-
+                            this.openAggregateSidebar();
                             break;
                     }
                     node = new Node(this.nodes.length, result, processorType);
@@ -160,6 +159,35 @@ export class PipelineGraphComponent implements OnInit, OnDestroy {
             );
 
         }
+    }
+    private openAggregateSidebar() {
+        this.pipelineService.toggleSideBar.next(true);
+        this.pipelineService.currentSidebarProcessor = "aggregate"
+
+            this.pipelineService.currentSidebarProcessorDetail = new AggregateNode(Math.floor(Math.random() * 1000), [
+                new Aggregate()
+            ]);
+
+
+    }
+
+    private openJoinSidebar() {
+        this.pipelineService.toggleSideBar.next(true);
+        this.pipelineService.currentSidebarProcessor = "join"
+
+            this.pipelineService.currentSidebarProcessorDetail = new JoinNode(Math.floor(Math.random() * 1000), [
+                new Join()
+            ]);
+
+
+    }
+
+    private openFilterSideBar() {
+        this.pipelineService.toggleSideBar.next(true);
+        this.pipelineService.currentSidebarProcessor = "filter"
+
+            this.pipelineService.currentSidebarProcessorDetail = new Filter(-1);
+
     }
 
     ngOnDestroy(): void {
