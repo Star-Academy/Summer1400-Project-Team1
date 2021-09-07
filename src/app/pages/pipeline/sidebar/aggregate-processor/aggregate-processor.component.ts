@@ -7,7 +7,8 @@ import { Aggregate } from "../../../../models/aggregate-node";
 import { AggregateNode } from "../../../../models/graph/processor-nodes/aggregate-node";
 
 interface AggregateType {
-  name: string;
+  value: string;
+  viewValue: string;
 }
 
 @Component({
@@ -17,55 +18,33 @@ interface AggregateType {
 })
 export class AggregateProcessorComponent implements OnInit {
   @Input() aggregateNode!: AggregateNode;
-
-  panelOpenState: boolean = true;
   aggregateTypeControl = new FormControl("", Validators.required);
   aggregateTypes: AggregateType[] = [
-    { name: "COUNT" },
-    { name: "SUM" },
-    { name: "AVERAGE" },
-    { name: "MIN" },
-    { name: "MAX" },
+    { value: "COUNT", viewValue: "تعداد" },
+    { value: "SUM", viewValue: "مجموع" },
+    { value: "AVERAGE", viewValue: "میانگین" },
+    { value: "MIN", viewValue: "کمترین" },
+    { value: "MAX", viewValue: "بیشترین" },
   ];
   myControl = new FormControl();
-  options: string[] = ["One", "Two", "Three"];
-  filteredOptions!: Observable<string[]>;
+  filteredColumns!: Observable<string[]>;
 
-  aggregatesList: Aggregate[] = [];
-
-  aggregatesListSub!: Subscription;
   constructor(private pipelineService: PipelineService) {}
 
   ngOnInit(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredColumns = this.myControl.valueChanges.pipe(
       startWith(""),
       map((value) => this._filter(value))
     );
-    // this.aggregatesList = (
-    //   this.pipelineService.currentSidebarProcessorDetail as AggregateNode
-    // ).aggregateList;
-    this.aggregatesListSub =
-      this.pipelineService.currentSidebarProcessorDetailChanged.subscribe(
-        (details: any) => {
-          this.aggregatesList = details.aggregateList;
-        }
-      );
   }
 
-  ngOnDestroy(): void {
-    this.aggregatesListSub.unsubscribe();
-  }
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+    return this.aggregateNode.inputData.columns.filter((column) =>
+      column.toLowerCase().includes(value.toLowerCase())
     );
   }
 
   onClose() {}
 
   onDelete() {}
-
-  onAddFilter() {}
 }

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, Output } from "@angular/core";
 import { EventEmitter } from "@angular/core";
 import { Node, NodeType } from "../../../models/graph/node";
+import { AggregateNode } from "../../../models/graph/processor-nodes/aggregate-node";
 
 @Component({
   selector: "app-sidebar",

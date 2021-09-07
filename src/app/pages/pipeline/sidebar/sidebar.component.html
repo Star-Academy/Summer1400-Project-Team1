@@ -8,7 +8,7 @@
             <app-join-processor [joinNode]="selectedNode"></app-join-processor>
         </div>
         <div *ngSwitchCase="NodeType.AGGREGATE">
-            <app-aggregate-processor [aggregateNode]="selectedNode"></app-aggregate-processor>
+            <app-aggregate-processor [aggregateNode]="$any(selectedNode)"></app-aggregate-processor>
         </div>
     </div >
 </ng-container>

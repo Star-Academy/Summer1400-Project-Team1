@@ -1,59 +1,44 @@
 <div class="main-wrapper">
     <header>
-        <p>aggregate</p>
+        <p>{{aggregateNode.name}}</p>
         <button mat-icon-button>
-            <img (click)="onAddFilter()" src="assets/images/add-black.svg" alt="">
+            <img src="assets/images/delete.svg" alt="">
         </button>
     </header>
     <main>
-        <mat-accordion *ngFor="let item of aggregatesList;let i = index;">
-            <mat-expansion-panel [expanded]="i==0" (opened)='panelOpenState = true'
-                                 (closed)='panelOpenState = false'>
+        <div class='panel-body'>
+            <form  #form="ngForm" >
+                <mat-form-field class="example-full-width">
+                    <mat-label>نام ستون</mat-label>
+                    <input type="text"
+                           aria-label="ستون"
+                           matInput
+                           required
+                           [(ngModel)]="aggregateNode.column"
+                           [formControl]="myControl"
+                           [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let filteredColumn of filteredColumns | async" [value]="filteredColumn">
+                            {{filteredColumn}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>نوع تجمیع</mat-label>
+                    <mat-select [formControl]="aggregateTypeControl" required>
+                        <mat-option *ngFor="let aggregateType of aggregateTypes" [value]="aggregateType.value">
+                            {{aggregateType.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="aggregateTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>مقدار</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </form>
 
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        تجمیع
-                    </mat-panel-title>
-
-                    <div class="delete" ><img (click)="onDelete()" src="assets/images/delete.svg" alt=""></div>
-
-                </mat-expansion-panel-header>
-
-                <div class='panel-body'>
-                    <form  #form="ngForm" >
-                        <mat-form-field class="example-full-width" appearance="fill">
-                            <mat-label>نام ستون</mat-label>
-                            <input type="text"
-                                   aria-label="ستون"
-                                   matInput
-                                   required
-                                   [formControl]="myControl"
-                                   [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                                    {{option}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                        <mat-form-field appearance="fill">
-                            <mat-label>نوع تجمیع</mat-label>
-                            <mat-select [formControl]="aggregateTypeControl" required>
-                                <mat-option *ngFor="let aggregate of aggregateTypes" [value]="aggregate">
-                                    {{aggregate.name}}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="aggregateTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
-                        </mat-form-field>
-                        <!--                        <p>{{animalControl.value.name}}</p>-->
-                        <mat-form-field appearance="fill">
-                            <mat-label>مقدار</mat-label>
-                            <input matInput>
-                        </mat-form-field>
-                    </form>
-
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+        </div>
     </main>
 
     <div class='actions-wrapper'>
