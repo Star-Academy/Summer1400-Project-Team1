@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models;
+using API.SqlIOHandler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,7 @@ namespace API
             services.AddScoped<IDatabaseHandler, DatabaseHandler>();
             services.AddSingleton<ISqlHandler, SqlHandler>();
             services.AddSingleton<ICsvHandler, CsvHandler>();
+            services.AddSingleton<ILinkedServerHandler, LinkedServerHandler>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

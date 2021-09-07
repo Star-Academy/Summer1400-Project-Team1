@@ -18,10 +18,13 @@ namespace API
     {
         private readonly ApiContext _context;
         private readonly ILinkedServerHandler _linkedServerHandler;
+        private readonly ISqlIOHandler _sqlIoHandler;
 
-        public DatabaseHandler(ApiContext apiContext)
+        public DatabaseHandler(ApiContext apiContext,ILinkedServerHandler linkedServerHandler, ISqlIOHandler sqlIoHandler)
         {
             _context = apiContext;
+            _linkedServerHandler = linkedServerHandler;
+            _sqlIoHandler = sqlIoHandler;
         }
 
         public List<ConnectionModel> GetConnections()
@@ -46,27 +49,19 @@ namespace API
             return newConnection.Id;
         }
 
-        public List<string> GetDatabases(int connectionId)
+        public IEnumerable<string> GetDatabases(int connectionId)
         {
-            using var sourceConnection = new SqlConnection(_context.Connection.Find(connectionId).ConnectionString);
-            sourceConnection.Open();
-            var databases = sourceConnection.GetSchema("Databases");
-            var databasesName = (from DataRow database in databases.Rows 
-                select database.Field<string>("database_name")).ToList();
+            var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
+            var databases = _sqlIoHandler.GetDatabases(serverConnectionString);
             
-            return databasesName;
+            return databases;
         }
 
-        public List<string> GetTables(int connectionId, string databaseName)
+        public IEnumerable<string> GetTables(int connectionId, string databaseName)
         {
             var connectionStringToDatabase = _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
-            using var sourceConnection = new SqlConnection(connectionStringToDatabase);
-            sourceConnection.Open();
-            var tables = sourceConnection.GetSchema("Tables");
-            var tablesName = (from DataRow table in tables.Rows 
-                select table.Field<string>("TABLE_NAME")).ToList();
-            
-            return tablesName;
+            var tables = _sqlIoHandler.GetTables(connectionStringToDatabase);
+            return tables;
         }
 
         public List<DatasetModel> GetDatasets()

@@ -1,3 +1,6 @@
+using System;
+using API.Models;
+using API.SqlIOHandler;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -26,7 +29,7 @@ namespace API.Controllers
         public IActionResult GetConnectionInfo(int id)
         {
             var connectionInfo = _databaseHandler.GetConnection(id);
-            return Ok(connectionInfo);
+            return Ok(JsonConvert.SerializeObject(connectionInfo));
         }
 
         [HttpGet]
@@ -34,21 +37,22 @@ namespace API.Controllers
         public IActionResult GetDatabases(int id)
         {
             var databases = _databaseHandler.GetDatabases(id);
-            return Ok(databases);
+            return Ok(JsonConvert.SerializeObject(databases));
         }
-        
+
         [HttpGet]
         [Route("{id:int}/database/{name}")]
         public IActionResult GetTables(int id, string name)
         {
-            var tables = _databaseHandler.GetTables(id,name);
-            return Ok(tables);
+            var tables = _databaseHandler.GetTables(id, name);
+            return Ok(JsonConvert.SerializeObject(tables));
         }
 
         [HttpPost]
-        public IActionResult AddConnection(string name, string server, string username, string password)
+        public IActionResult AddConnection(ConnectionModel connectionModel)
         {
-            var id = _databaseHandler.AddConnection(name, server, username, password);
+            var id = _databaseHandler.AddConnection(connectionModel.Name, connectionModel.Server,
+                connectionModel.Username, connectionModel.Password);
             return Ok(id);
         }
     }

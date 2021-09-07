@@ -8,21 +8,21 @@ namespace API.SqlIOHandler
 {
     public class SqlIOHandler : ISqlIOHandler
     {
-        public bool AddConnection(string sourceConnectionString)
-        {
-            using var sourceServer = new SqlConnection(sourceConnectionString);
-            try
-            {
-                sourceServer.Open();
-                return true;
-            }
-            catch (SqlException)
-            {
-                return false;
-            }
-        }
+        // public bool AddConnection(string sourceConnectionString)
+        // {
+        //     using var sourceServer = new SqlConnection(sourceConnectionString);
+        //     try
+        //     {
+        //         sourceServer.Open();
+        //         return true;
+        //     }
+        //     catch (SqlException)
+        //     {
+        //         return false;
+        //     }
+        // }
 
-        public IEnumerable<string> GetDataBaseList(string sourceConnectionString)
+        public IEnumerable<string> GetDatabases(string sourceConnectionString)
         {
             using var sourceConnection = new SqlConnection(sourceConnectionString);
             sourceConnection.Open();
@@ -33,7 +33,7 @@ namespace API.SqlIOHandler
             return databasesName;
         }
 
-        public IEnumerable<string> GetTableList(string sourceConnectionString)
+        public IEnumerable<string> GetTables(string sourceConnectionString)
         {
             using var sourceConnection = new SqlConnection(sourceConnectionString);
             sourceConnection.Open();
