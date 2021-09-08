@@ -15,7 +15,7 @@
                 _sqlHandler.Open();
             var addLinkedSrvQuery = $"EXEC sp_addlinkedserver @server='{serverLinkedWith}'" +
                                     $"EXEC sp_addlinkedsrvlogin @rmtsrvname='{serverLinkedWith}' ," +
-                                    $"@useself='FALSE', @locallogin=NULL, @rmtuser='{username}'," +
+                                    $"@useself='FALSE', @locallogin='sa', @rmtuser='{username}'," +
                                     $"@rmtpassword='{password}'";
             _sqlHandler.ExecuteSQLQuery(addLinkedSrvQuery);
             _sqlHandler.Close();

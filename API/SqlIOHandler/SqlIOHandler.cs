@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -8,28 +9,21 @@ namespace API.SqlIOHandler
 {
     public class SqlIOHandler : ISqlIOHandler
     {
-        // public bool AddConnection(string sourceConnectionString)
-        // {
-        //     using var sourceServer = new SqlConnection(sourceConnectionString);
-        //     try
-        //     {
-        //         sourceServer.Open();
-        //         return true;
-        //     }
-        //     catch (SqlException)
-        //     {
-        //         return false;
-        //     }
-        // }
+        private readonly ILinkedServerHandler _linkedServerHandler;
+
+        public SqlIOHandler(ILinkedServerHandler linkedServerHandler)
+        {
+            _linkedServerHandler = linkedServerHandler;
+        }
 
         public IEnumerable<string> GetDatabases(string sourceConnectionString)
         {
             using var sourceConnection = new SqlConnection(sourceConnectionString);
             sourceConnection.Open();
             var databases = sourceConnection.GetSchema("Databases");
-            var databasesName = (from DataRow database in databases.Rows 
+            var databasesName = (from DataRow database in databases.Rows
                 select database.Field<string>("database_name")).ToList();
-            
+
             return databasesName;
         }
 
@@ -38,12 +32,17 @@ namespace API.SqlIOHandler
             using var sourceConnection = new SqlConnection(sourceConnectionString);
             sourceConnection.Open();
             var tables = sourceConnection.GetSchema("Tables");
-            var tablesName = (from DataRow table in tables.Rows 
+            var tablesName = (from DataRow table in tables.Rows
                 select table.Field<string>("TABLE_NAME")).ToList();
-            
+
             return tablesName;
         }
-        
 
+        public void ImportDataFromSql(ConnectionModel connectionModel, string databaseName, string tableName)
+        {
+            _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
+            _linkedServerHandler.ImportToNewTable(connectionModel.Server, databaseName, tableName);
+            _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+        }
     }
 }
