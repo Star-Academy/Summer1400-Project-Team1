@@ -5,7 +5,7 @@
             <app-filter-processor [filterNode]="selectedNode"></app-filter-processor>
         </div>
         <div *ngSwitchCase="NodeType.JOIN">
-            <app-join-processor [joinNode]="selectedNode"></app-join-processor>
+            <app-join-processor [joinNode]="$any(selectedNode)"></app-join-processor>
         </div>
         <div *ngSwitchCase="NodeType.AGGREGATE">
             <app-aggregate-processor [aggregateNode]="$any(selectedNode)"></app-aggregate-processor>

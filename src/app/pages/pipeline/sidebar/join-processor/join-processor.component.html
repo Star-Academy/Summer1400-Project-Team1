@@ -1,59 +1,54 @@
 <div class="main-wrapper">
     <header>
-        <p>join</p>
+        <p>{{joinNode.name}}</p>
         <button mat-icon-button>
-            <img (click)="onAddFilter()" src="assets/images/add-black.svg" alt="">
+            <img (click)="onAddFilter()" src="assets/images/delete.svg" alt="">
         </button>
     </header>
     <main>
-        <mat-accordion *ngFor="let item of joinList;let i = index;">
-            <mat-expansion-panel [expanded]="i==0" (opened)='panelOpenState = true'
-                                 (closed)='panelOpenState = false'>
 
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        جوین
-                    </mat-panel-title>
+        <div class='panel-body'>
+            <form  #form="ngForm" >
+                <mat-form-field>
+                    <mat-label>دیتاست</mat-label>
+                    <mat-select required [(ngModel)]="joinNode.dataset" name="dataset">
+                        <mat-option *ngFor="let dataset of datasetService.datasetsTemp" [value]="dataset">
+                            {{dataset.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>ستون جدول</mat-label>
+                    <mat-select required [(ngModel)]="joinNode.tableColumn" name="tableCol">
+                        <mat-option *ngFor="let column of joinNode.inputData.columns" [value]="column">
+                            {{column}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>ستون دیتاست</mat-label>
+                    <mat-select required [(ngModel)]="joinNode.datasetColumn" name="datasetCol" [disabled]="!joinNode.dataset">
+                        <mat-option *ngFor="let column of joinNode.dataset?.data?.columns" [value]="column">
+                            {{column}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>نوع جوین</mat-label>
+                    <mat-select [formControl]="joinTypeControl" required>
+                        <mat-option *ngFor="let join of joinTypes; let i = index;" [value]="i">
+                            {{join.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="joinTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>مقدار</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </form>
 
-                    <div class="delete" ><img (click)="onDelete()" src="assets/images/delete.svg" alt=""></div>
-
-                </mat-expansion-panel-header>
-
-                <div class='panel-body'>
-                    <form  #form="ngForm" >
-                        <mat-form-field class="example-full-width" appearance="fill">
-                            <mat-label>دیتاست جوین</mat-label>
-                            <input type="text"
-                                   aria-label="ستون"
-                                   matInput
-                                   required
-                                   [formControl]="myControl"
-                                   [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                                    {{option}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                        <mat-form-field appearance="fill">
-                            <mat-label>نوع جوین</mat-label>
-                            <mat-select [formControl]="joinTypeControl" required>
-                                <mat-option *ngFor="let join of joinTypes" [value]="join">
-                                    {{join.name}}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="joinTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
-                        </mat-form-field>
-                        <!--                        <p>{{animalControl.value.name}}</p>-->
-                        <mat-form-field appearance="fill">
-                            <mat-label>مقدار</mat-label>
-                            <input matInput>
-                        </mat-form-field>
-                    </form>
-
-                </div>
-            </mat-expansion-panel>
-        </mat-accordion>
+        </div>
     </main>
 
     <div class='actions-wrapper'>

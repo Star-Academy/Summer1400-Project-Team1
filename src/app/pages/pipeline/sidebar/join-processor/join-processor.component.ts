@@ -5,6 +5,7 @@ import { map, startWith } from "rxjs/operators";
 import { PipelineService } from "../../../../services/pipeline.service";
 import { Join } from "../../../../models/join-node";
 import { JoinNode } from "../../../../models/graph/processor-nodes/join-node";
+import { DatasetService } from "../../../../services/dataset.service";
 interface JoinType {
   name: string;
 }
@@ -14,7 +15,7 @@ interface JoinType {
   templateUrl: "./join-processor.component.html",
   styleUrls: ["./join-processor.component.scss"],
 })
-export class JoinProcessorComponent implements OnInit, OnDestroy {
+export class JoinProcessorComponent implements OnInit {
   @Input() joinNode!: JoinNode;
 
   panelOpenState: boolean = true;
@@ -26,38 +27,20 @@ export class JoinProcessorComponent implements OnInit, OnDestroy {
     { name: "Right outer join" },
   ];
   myControl = new FormControl();
-  options: string[] = ["One", "Two", "Three"];
-  filteredOptions!: Observable<string[]>;
-
-  joinList: Join[] = [];
-
-  joinListSub!: Subscription;
-  constructor(private pipelineService: PipelineService) {}
+  filteredColumns!: Observable<string[]>;
+  constructor(public datasetService: DatasetService) {}
 
   ngOnInit(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredColumns = this.myControl.valueChanges.pipe(
       startWith(""),
       map((value) => this._filter(value))
     );
-    // this.joinList = (
-    //   this.pipelineService.currentSidebarProcessorDetail as JoinNode
-    // ).joinsList;
-    this.joinListSub =
-      this.pipelineService.currentSidebarProcessorDetailChanged.subscribe(
-        (details: any) => {
-          this.joinList = details.joinsList;
-        }
-      );
-  }
-
-  ngOnDestroy(): void {
-    this.joinListSub.unsubscribe();
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.options.filter((option) =>
+    return this.joinNode.inputData.columns.filter((option) =>
       option.toLowerCase().includes(filterValue)
     );
   }

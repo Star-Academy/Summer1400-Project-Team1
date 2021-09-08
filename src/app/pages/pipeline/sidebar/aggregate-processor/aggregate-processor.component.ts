@@ -29,7 +29,7 @@ export class AggregateProcessorComponent implements OnInit {
   myControl = new FormControl();
   filteredColumns!: Observable<string[]>;
 
-  constructor(private pipelineService: PipelineService) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.filteredColumns = this.myControl.valueChanges.pipe(
