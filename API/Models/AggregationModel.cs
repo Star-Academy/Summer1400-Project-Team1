@@ -7,6 +7,7 @@ namespace API.Models
     {
         [Key]
         public int Id { get; set; }
+        public string Name { get; set; }
         public List<AggregateFunctionModel> AggregateFunctions { get; set; }
         public List<GroupModel> GroupByItems { get; set; }
     }

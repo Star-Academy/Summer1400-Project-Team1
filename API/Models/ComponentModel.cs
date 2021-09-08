@@ -8,7 +8,7 @@ namespace API.Models
     {
         public int OrderId { get; set; }
         public string Name { get; set; }
-        public int Type { get; set; }
+        public ComponentType Type { get; set; }
         public int RelatedComponentId { get; set; }
     }
 }

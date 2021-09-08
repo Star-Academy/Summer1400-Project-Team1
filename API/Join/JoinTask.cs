@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
@@ -46,6 +47,7 @@ namespace API.Join
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
             SqlCommand command = new SqlCommand(sqlString, _sqlHandler.Connection);
+            Console.WriteLine(sqlString);
             command.ExecuteNonQuery();
             return tempTableName;
         }

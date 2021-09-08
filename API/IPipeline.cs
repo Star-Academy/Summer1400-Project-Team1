@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using API.Models;
 
 namespace API
 {
@@ -7,6 +8,8 @@ namespace API
         LinkedList<IPipelineComponent> Components { get; set; }
         string SourceDataset { get; set; }
         string DestinationDataset { get; set; }
-        void Run(int index=0);
+        void LoadFromModel(PipelineModel pipelineModel);
+        string RunByIndex(int index);
+        void Run();
     }
 }

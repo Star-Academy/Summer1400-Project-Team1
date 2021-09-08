@@ -1,28 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Data;
 using System.Linq;
 using API.Models;
 using API.SqlIOHandler;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace API
 {
-    enum ComponentType
+    public enum ComponentType
     {
         Aggregation = 0,
         Filter = 1,
         Join = 2
     }
-
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
+        private readonly ICsvHandler _csvHandler;
         private readonly ISqlIOHandler _sqlIoHandler;
 
-        public DatabaseHandler(ApiContext apiContext, ISqlIOHandler sqlIoHandler)
+        public DatabaseHandler(ApiContext apiContext, ISqlIOHandler sqlIoHandler,ICsvHandler csvHandler)
         {
             _context = apiContext;
+            _csvHandler = csvHandler;
             _sqlIoHandler = sqlIoHandler;
         }
 
@@ -79,34 +83,95 @@ namespace API
             });
         }
 
-        public void AddCsvDataset(string pathToCsv)
+        public void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded)
         {
-            throw new NotImplementedException();
+            _csvHandler.LoadCsv(pathToCsv,isHeaderIncluded);
+            _csvHandler.CsvToSql(name);
         }
 
         public string GetCsvDataset(int datasetId)
         {
-            throw new NotImplementedException();
+            var dataset = _context.Dataset.Find(datasetId);
+            var folderName = Path.Combine("Resources", "CSVs");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var path = Path.Combine(pathToSave, $"{dataset.Name}.csv");
+            _csvHandler.SqlToCsv(dataset.Name,path);
+            return path;
         }
 
         public List<PipelineModel> GetPipelines()
         {
-            throw new NotImplementedException();
+            return _context.Pipeline.ToList();
+        }
+
+        public PipelineModel GetPipeline(int pipelineId)
+        {
+            return _context.Pipeline.Find(pipelineId);
         }
 
         public int AddPipeline(string name)
         {
-            throw new NotImplementedException();
+            var pipeline = new PipelineModel()
+            {
+                Name = name,
+                DateCreated = DateTime.Now
+            };
+            _context.Pipeline.Add(pipeline);
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
+            
+            return pipeline.Id;
         }
 
         public List<ComponentModel> GetComponents(int pipelineId)
         {
-            throw new NotImplementedException();
+            return _context.Pipeline
+                .Find(pipelineId)
+                .Components.ToList();
+        }
+
+        private void AddComponent(PipelineModel pipelineModel, ComponentModel componentModel, int orderId)
+        {
+            pipelineModel.Components.OrderBy(c => c.OrderId);
+            pipelineModel.Components.Insert(orderId,componentModel);
+            for (int i = orderId+1; i < pipelineModel.Components.Count; i++)
+            {
+                pipelineModel.Components[i].OrderId++;
+            }
+
+            _context.SaveChanges();
         }
 
         public void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId)
         {
-            throw new NotImplementedException();
+            /*if (!_context.Database.EnsureCreated())
+            {
+                Console.Error.WriteLine("database not created");
+                return;
+            }*/
+            PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
+            if (pipeline == null)
+                throw new Exception("pipeline not found");
+            if (pipeline.Components.Count < orderId)
+                throw new Exception("invalid order");
+            _context.AggregateComponent.Add(aggregationModel);
+            _context.SaveChanges();
+            
+            AddComponent(pipeline,new ComponentModel()
+            {
+                Name = aggregationModel.Name,
+                OrderId = orderId,
+                Type = ComponentType.Aggregation,
+                RelatedComponentId = aggregationModel.Id
+            },orderId);
+            
         }
 
         public void AddFilterComponent(int pipelineId, string body, string name, int orderId)
@@ -120,15 +185,14 @@ namespace API
             _context.SaveChanges();
             var filterId = newFilterComponent.Id;
 
-            var newComponentModel = new ComponentModel()
+            AddComponent( _context.Pipeline.Find(pipelineId),new ComponentModel()
             {
                 Name = name,
-                Type = (int) ComponentType.Filter,
+                Type = ComponentType.Filter,
                 OrderId = orderId,
                 RelatedComponentId = filterId
-            };
+            },orderId);
 
-            _context.Pipeline.Find(pipelineId).Components.Add(newComponentModel);
         }
 
         public void AddJoinComponent(int pipelineId, JoinModel joinModel, int orderId)
@@ -136,14 +200,20 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public Tuple<int, int> GetComponent(int pipelineId, int orderId)
+        public Tuple<ComponentType, int> GetComponent(int pipelineId, int orderId)
         {
-            throw new NotImplementedException();
+            PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
+            if (pipeline == null)
+                throw new Exception("pipeline not found");
+            if (orderId >= pipeline.Components.Count)
+                throw new Exception("invalid orderId");
+            ComponentModel component = pipeline.Components[orderId];
+            return new Tuple<ComponentType, int>(component.Type, component.RelatedComponentId);
         }
 
         public AggregationModel GetAggregateComponent(int componentId)
         {
-            throw new NotImplementedException();
+            return _context.AggregateComponent.Find(componentId);
         }
 
         public FilterModel GetFilterComponent(int componentId)
@@ -152,6 +222,58 @@ namespace API
         }
 
         public JoinModel GetJoinComponent(int componentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateAggregateComponent(int id, AggregationModel newModel)
+        {
+            var oldModel = _context.AggregateComponent.Find(id);
+            if (oldModel == null)
+                throw new Exception("not found");
+            oldModel.Name = newModel.Name;
+            oldModel.AggregateFunctions = newModel.AggregateFunctions;
+            oldModel.GroupByItems = newModel.GroupByItems;
+            _context.SaveChanges();
+        }
+
+        void IDatabaseHandler.UpdateFilterComponent(int id, AggregationModel newModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateJoinComponent(int id, AggregationModel newModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteComponent(int pipelineId, int componentId)
+        {
+            PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
+            if (pipeline == null)
+                throw new Exception("pipeline not found");
+            ComponentModel component = pipeline.Components.Find(c => c.OrderId==componentId);
+            if (component == null)
+                throw new Exception("component not found");
+            pipeline.Components.Remove(component);
+            _context.SaveChanges();
+        }
+
+        public void DeleteAggregateComponent(int id)
+        {
+            AggregationModel aggregation = _context.AggregateComponent.Find(id);
+            if (aggregation == null)
+                throw new Exception("aggregate not found");
+            _context.AggregateComponent.Remove(aggregation);
+            _context.SaveChanges();
+        }
+
+        public void DeleteFilterComponent(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteJoinComponent(int id)
         {
             throw new NotImplementedException();
         }
