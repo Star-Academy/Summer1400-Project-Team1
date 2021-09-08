@@ -13,8 +13,6 @@ namespace API
         IEnumerable<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
-        void AddCsvDataset(string pathToCsv);
-        void AddSqlDataset(int connectionId, int databaseId, int tableId);
         void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
         List<PipelineModel> GetPipelines();

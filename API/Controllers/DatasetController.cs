@@ -91,15 +91,8 @@ namespace API.Controllers
             
             return contentType;
         }
-    }
-}
-        private readonly IDatabaseHandler _databaseHandler;
-
-        public DatasetController(IDatabaseHandler databaseHandler)
-        {
-            _databaseHandler = databaseHandler;
-        }
-
+        
+        
         [HttpGet]
         public IActionResult GetDatasets()
         {
