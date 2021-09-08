@@ -6,6 +6,7 @@ using API.Aggregation;
 using API.Filter;
 using API.Join;
 using API.Models;
+using static API.ComponentType;
 
 namespace API
 {
@@ -29,13 +30,13 @@ namespace API
         {
             switch (componentModel.Type)
             {
-                case (int) ComponentType.Join:
+                case  ComponentType.Join:
                 {
                     AddComponentJoin(componentModel);
                     break;
                 }
 
-                case (int) ComponentType.Filter:
+                case ComponentType.Filter:
                 {
                     AddCompnentFilter(componentModel);
                     break;

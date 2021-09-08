@@ -192,11 +192,6 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public PipelineModel GetPipeline(int id)
-        {
-            return _context.Pipeline.Find(id);
-        }
-
         public void UpdateAggregateComponent(int id, AggregationModel newModel)
         {
             var oldModel = _context.AggregateComponent.Find(id);

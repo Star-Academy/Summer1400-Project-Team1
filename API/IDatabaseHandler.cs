@@ -27,7 +27,6 @@ namespace API
         AggregationModel GetAggregateComponent(int componentId);
         FilterModel GetFilterComponent(int componentId);
         JoinModel GetJoinComponent(int componentId);
-        PipelineModel GetPipeline(int id);
         void UpdateAggregateComponent(int id, AggregationModel newModel);
         void DeleteComponent(int pipelineId, int componentId);
         void DeleteAggregateComponent(int id);
