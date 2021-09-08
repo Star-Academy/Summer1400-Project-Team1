@@ -214,6 +214,16 @@ namespace API
             _context.SaveChanges();
         }
 
+        void IDatabaseHandler.UpdateFilterComponent(int id, AggregationModel newModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateJoinComponent(int id, AggregationModel newModel)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DeleteComponent(int pipelineId, int componentId)
         {
             PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
@@ -233,6 +243,16 @@ namespace API
                 throw new Exception("aggregate not found");
             _context.AggregateComponent.Remove(aggregation);
             _context.SaveChanges();
+        }
+
+        public void DeleteFilterComponent(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteJoinComponent(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -44,28 +44,13 @@ namespace API.Controllers
             Console.WriteLine("id is :"+id);
         }
 
-        [HttpPost("{pid}/aggregate")]
-        public IActionResult AddAggregate([FromRoute] int pid, [FromQuery] int index,
-            [FromBody] AggregationModel aggregationModel)
-        {
-            try
-            {
-                _databaseHandler.AddAggregateComponent(pid, aggregationModel, index);
-                return Ok(aggregationModel);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        
         void AddAggregate(int pipelineId, int orderId,string name, string body)
         {
             AggregationModel aggregation = JsonSerializer.Deserialize<AggregationModel>(body);
             if(aggregation==null)
                 return;
             aggregation.Name = name;
-            AddAggregate(pipelineId, orderId, aggregation);
+            _databaseHandler.AddAggregateComponent(pipelineId, aggregation, orderId);
         }
         
         void AddFilter(int pipelineId, int orderId,string name, string body)
@@ -210,11 +195,13 @@ namespace API.Controllers
             switch (componentInfo.Item1)
             {
                 case ComponentType.Filter:
+                    _databaseHandler.DeleteFilterComponent(componentInfo.Item2);
                     break;
                 case ComponentType.Join:
+                    _databaseHandler.DeleteJoinComponent(componentInfo.Item2);
                     break;
                 case ComponentType.Aggregation:
-                    DeleteAggregation(componentInfo.Item2);
+                    _databaseHandler.DeleteAggregateComponent(componentInfo.Item2);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -223,19 +210,6 @@ namespace API.Controllers
             _databaseHandler.DeleteComponent(pid, cid);
 
             return Ok();
-        }
-
-        private IActionResult DeleteAggregation(int id)
-        {
-            try
-            {
-                _databaseHandler.DeleteAggregateComponent(id);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
         }
 
         [HttpPost]
