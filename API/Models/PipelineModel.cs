@@ -10,6 +10,8 @@ namespace API.Models
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        public DatasetModel Source { get; set; }
+        public DatasetModel Destination { get; set; }
         public List<ComponentModel> Components { get; set; }
         public DateTime DateCreated { get; set; }
 

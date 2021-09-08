@@ -7,12 +7,12 @@ namespace API.Filter
 {
     public class ColumnFilter:IPipelineComponent
     {
-        private SqlHandler _sqlHandler;
+        private ISqlHandler _sqlHandler;
         public StringBuilder StringBuilder = new StringBuilder();
         private Node _root;
         private string _temporaryTableName;
         
-        public ColumnFilter(SqlHandler sqlHandler,Node root)
+        public ColumnFilter(ISqlHandler sqlHandler,Node root)
         {
             _sqlHandler = sqlHandler;
             _root = root;

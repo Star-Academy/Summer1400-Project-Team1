@@ -9,10 +9,12 @@ namespace API.Controllers
     [Route("api/v1/[controller]")]
     public class PipelineController : ControllerBase
     {
-        private IDatabaseHandler _handler;
-        public PipelineController(IDatabaseHandler databaseHandler)
+        private readonly IDatabaseHandler _databaseHandler;
+        private readonly ISqlHandler _sqlHandler;
+        public PipelineController(ISqlHandler sqlHandler,IDatabaseHandler databaseHandler)
         {
-            _handler = databaseHandler;
+            _sqlHandler = sqlHandler;
+            _databaseHandler = databaseHandler;
         }
         
         [HttpGet]
@@ -48,7 +50,7 @@ namespace API.Controllers
         {
             try
             {
-                _handler.AddAggregateComponent(pid, aggregationModel, index);
+                _databaseHandler.AddAggregateComponent(pid, aggregationModel, index);
                 return Ok(aggregationModel);
             }
             catch (Exception e)
@@ -65,35 +67,35 @@ namespace API.Controllers
             aggregation.Name = name;
             AddAggregate(pipelineId, orderId, aggregation);
         }
-
+        
         void AddFilter(int pipelineId, int orderId,string name, string body)
         {
-            _handler.AddFilterComponent(pipelineId,body,name,orderId);
+            _databaseHandler.AddFilterComponent(pipelineId,body,name,orderId);
         }
-
+        
         void AddJoin(int pipelineId, int orderId,string name, string body)
         {
         }
 
         [HttpPost]
         [Route("{id}/component")]
-        public void PostComponent(int id, string type, int index,string name)
+        public void PostComponent(int id,string type, int index,string name)
         {
             switch (type)
             {
                 case "join":
                 {
-                    AddJoin(id, index, name,Response.Body.ToString());
+                    AddJoin(id,index,name,Response.Body.ToString());
                     break;
                 }
                 case "aggregate":
                 {
-                    AddAggregate(id, index, name,Response.Body.ToString());
+                    AddAggregate(id,index,name,Response.Body.ToString());
                     break;
                 }
                 case "filter":
                 {
-                    AddFilter(id, index, name,Response.Body.ToString());
+                    AddFilter(id,index,name,Response.Body.ToString());
                     break;
                 }
             }
@@ -106,7 +108,7 @@ namespace API.Controllers
             try
             
             {
-                componentInfo = _handler.GetComponent(pid, cid);
+                componentInfo = _databaseHandler.GetComponent(pid, cid);
             }
             catch (Exception e)
             {
@@ -135,7 +137,7 @@ namespace API.Controllers
             {
                 try
                 {
-                    _handler.UpdateAggregateComponent(id, replace);
+                    _databaseHandler.UpdateAggregateComponent(id, replace);
                 }
                 catch (Exception e)
                 {
@@ -158,7 +160,7 @@ namespace API.Controllers
             Tuple<ComponentType, int> componentInfo;
             try
             {
-                componentInfo = _handler.GetComponent(pid, cid);
+                componentInfo = _databaseHandler.GetComponent(pid, cid);
             }
             catch (Exception e)
             {
@@ -182,7 +184,7 @@ namespace API.Controllers
 
         private IActionResult GetAggregation(int id)
         {
-            var aggregation = _handler.GetAggregateComponent(id);
+            var aggregation = _databaseHandler.GetAggregateComponent(id);
             if (aggregation == null)
                 return NotFound();
             return Ok(new
@@ -198,7 +200,7 @@ namespace API.Controllers
             Tuple<ComponentType, int> componentInfo;
             try
             {
-                componentInfo = _handler.GetComponent(pid, cid);
+                componentInfo = _databaseHandler.GetComponent(pid, cid);
             }
             catch (Exception e)
             {
@@ -218,7 +220,7 @@ namespace API.Controllers
                     throw new ArgumentOutOfRangeException();
             }
 
-            _handler.DeleteComponent(pid, cid);
+            _databaseHandler.DeleteComponent(pid, cid);
 
             return Ok();
         }
@@ -227,7 +229,7 @@ namespace API.Controllers
         {
             try
             {
-                _handler.DeleteAggregateComponent(id);
+                _databaseHandler.DeleteAggregateComponent(id);
                 return Ok();
             }
             catch (Exception e)
@@ -235,5 +237,24 @@ namespace API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost]
+        [Route("{id}/run")]
+        public IActionResult Run(int id)
+        {
+            var pipeline = new Pipeline(_sqlHandler, _databaseHandler);
+            pipeline.LoadFromModel(_databaseHandler.GetPipeline(id));
+            try
+            {
+                pipeline.Run();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500,e);
+            }
+            return Ok();
+        }
+        
+        
     }
 }
