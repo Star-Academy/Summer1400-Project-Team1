@@ -13,9 +13,11 @@ namespace API
         Dictionary<int,string> GetTables(int connectionId, int databaseId);
         List<DatasetModel> GetDatasets();
         void AddSqlDataset(int connectionId, int databaseId, int tableId);
-        void AddCsvDataset(string pathToCsv);
+        void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
         List<PipelineModel> GetPipelines();
+
+        PipelineModel GetPipeline(int pipelineId);
         int AddPipeline(string name);
         List<ComponentModel> GetComponents(int pipelineId);
         void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId);

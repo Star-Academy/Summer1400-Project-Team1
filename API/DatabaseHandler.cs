@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace API
 {
@@ -14,10 +17,12 @@ namespace API
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
+        private readonly ICsvHandler _csvHandler;
 
-        public DatabaseHandler(ApiContext apiContext)
+        public DatabaseHandler(ApiContext apiContext,ICsvHandler csvHandler)
         {
             _context = apiContext;
+            _csvHandler = csvHandler;
         }
 
         public List<ConnectionModel> GetConnections()
@@ -55,29 +60,58 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public void AddCsvDataset(string pathToCsv)
+        public void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded)
         {
-            throw new NotImplementedException();
+            _csvHandler.LoadCsv(pathToCsv,isHeaderIncluded);
+            _csvHandler.CsvToSql(name);
         }
 
         public string GetCsvDataset(int datasetId)
         {
-            throw new NotImplementedException();
+            var dataset = _context.Dataset.Find(datasetId);
+            var folderName = Path.Combine("Resources", "CSVs");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var path = Path.Combine(pathToSave, $"{dataset.Name}.csv");
+            _csvHandler.SqlToCsv(dataset.Name,path);
+            return path;
         }
 
         public List<PipelineModel> GetPipelines()
         {
-            throw new NotImplementedException();
+            return _context.Pipeline.ToList();
+        }
+
+        public PipelineModel GetPipeline(int pipelineId)
+        {
+            return _context.Pipeline.Find(pipelineId);
         }
 
         public int AddPipeline(string name)
         {
-            throw new NotImplementedException();
+            var pipeline = new PipelineModel()
+            {
+                Name = name,
+                DateCreated = DateTime.Now
+            };
+            _context.Pipeline.Add(pipeline);
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return 0;
+            }
+            
+            return pipeline.Id;
         }
 
         public List<ComponentModel> GetComponents(int pipelineId)
         {
-            throw new NotImplementedException();
+            return _context.Pipeline
+                .Find(pipelineId)
+                .Components.ToList();
         }
 
         public void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId)

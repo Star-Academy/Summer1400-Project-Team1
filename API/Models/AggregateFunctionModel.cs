@@ -5,7 +5,7 @@ namespace API.Models
     [Owned]
     public class AggregateFunctionModel
     {
-        public string AggregationType { get; set; }
+        public int AggregationType { get; set; }
         public string ColumnName { get; set; }
         public string OutputColumnName { get; set; }
     }

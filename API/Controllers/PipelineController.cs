@@ -7,10 +7,12 @@ namespace API.Controllers
     [Route("api/v1/[controller]")]
     public class PipelineController : ControllerBase
     {
-        private DatabaseHandler _handler;
-        public PipelineController(DatabaseHandler databaseHandler)
+        private readonly IDatabaseHandler _databaseHandler;
+        private readonly ISqlHandler _sqlHandler;
+        public PipelineController(ISqlHandler sqlHandler,IDatabaseHandler databaseHandler)
         {
-            _handler = databaseHandler;
+            _sqlHandler = sqlHandler;
+            _databaseHandler = databaseHandler;
         }
         
         [HttpGet]
@@ -46,7 +48,7 @@ namespace API.Controllers
         
         void AddFilter(int pipelineId, int orderId,string name, string body)
         {
-            _handler.AddFilterComponent(pipelineId,body,name,orderId);
+            _databaseHandler.AddFilterComponent(pipelineId,body,name,orderId);
         }
         
         void AddJoin(int pipelineId, int orderId,string name, string body)
@@ -83,8 +85,23 @@ namespace API.Controllers
         {
             return Ok();
         }
-        
-        
+
+        [HttpPost]
+        [Route("{id}/run")]
+        public IActionResult Run(int id)
+        {
+            var pipeline = new Pipeline(_sqlHandler, _databaseHandler);
+            pipeline.LoadFromModel(_databaseHandler.GetPipeline(id));
+            try
+            {
+                pipeline.Run();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500,e);
+            }
+            return Ok();
+        }
         
         
     }
