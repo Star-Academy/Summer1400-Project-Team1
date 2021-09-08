@@ -91,5 +91,30 @@ namespace API.Controllers
             
             return contentType;
         }
+        
+        
+        [HttpGet]
+        public IActionResult GetDatasets()
+        {
+            var datasets = _databaseHandler.GetDatasets().ToList();
+            return Ok(datasets);
+        }
+
+        [HttpPost("sql")]
+        public IActionResult AddSqlDataset(SqlDataset sqlDataset)
+        {
+            _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
+                sqlDataset.DatabaseName,sqlDataset.TableName);
+            return Ok();
+        }
+        
+    }
+
+    public class SqlDataset
+    {
+        public readonly string Name;
+        public readonly int ConnectionId;
+        public readonly string DatabaseName;
+        public readonly string TableName;
     }
 }

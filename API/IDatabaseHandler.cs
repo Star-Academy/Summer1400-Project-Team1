@@ -9,10 +9,10 @@ namespace API
         List<ConnectionModel> GetConnections();
         ConnectionModel GetConnection(int connectionId);
         int AddConnection(string name,string server,string username,string password);
-        Dictionary<int,string> GetDatabases(int connectionId);
-        Dictionary<int,string> GetTables(int connectionId, int databaseId);
+        IEnumerable<string> GetDatabases(int connectionId);
+        IEnumerable<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
-        void AddSqlDataset(int connectionId, int databaseId, int tableId);
+        void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
         void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
         List<PipelineModel> GetPipelines();

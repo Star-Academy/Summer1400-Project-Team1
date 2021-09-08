@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Data;
 using System.Linq;
 using API.Models;
+using API.SqlIOHandler;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
 
@@ -14,51 +17,70 @@ namespace API
         Filter = 1,
         Join = 2
     }
-
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
         private readonly ICsvHandler _csvHandler;
+        private readonly ISqlIOHandler _sqlIoHandler;
 
-        public DatabaseHandler(ApiContext apiContext, ICsvHandler csvHandler)
+        public DatabaseHandler(ApiContext apiContext, ISqlIOHandler sqlIoHandler,ICsvHandler csvHandler)
         {
             _context = apiContext;
             _csvHandler = csvHandler;
+            _sqlIoHandler = sqlIoHandler;
         }
 
         public List<ConnectionModel> GetConnections()
         {
-            throw new NotImplementedException();
+            return _context.Connection.ToList();
         }
 
         public ConnectionModel GetConnection(int connectionId)
         {
-            throw new NotImplementedException();
+            return _context.Connection.Find(connectionId);
         }
 
         public int AddConnection(string name, string server, string username, string password)
         {
-            throw new NotImplementedException();
+            var newConnection = new ConnectionModel()
+            {
+                Name = name, Server = server, Username = username, Password = password
+            };
+            _context.Connection.Add(newConnection);
+            newConnection.BuildConnectionString();
+            _context.SaveChanges();
+            return newConnection.Id;
         }
 
-        public Dictionary<int, string> GetDatabases(int connectionId)
+        public IEnumerable<string> GetDatabases(int connectionId)
         {
-            throw new NotImplementedException();
+            var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
+            var databases = _sqlIoHandler.GetDatabases(serverConnectionString);
+
+            return databases;
         }
 
-        public Dictionary<int, string> GetTables(int connectionId, int databaseId)
+        public IEnumerable<string> GetTables(int connectionId, string databaseName)
         {
-            throw new NotImplementedException();
+            var connectionStringToDatabase =
+                _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
+            var tables = _sqlIoHandler.GetTables(connectionStringToDatabase);
+            return tables;
         }
 
         public List<DatasetModel> GetDatasets()
         {
-            throw new NotImplementedException();
+            return _context.Dataset.ToList();
         }
 
-        public void AddSqlDataset(int connectionId, int databaseId, int tableId)
+        public void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableName)
         {
-            throw new NotImplementedException();
+            var connectionModel = _context.Connection.Find(connectionId);
+            _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
+            _context.Dataset.Add(new DatasetModel()
+            {
+                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
+            });
         }
 
         public void AddCsvDataset(string pathToCsv, string name, bool isHeaderIncluded)
@@ -228,7 +250,11 @@ namespace API
 
         public void UpdateFilterComponent(int id, FilterModel newModel)
         {
-            throw new NotImplementedException();
+            var oldModel = _context.FilterComponent.Find(id);
+            if (oldModel == null)
+                throw new Exception("not found");
+            oldModel.Query = newModel.Query;
+            _context.SaveChanges();
         }
 
         public void UpdateJoinComponent(int id, JoinModel newModel)
@@ -243,6 +269,7 @@ namespace API
             oldModel.SecondTablePk = newModel.SecondTablePk;
             _context.SaveChanges();
         }
+        
 
         public void DeleteComponent(int pipelineId, int componentId)
         {
@@ -267,7 +294,11 @@ namespace API
 
         public void DeleteFilterComponent(int id)
         {
-            throw new NotImplementedException();
+            FilterModel filter = _context.FilterComponent.Find(id);
+            if (filter == null)
+                throw new Exception("filter not found");
+            _context.FilterComponent.Remove(filter);
+            _context.SaveChanges();
         }
 
         public void DeleteJoinComponent(int id)
