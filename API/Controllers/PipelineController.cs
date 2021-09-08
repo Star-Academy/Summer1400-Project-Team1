@@ -11,12 +11,13 @@ namespace API.Controllers
     {
         private readonly IDatabaseHandler _databaseHandler;
         private readonly ISqlHandler _sqlHandler;
-        public PipelineController(ISqlHandler sqlHandler,IDatabaseHandler databaseHandler)
+
+        public PipelineController(ISqlHandler sqlHandler, IDatabaseHandler databaseHandler)
         {
             _sqlHandler = sqlHandler;
             _databaseHandler = databaseHandler;
         }
-        
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -27,60 +28,64 @@ namespace API.Controllers
         [Route("{id}")]
         public IActionResult GetPipeline(int id)
         {
-            Console.WriteLine("get pipeline"+id);
+            Console.WriteLine("get pipeline" + id);
             return Ok();
         }
-        
+
         [HttpPost]
         public void Post()
         {
-            
         }
-        
+
         [HttpPatch]
         [Route("{id}")]
         public void Patch(int id)
         {
-            Console.WriteLine("id is :"+id);
+            Console.WriteLine("id is :" + id);
         }
 
-        void AddAggregate(int pipelineId, int orderId,string name, string body)
+        void AddAggregate(int pipelineId, int orderId, string name, string body)
         {
             AggregationModel aggregation = JsonSerializer.Deserialize<AggregationModel>(body);
-            if(aggregation==null)
+            if (aggregation == null)
                 return;
             aggregation.Name = name;
             _databaseHandler.AddAggregateComponent(pipelineId, aggregation, orderId);
         }
-        
-        void AddFilter(int pipelineId, int orderId,string name, string body)
+
+        void AddFilter(int pipelineId, int orderId, string name, string body)
         {
-            _databaseHandler.AddFilterComponent(pipelineId,body,name,orderId);
+            _databaseHandler.AddFilterComponent(pipelineId, body, name, orderId);
         }
-        
-        void AddJoin(int pipelineId, int orderId,string name, string body)
+
+        void AddJoin(int pipelineId, int orderId, string name, string body)
         {
+            JoinModel join = JsonSerializer.Deserialize<JoinModel>(body);
+            if (join == null)
+                return;
+            join.Name = name;
+            _databaseHandler.AddJoinComponent(pipelineId, join, orderId);
         }
 
         [HttpPost]
         [Route("{id}/component")]
-        public void PostComponent(int id,string type, int index,string name)
+        public void PostComponent(int id, string type, int index, string name)
         {
             switch (type)
             {
                 case "join":
                 {
-                    AddJoin(id,index,name,Response.Body.ToString());
+                    AddJoin(id, index, name, Response.Body.ToString());
                     break;
                 }
                 case "aggregate":
                 {
-                    AddAggregate(id,index,name,Response.Body.ToString());
+                    AddAggregate(id, index, name, Response.Body.ToString());
                     break;
                 }
                 case "filter":
                 {
-                    AddFilter(id,index,name,Response.Body.ToString());
+                    AddFilter(id, index, name, Response.Body.ToString());
                     break;
                 }
             }
@@ -91,7 +96,6 @@ namespace API.Controllers
         {
             Tuple<ComponentType, int> componentInfo;
             try
-            
             {
                 componentInfo = _databaseHandler.GetComponent(pid, cid);
             }
@@ -105,9 +109,9 @@ namespace API.Controllers
                 case ComponentType.Filter:
                     break;
                 case ComponentType.Join:
-                    break;
+                    return PatchJoin(componentInfo.Item2, Request.Body.ToString());
                 case ComponentType.Aggregation:
-                    return PatchAggregation(componentInfo.Item2,Request.Body.ToString());
+                    return PatchAggregation(componentInfo.Item2, Request.Body.ToString());
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -128,11 +132,29 @@ namespace API.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-                
             }
             else
             {
                 return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        private IActionResult PatchJoin(int id, string json)
+        {
+            JoinModel model = JsonSerializer.Deserialize<JoinModel>(json);
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _databaseHandler.UpdateJoinComponent(id, model);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
             return Ok();
@@ -157,7 +179,7 @@ namespace API.Controllers
                 case ComponentType.Filter:
                     break;
                 case ComponentType.Join:
-                    break;
+                    return GetJoin(componentInfo.Item2);
                 case ComponentType.Aggregation:
                     return GetAggregation(componentInfo.Item2);
                 default:
@@ -176,6 +198,18 @@ namespace API.Controllers
             {
                 Type = ComponentType.Aggregation,
                 Component = aggregation
+            });
+        }
+        
+        private IActionResult GetJoin(int id)
+        {
+            var join = _databaseHandler.GetJoinComponent(id);
+            if (join == null)
+                return NotFound();
+            return Ok(new
+            {
+                Type = ComponentType.Join,
+                Component = join
             });
         }
 
@@ -224,11 +258,10 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500,e);
+                return StatusCode(500, e);
             }
+
             return Ok();
         }
-        
-        
     }
 }

@@ -22,14 +22,14 @@ namespace API
         List<ComponentModel> GetComponents(int pipelineId);
         void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId);
         void AddFilterComponent(int pipelineId, string body,string name, int orderId);
-        void AddJoinComponent(int pipelineId, JoinModel joinModel, int orderId);
+        void AddJoinComponent(int pipelineId,JoinModel joinModel, int orderId);
         Tuple<ComponentType,int> GetComponent(int pipelineId, int orderId);
         AggregationModel GetAggregateComponent(int componentId);
         FilterModel GetFilterComponent(int componentId);
         JoinModel GetJoinComponent(int componentId);
         void UpdateAggregateComponent(int id, AggregationModel newModel);
-        void UpdateFilterComponent(int id, AggregationModel newModel);
-        void UpdateJoinComponent(int id, AggregationModel newModel);
+        void UpdateFilterComponent(int id, FilterModel newModel);
+        void UpdateJoinComponent(int id, JoinModel newModel);
         void DeleteComponent(int pipelineId, int componentId);
         void DeleteAggregateComponent(int id);
         void DeleteFilterComponent(int id);
