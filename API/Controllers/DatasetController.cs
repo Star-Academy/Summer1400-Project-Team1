@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -21,13 +22,21 @@ namespace API.Controllers
             return Ok(datasets);
         }
 
-        [HttpPost]
-        [Route("sql")]
-        public IActionResult AddSqlDataset(string name, int connectionId, 
-            string databaseName, string tableName)
+        [HttpPost("sql")]
+        public IActionResult AddSqlDataset(SqlDataset sqlDataset)
         {
-            _databaseHandler.AddSqlDataset(name,connectionId,databaseName,tableName);
+            _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
+                sqlDataset.DatabaseName,sqlDataset.TableName);
             return Ok();
         }
+        
+    }
+
+    public class SqlDataset
+    {
+        public readonly string Name;
+        public readonly int ConnectionId;
+        public readonly string DatabaseName;
+        public readonly string TableName;
     }
 }

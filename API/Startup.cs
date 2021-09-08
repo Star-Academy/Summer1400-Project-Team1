@@ -33,6 +33,7 @@ namespace API
             services.AddSingleton<ISqlHandler, SqlHandler>();
             services.AddSingleton<ICsvHandler, CsvHandler>();
             services.AddSingleton<ILinkedServerHandler, LinkedServerHandler>();
+            services.AddSingleton<ISqlIOHandler,SqlIOHandler.SqlIOHandler>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

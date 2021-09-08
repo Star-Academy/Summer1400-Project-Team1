@@ -14,16 +14,15 @@ namespace API
         Filter = 1,
         Join = 2
     }
+
     public class DatabaseHandler : IDatabaseHandler
     {
         private readonly ApiContext _context;
-        private readonly ILinkedServerHandler _linkedServerHandler;
         private readonly ISqlIOHandler _sqlIoHandler;
 
-        public DatabaseHandler(ApiContext apiContext,ILinkedServerHandler linkedServerHandler, ISqlIOHandler sqlIoHandler)
+        public DatabaseHandler(ApiContext apiContext, ISqlIOHandler sqlIoHandler)
         {
             _context = apiContext;
-            _linkedServerHandler = linkedServerHandler;
             _sqlIoHandler = sqlIoHandler;
         }
 
@@ -44,8 +43,8 @@ namespace API
                 Name = name, Server = server, Username = username, Password = password
             };
             _context.Connection.Add(newConnection);
-            _context.SaveChanges();
             newConnection.BuildConnectionString();
+            _context.SaveChanges();
             return newConnection.Id;
         }
 
@@ -53,13 +52,14 @@ namespace API
         {
             var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
             var databases = _sqlIoHandler.GetDatabases(serverConnectionString);
-            
+
             return databases;
         }
 
         public IEnumerable<string> GetTables(int connectionId, string databaseName)
         {
-            var connectionStringToDatabase = _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
+            var connectionStringToDatabase =
+                _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
             var tables = _sqlIoHandler.GetTables(connectionStringToDatabase);
             return tables;
         }
@@ -69,18 +69,13 @@ namespace API
             return _context.Dataset.ToList();
         }
 
-        public void AddSqlDataset(string datasetName,int connectionId, string databaseName, string tableName)
+        public void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableName)
         {
-            var server = _context.Connection.Find(connectionId).Server;
-            var username = _context.Connection.Find(connectionId).Username;
-            var password = _context.Connection.Find(connectionId).Password;
-            _linkedServerHandler.AddLinkedServer(server,username,password);
-            _linkedServerHandler.ImportToNewTable(server,databaseName,tableName);
-            _linkedServerHandler.DropLinkedServer(server);
+            var connectionModel = _context.Connection.Find(connectionId);
+            _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
             _context.Dataset.Add(new DatasetModel()
             {
-                Connection = _context.Connection.Find(connectionId), Name = datasetName,
-                DateCreated = DateTime.Now
+                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
             });
         }
 
@@ -114,7 +109,7 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public void AddFilterComponent(int pipelineId, string body,string name, int orderId)
+        public void AddFilterComponent(int pipelineId, string body, string name, int orderId)
         {
             var newFilterComponent = new FilterModel()
             {
@@ -124,17 +119,16 @@ namespace API
             _context.FilterComponent.Add(newFilterComponent);
             _context.SaveChanges();
             var filterId = newFilterComponent.Id;
-            
+
             var newComponentModel = new ComponentModel()
             {
                 Name = name,
-                Type = (int)ComponentType.Filter,
+                Type = (int) ComponentType.Filter,
                 OrderId = orderId,
                 RelatedComponentId = filterId
             };
-            
-            _context.Pipeline.Find(pipelineId).Components.Add(newComponentModel);
 
+            _context.Pipeline.Find(pipelineId).Components.Add(newComponentModel);
         }
 
         public void AddJoinComponent(int pipelineId, JoinModel joinModel, int orderId)
