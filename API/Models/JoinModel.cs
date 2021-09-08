@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using API.Join;
 
 namespace API.Models
 {
@@ -9,6 +10,6 @@ namespace API.Models
         public string SecondTableName { get; set; }
         public string FirstTablePk { get; set; }
         public string SecondTablePk { get; set; }
-        public int JoinType { get; set; }
+        public JoinType JoinType { get; set; }
     }
 }

@@ -114,6 +114,18 @@ namespace API
                 .Components.ToList();
         }
 
+        private void AddComponent(PipelineModel pipelineModel, ComponentModel componentModel, int orderId)
+        {
+            pipelineModel.Components.OrderBy(c => c.OrderId);
+            pipelineModel.Components.Insert(orderId,componentModel);
+            for (int i = orderId+1; i < pipelineModel.Components.Count; i++)
+            {
+                pipelineModel.Components[i].OrderId++;
+            }
+
+            _context.SaveChanges();
+        }
+
         public void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId)
         {
             /*if (!_context.Database.EnsureCreated())
@@ -128,14 +140,15 @@ namespace API
                 throw new Exception("invalid order");
             _context.AggregateComponent.Add(aggregationModel);
             _context.SaveChanges();
-            pipeline.Components.Insert(orderId,new ComponentModel()
+            
+            AddComponent(pipeline,new ComponentModel()
             {
                 Name = aggregationModel.Name,
                 OrderId = orderId,
                 Type = ComponentType.Aggregation,
                 RelatedComponentId = aggregationModel.Id
-            });
-            _context.SaveChanges();
+            },orderId);
+            
         }
 
         public void AddFilterComponent(int pipelineId, string body,string name, int orderId)
@@ -148,16 +161,14 @@ namespace API
             _context.FilterComponent.Add(newFilterComponent);
             _context.SaveChanges();
             var filterId = newFilterComponent.Id;
-            
-            var newComponentModel = new ComponentModel()
+
+            AddComponent( _context.Pipeline.Find(pipelineId),new ComponentModel()
             {
                 Name = name,
                 Type = ComponentType.Filter,
                 OrderId = orderId,
                 RelatedComponentId = filterId
-            };
-            
-            _context.Pipeline.Find(pipelineId).Components.Add(newComponentModel);
+            },orderId);
 
         }
 

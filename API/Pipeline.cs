@@ -42,7 +42,7 @@ namespace API
                     break;
                 }
 
-                case (int) ComponentType.Aggregation:
+                case ComponentType.Aggregation:
                 {
                     AddComponentAggregate(componentModel);
                     break;
