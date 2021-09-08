@@ -13,6 +13,7 @@ namespace API
         private bool _isHeaderIncluded;
         private bool[] _columnsDetected;
         private readonly ISqlHandler _sqlHandler;
+        private string _tableName;
 
         public CsvHandler(ISqlHandler sqlHandler)
         {
@@ -26,18 +27,18 @@ namespace API
             {
                 MissingFieldFound              = null
             };
-            var csvReader = new CsvReader(file, config);
-            var dataReader = new CsvDataReader(csvReader);
+            using var csvReader = new CsvReader(file, config);
+            using var dataReader = new CsvDataReader(csvReader);
             _dataTable = new DataTable();
             _dataTable.Load(dataReader);
             _isHeaderIncluded = isHeaderIncluded;
             _columnsDetected = new bool[_dataTable.Columns.Count];
         }
 
-        private void CreateTable(string tableName)
+        private void CreateTable()
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
-            var command = new SqlCommand($"CREATE TABLE {tableName} (temp int);",_sqlHandler.Connection);
+            var command = new SqlCommand($"CREATE TABLE {_tableName} (temp int);",_sqlHandler.Connection);
             command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
@@ -46,7 +47,7 @@ namespace API
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var command =
-                new SqlCommand($"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " text;",
+                new SqlCommand($"ALTER TABLE {_tableName} ADD {_dataTable.Columns[index].ColumnName}" + " VARCHAR(MAX);",
                     _sqlHandler.Connection);
             command.ExecuteNonQuery();
             _sqlHandler.Close();
@@ -57,7 +58,7 @@ namespace API
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var command =
                 new SqlCommand(
-                    $"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " datetime;",
+                    $"ALTER TABLE {_tableName} ADD {_dataTable.Columns[index].ColumnName}" + " datetime;",
                     _sqlHandler.Connection);
             command.ExecuteNonQuery();
             _sqlHandler.Close();
@@ -67,7 +68,7 @@ namespace API
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var command =
-                new SqlCommand($"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " float;",
+                new SqlCommand($"ALTER TABLE {_tableName} ADD {_dataTable.Columns[index].ColumnName}" + " float;",
                     _sqlHandler.Connection);
             command.ExecuteNonQuery();
             _sqlHandler.Close();
@@ -77,7 +78,7 @@ namespace API
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var command =
-                new SqlCommand($"ALTER TABLE myTable ADD {_dataTable.Columns[index].ColumnName}" + " int;",
+                new SqlCommand($"ALTER TABLE {_tableName} ADD {_dataTable.Columns[index].ColumnName}" + " int;",
                     _sqlHandler.Connection);
             command.ExecuteNonQuery();
             _sqlHandler.Close();
@@ -85,21 +86,22 @@ namespace API
         
         private void AddColumn(DataRow row, int index)
         {
-            switch (row[index])
+            if (int.TryParse(row[index].ToString(),out var t))
             {
-                case int:
-                    AddColumnInt(index);
-                    return;
-                case float:
-                    AddColumnFloat(index);
-                    return;
-                case DateTime:
-                    AddColumnDate(index);
-                    return;
-                default:
-                    AddColumnText(index);
-                    break;
+                AddColumnInt(index);
+                return;
             }
+            if (float.TryParse(row[index].ToString(),out var t2))
+            {
+                AddColumnFloat(index);
+                return;
+            }
+            if (DateTime.TryParse(row[index].ToString(),out var t3))
+            {
+                AddColumnDate(index);
+                return;
+            }
+            AddColumnText(index);
         }
         
         private void DetectRemainingColumns()
@@ -131,7 +133,7 @@ namespace API
                     _columnsDetected[index] = true;
                     if(_isHeaderIncluded == false) _dataTable.Columns[index].ColumnName = "column" + index;
                     if(!_sqlHandler.IsOpen())_sqlHandler.Open();
-
+                    
                     AddColumn(row, index);
                 }
             }
@@ -141,14 +143,15 @@ namespace API
         private void RemoveTempColumn()
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
-            var command = new SqlCommand("ALTER TABLE myTable DROP COLUMN temp", _sqlHandler.Connection);
+            var command = new SqlCommand($"ALTER TABLE {_tableName} DROP COLUMN temp", _sqlHandler.Connection);
             command.ExecuteNonQuery();
             _sqlHandler.Close();
         }
 
         public void CsvToSql(string tableName)
         {
-            CreateTable(tableName);
+            _tableName = tableName;
+            CreateTable();
             DetectColumns();
             RemoveTempColumn();
             
@@ -171,6 +174,32 @@ namespace API
                 }
             }
             _sqlHandler.Close();
+        }
+
+        public void SqlToCsv(string tableName, string pathToCsv)
+        {
+            if (!_sqlHandler.IsOpen()) _sqlHandler.Open();
+            var adaptor = new SqlDataAdapter($"SELECT * FROM {tableName}", _sqlHandler.Connection);
+            _dataTable = new DataTable();
+            adaptor.Fill(_dataTable);
+            using var writer = new StreamWriter(pathToCsv);
+            using var csvWriter = new CsvWriter(writer, CultureInfo.CurrentCulture);
+            foreach (DataColumn dc in _dataTable.Columns)
+            {
+                csvWriter.WriteField(dc.ColumnName);
+            }
+
+            csvWriter.NextRecord();
+
+            foreach (DataRow dr in _dataTable.Rows)
+            {
+                foreach (DataColumn dc in _dataTable.Columns)
+                {
+                    csvWriter.WriteField(dr[dc]);
+                }
+
+                csvWriter.NextRecord();
+            }
         }
     }
 }
