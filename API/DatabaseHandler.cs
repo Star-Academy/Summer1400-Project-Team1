@@ -237,15 +237,20 @@ namespace API
             _context.SaveChanges();
         }
 
-        void IDatabaseHandler.UpdateFilterComponent(int id, AggregationModel newModel)
+        public void UpdateFilterComponent(int id, FilterModel newModel)
         {
-            throw new NotImplementedException();
+            var oldModel = _context.FilterComponent.Find(id);
+            if (oldModel == null)
+                throw new Exception("not found");
+            oldModel.Query = newModel.Query;
+            _context.SaveChanges();
         }
 
-        public void UpdateJoinComponent(int id, AggregationModel newModel)
+        public void UpdateJoinComponent(int id, JoinModel newModel)
         {
             throw new NotImplementedException();
         }
+        
 
         public void DeleteComponent(int pipelineId, int componentId)
         {
@@ -270,7 +275,11 @@ namespace API
 
         public void DeleteFilterComponent(int id)
         {
-            throw new NotImplementedException();
+            FilterModel filter = _context.FilterComponent.Find(id);
+            if (filter == null)
+                throw new Exception("filter not found");
+            _context.FilterComponent.Remove(filter);
+            _context.SaveChanges();
         }
 
         public void DeleteJoinComponent(int id)

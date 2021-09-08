@@ -91,7 +91,6 @@ namespace API.Controllers
         {
             Tuple<ComponentType, int> componentInfo;
             try
-            
             {
                 componentInfo = _databaseHandler.GetComponent(pid, cid);
             }
@@ -103,13 +102,36 @@ namespace API.Controllers
             switch (componentInfo.Item1)
             {
                 case ComponentType.Filter:
-                    break;
+                    return PatchFilter(componentInfo.Item2,Request.Body.ToString());
                 case ComponentType.Join:
                     break;
                 case ComponentType.Aggregation:
                     return PatchAggregation(componentInfo.Item2,Request.Body.ToString());
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            return Ok();
+        }
+
+        private IActionResult PatchFilter(int id, string json)
+        {
+            var replace = JsonSerializer.Deserialize<FilterModel>(json);
+            if (replace != null)
+            {
+                try
+                {
+                    _databaseHandler.UpdateFilterComponent(id, replace);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+                
+            }
+            else
+            {
+                return BadRequest();
             }
 
             return Ok();
@@ -155,7 +177,7 @@ namespace API.Controllers
             switch (componentInfo.Item1)
             {
                 case ComponentType.Filter:
-                    break;
+                    return GetFilter(componentInfo.Item2);
                 case ComponentType.Join:
                     break;
                 case ComponentType.Aggregation:
@@ -165,6 +187,18 @@ namespace API.Controllers
             }
 
             return Ok();
+        }
+
+        private IActionResult GetFilter(int id)
+        {
+            var filter = _databaseHandler.GetFilterComponent(id);
+            if (filter == null)
+                return NotFound();
+            return Ok(new
+            {
+                Type = ComponentType.Filter,
+                Component = filter
+            });
         }
 
         private IActionResult GetAggregation(int id)
