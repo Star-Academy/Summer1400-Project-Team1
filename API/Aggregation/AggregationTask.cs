@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace API.Aggregation
 {
@@ -38,16 +39,19 @@ namespace API.Aggregation
             sqlString += "INTO " + destinationName + " ";
 
             sqlString += "FROM " + sourceDataset + " ";
-            sqlString += "GROUP BY ";
-
-            first = true;
-            foreach (var groupBy in _groupByItems)
+            if (_groupByItems.Any())
             {
-                if (!first)
-                    sqlString += ",";
-                else
-                    first = false;
-                sqlString += groupBy.ColumnName + " ";
+                sqlString += "GROUP BY ";
+
+                first = true;
+                foreach (var groupBy in _groupByItems)
+                {
+                    if (!first)
+                        sqlString += ",";
+                    else
+                        first = false;
+                    sqlString += groupBy.ColumnName + " ";
+                }
             }
 
 

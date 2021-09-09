@@ -187,7 +187,7 @@ namespace API.Controllers
 
         private IActionResult PatchAggregation(int id, string json)
         {
-            var replace = JsonSerializer.Deserialize<AggregationModel>(json);
+            var replace = JsonConvert.DeserializeObject<AggregationModel>(json);
             if (replace != null)
             {
                 try
