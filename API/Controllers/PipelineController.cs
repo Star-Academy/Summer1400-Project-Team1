@@ -1,7 +1,10 @@
 using System;
+using System.IO;
 using System.Text.Json;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace API.Controllers
 {
@@ -46,11 +49,10 @@ namespace API.Controllers
 
         void AddAggregate(int pipelineId, int orderId, string name, string body)
         {
-            AggregationModel aggregation = JsonSerializer.Deserialize<AggregationModel>(body);
+            AggregationModel aggregation = JsonConvert.DeserializeObject<AggregationModel>(body);
             if (aggregation == null)
                 return;
-            aggregation.Name = name;
-            _databaseHandler.AddAggregateComponent(pipelineId, aggregation, orderId);
+            _databaseHandler.AddAggregateComponent(pipelineId, name, aggregation, orderId);
         }
 
         void AddFilter(int pipelineId, int orderId, string name, string body)
@@ -63,36 +65,35 @@ namespace API.Controllers
             JoinModel join = JsonSerializer.Deserialize<JoinModel>(body);
             if (join == null)
                 return;
-            join.Name = name;
-            _databaseHandler.AddJoinComponent(pipelineId, join, orderId);
+            _databaseHandler.AddJoinComponent(pipelineId, name, join, orderId);
         }
 
         [HttpPost]
         [Route("{id}/component")]
-        public void PostComponent(int id, string type, int index, string name)
+        public void PostComponent(int id, string type, int index, string name,[FromBody] JsonElement body)
         {
             switch (type)
             {
                 case "join":
                 {
-                    AddJoin(id, index, name, Response.Body.ToString());
+                    AddJoin(id, index, name, body.ToString());
                     break;
                 }
                 case "aggregate":
                 {
-                    AddAggregate(id, index, name, Response.Body.ToString());
+                    AddAggregate(id, index, name, body.ToString());
                     break;
                 }
                 case "filter":
                 {
-                    AddFilter(id, index, name, Response.Body.ToString());
+                    AddFilter(id, index, name, body.ToString());
                     break;
                 }
             }
         }
 
         [HttpPatch("{pid}/component/{cid}")]
-        public IActionResult PatchComponent(int pid, int cid)
+        public IActionResult PatchComponent(int pid, int cid,[FromQuery] string name,[FromBody] JsonElement body)
         {
             Tuple<ComponentType, int> componentInfo;
             try
@@ -103,20 +104,21 @@ namespace API.Controllers
             {
                 return BadRequest(e.Message);
             }
-
+            
+            if(name != null) _databaseHandler.UpdataComponent(pid,cid,name);
+            
             switch (componentInfo.Item1)
             {
                 case ComponentType.Filter:
-                    return PatchFilter(componentInfo.Item2,Request.Body.ToString());
+                    return PatchFilter(componentInfo.Item2,body.ToString());
                 case ComponentType.Join:
-                    return PatchJoin(componentInfo.Item2, Request.Body.ToString());
+                    return PatchJoin(componentInfo.Item2, body.ToString());
                 case ComponentType.Aggregation:
-                    return PatchAggregation(componentInfo.Item2, Request.Body.ToString());
+                    return PatchAggregation(componentInfo.Item2, body.ToString());
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            return Ok();
         }
 
         private IActionResult PatchFilter(int id, string json)
@@ -290,6 +292,24 @@ namespace API.Controllers
             try
             {
                 pipeline.Run();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+            }
+
+            return Ok();
+        }
+        
+        [HttpPost]
+        [Route("{pid}/run/{id}")]
+        public IActionResult RunByIndex(int pid,int id)
+        {
+            var pipeline = new Pipeline(_sqlHandler, _databaseHandler);
+            pipeline.LoadFromModel(_databaseHandler.GetPipeline(pid));
+            try
+            {
+                pipeline.RunByIndex(id);
             }
             catch (Exception e)
             {

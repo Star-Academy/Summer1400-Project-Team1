@@ -109,13 +109,24 @@ namespace API
             _context.SaveChanges();
         }
 
+        public int AddDataset(string name)
+        {
+            var dataset = new DatasetModel()
+            {
+                Name = name, Table = name, DateCreated = DateTime.Now, Connection = null
+            };
+            _context.Dataset.Add(dataset);
+            _context.SaveChanges();
+            return dataset.Id;
+        }
+
         public void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableName)
         {
             var connectionModel = _context.Connection.Find(connectionId);
             _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
             _context.Dataset.Add(new DatasetModel()
             {
-                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
+                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now, Table = tableName
             });
             _context.SaveChanges();
         }
@@ -124,6 +135,11 @@ namespace API
         {
             _csvHandler.LoadCsv(pathToCsv, isHeaderIncluded);
             _csvHandler.CsvToSql(name);
+            _context.Dataset.Add(new DatasetModel()
+            {
+                Connection = null, Name = name, DateCreated = DateTime.Now, Table = name
+            });
+            _context.SaveChanges();
         }
 
         public string GetCsvDataset(int datasetId)
@@ -143,7 +159,11 @@ namespace API
 
         public PipelineModel GetPipeline(int pipelineId)
         {
-            return _context.Pipeline.Find(pipelineId);
+            var pipeline = _context.Pipeline.Find(pipelineId); 
+            _context.Entry(pipeline).Reference(p => p.Source).Load();
+            _context.Entry(pipeline).Reference(p => p.Destination).Load();
+            _context.Entry(pipeline).Collection(p => p.Components).Load();
+            return pipeline;
         }
 
         public int AddPipeline(string name)
@@ -176,7 +196,7 @@ namespace API
 
         private void AddComponent(PipelineModel pipelineModel, ComponentModel componentModel, int orderId)
         {
-            pipelineModel.Components.OrderBy(c => c.OrderId);
+            pipelineModel.Components.Sort((c1,c2) => c1.OrderId-c2.OrderId);
             pipelineModel.Components.Insert(orderId, componentModel);
             for (int i = orderId + 1; i < pipelineModel.Components.Count; i++)
             {
@@ -186,7 +206,7 @@ namespace API
             _context.SaveChanges();
         }
 
-        public void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId)
+        public void AddAggregateComponent(int pipelineId, string name, AggregationModel aggregationModel, int orderId)
         {
             /*if (!_context.Database.EnsureCreated())
             {
@@ -203,7 +223,7 @@ namespace API
 
             AddComponent(pipeline, new ComponentModel()
             {
-                Name = aggregationModel.Name,
+                Name = name,
                 OrderId = orderId,
                 Type = ComponentType.Aggregation,
                 RelatedComponentId = aggregationModel.Id
@@ -230,7 +250,7 @@ namespace API
             }, orderId);
         }
 
-        public void AddJoinComponent(int pipelineId, JoinModel joinModel, int orderId)
+        public void AddJoinComponent(int pipelineId, string name, JoinModel joinModel, int orderId)
         {
             PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
             if (pipeline == null)
@@ -241,9 +261,9 @@ namespace API
             _context.SaveChanges();
             AddComponent(pipeline, new ComponentModel()
             {
-                Name = joinModel.Name,
+                Name = name,
                 OrderId = orderId,
-                Type = ComponentType.Aggregation,
+                Type = ComponentType.Join,
                 RelatedComponentId = joinModel.Id
             }, orderId);
         }
@@ -255,13 +275,16 @@ namespace API
                 throw new Exception("pipeline not found");
             if (orderId >= pipeline.Components.Count)
                 throw new Exception("invalid orderId");
-            ComponentModel component = pipeline.Components[orderId];
+            ComponentModel component = pipeline.Components.Find(c => c.OrderId == orderId);
             return new Tuple<ComponentType, int>(component.Type, component.RelatedComponentId);
         }
 
         public AggregationModel GetAggregateComponent(int componentId)
         {
-            return _context.AggregateComponent.Find(componentId);
+            var component = _context.AggregateComponent.Find(componentId);
+            _context.Entry(component).Collection(c => c.AggregateFunctions).Load();
+            _context.Entry(component).Collection(c => c.GroupByItems).Load();
+            return component;
         }
 
         public FilterModel GetFilterComponent(int componentId)
@@ -274,12 +297,23 @@ namespace API
             return _context.JoinComponent.Find(componentId);
         }
 
+        public void UpdataComponent(int pipelineId, int componentId, string name)
+        {
+            PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
+            if (pipeline == null)
+                throw new Exception("pipeline not found");
+            if (componentId >= pipeline.Components.Count)
+                throw new Exception("invalid orderId");
+            ComponentModel component = pipeline.Components.Find(c => c.OrderId == componentId);
+            component.Name = name;
+            _context.SaveChanges();
+        }
+
         public void UpdateAggregateComponent(int id, AggregationModel newModel)
         {
             var oldModel = _context.AggregateComponent.Find(id);
             if (oldModel == null)
                 throw new Exception("not found");
-            oldModel.Name = newModel.Name;
             oldModel.AggregateFunctions = newModel.AggregateFunctions;
             oldModel.GroupByItems = newModel.GroupByItems;
             _context.SaveChanges();
@@ -299,7 +333,6 @@ namespace API
             JoinModel oldModel = _context.JoinComponent.Find(id);
             if (oldModel == null)
                 throw new Exception("not found");
-            oldModel.Name = newModel.Name;
             oldModel.JoinType = newModel.JoinType;
             oldModel.SecondTableName = newModel.SecondTableName;
             oldModel.FirstTablePk = newModel.FirstTablePk;
@@ -317,6 +350,12 @@ namespace API
             if (component == null)
                 throw new Exception("component not found");
             pipeline.Components.Remove(component);
+            pipeline.Components.Sort((c1,c2) => c1.OrderId-c2.OrderId);
+            for (int i = componentId; i < pipeline.Components.Count; i++)
+            {
+                pipeline.Components[i].OrderId--;
+            }
+            
             _context.SaveChanges();
         }
 

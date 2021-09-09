@@ -23,6 +23,7 @@ namespace API
         {
             _sqlHandler = sqlHandler;
             _databaseHandler = databaseHandler;
+            Components = new LinkedList<IPipelineComponent>();
         }
         
         
@@ -38,7 +39,7 @@ namespace API
 
                 case ComponentType.Filter:
                 {
-                    AddCompnentFilter(componentModel);
+                    AddComponentFilter(componentModel);
                     break;
                 }
 
@@ -66,7 +67,7 @@ namespace API
             Components.AddLast(component);
         }
 
-        private void AddCompnentFilter(ComponentModel componentModel)
+        private void AddComponentFilter(ComponentModel componentModel)
         {
             var filterModel = _databaseHandler.GetFilterComponent(componentModel.RelatedComponentId);
             var parser = new Parser(filterModel.Query);
@@ -84,13 +85,12 @@ namespace API
 
         public void LoadFromModel(PipelineModel pipelineModel)
         {
-            if(pipelineModel.Source != null)SourceDataset = pipelineModel.Source.Name;
-            if(pipelineModel.Destination != null)DestinationDataset = pipelineModel.Destination.Name;
+            if(pipelineModel.Source != null)SourceDataset = pipelineModel.Source.Table;
+            if(pipelineModel.Destination != null)DestinationDataset = pipelineModel.Destination.Table;
             
-            pipelineModel.Components
-                .OrderBy(c => c.OrderId);
-            
-            foreach (var c in pipelineModel.Components)
+             pipelineModel.Components.Sort((c1,c2) => c1.OrderId-c2.OrderId);
+
+             foreach (var c in pipelineModel.Components)
             {
                 AddComponent(c);
             }
@@ -100,15 +100,21 @@ namespace API
         public string RunByIndex(int index)
         {
             if (SourceDataset == "") return "";
-            Components.OrderBy(c => c.OrderId);
+            if(index >= Components.Count-1) 
+            {
+                Run();
+                return DestinationDataset;
+            }
             var source = SourceDataset;
             var destination = "";
+            var count = 0;
             foreach (var c in Components)
             {
                 destination = c.Execute(source);
                 if(source != SourceDataset) DeleteTable(source);
-                if (c.OrderId == index) return destination;
+                if (count == index) return destination;
                 source = destination;
+                count++;
             }
 
             return "";
@@ -120,6 +126,17 @@ namespace API
             var command = new SqlCommand($"DROP TABLE {tableName}", _sqlHandler.Connection);
             command.ExecuteNonQuery();
         }
+
+        private void CopyToDestination(string tableName)
+        {
+            if(!_sqlHandler.IsOpen())_sqlHandler.Open();
+            var command =
+                new SqlCommand(
+                    $"DROP TABLE IF EXISTS {DestinationDataset};SELECT * INTO {DestinationDataset} FROM {tableName};",
+                    _sqlHandler.Connection);
+            command.ExecuteNonQuery();
+            DeleteTable(tableName);
+        }
         
         public void Run()
         {
@@ -127,12 +144,12 @@ namespace API
             
             var source = SourceDataset;
             string destination;
-            Components.OrderBy(c => c.OrderId);
             foreach (var c in Components)
             {
                 destination = c.Execute(source);
                 if(source != SourceDataset) DeleteTable(source);
-                if (destination != DestinationDataset) source = destination;
+                if (c != Components.Last.Value) source = destination;
+                else CopyToDestination(destination);
             }
 
         }

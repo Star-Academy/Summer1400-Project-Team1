@@ -49,7 +49,7 @@ namespace API.Join
             SqlCommand command = new SqlCommand(sqlString, _sqlHandler.Connection);
             Console.WriteLine(sqlString);
             command.ExecuteNonQuery();
-            return tempTableName;
+            return "##"+tempTableName;
         }
 
         private static string GetTempTableNameFromSourceDataset(string sourceDataset)

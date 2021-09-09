@@ -16,6 +16,7 @@ namespace API
         List<DatasetModel> GetDatasets();
         DatasetModel GetDataset(int id);
         void DeleteDataset(int id);
+        int AddDataset(string name);
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
         void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
@@ -24,13 +25,14 @@ namespace API
         PipelineModel GetPipeline(int pipelineId);
         int AddPipeline(string name);
         List<ComponentModel> GetComponents(int pipelineId);
-        void AddAggregateComponent(int pipelineId, AggregationModel aggregationModel, int orderId);
+        void AddAggregateComponent(int pipelineId, string name, AggregationModel aggregationModel, int orderId);
         void AddFilterComponent(int pipelineId, string body,string name, int orderId);
-        void AddJoinComponent(int pipelineId,JoinModel joinModel, int orderId);
+        void AddJoinComponent(int pipelineId, string name,JoinModel joinModel, int orderId);
         Tuple<ComponentType,int> GetComponent(int pipelineId, int orderId);
         AggregationModel GetAggregateComponent(int componentId);
         FilterModel GetFilterComponent(int componentId);
         JoinModel GetJoinComponent(int componentId);
+        void UpdataComponent(int pipelineId, int componentId, string name);
         void UpdateAggregateComponent(int id, AggregationModel newModel);
         void UpdateFilterComponent(int id, FilterModel newModel);
         void UpdateJoinComponent(int id, JoinModel newModel);

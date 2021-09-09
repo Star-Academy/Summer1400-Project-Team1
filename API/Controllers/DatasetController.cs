@@ -26,6 +26,12 @@ namespace API.Controllers
         {
             _databaseHandler = databaseHandler;
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] string name)
+        {
+            return Ok(_databaseHandler.AddDataset(name));
+        }
         
         [HttpPost, DisableRequestSizeLimit]
         [Route("csv")]
@@ -111,10 +117,6 @@ namespace API.Controllers
         [HttpPost("sql")]
         public IActionResult AddSqlDataset(SqlDataset sqlDataset)
         {
-            Console.WriteLine(sqlDataset.Name);
-            Console.WriteLine(sqlDataset.ConnectionId);
-            Console.WriteLine(sqlDataset.DatabaseName);
-            Console.WriteLine(sqlDataset.TableName);
             _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
                 sqlDataset.DatabaseName,sqlDataset.TableName);
             return Ok();
