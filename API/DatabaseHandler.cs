@@ -70,6 +70,8 @@ namespace API
             connectionModel.Server = newConnectionModel.Server;
             connectionModel.Username = newConnectionModel.Username;
             connectionModel.Password = newConnectionModel.Password;
+            connectionModel.BuildConnectionString();
+            _context.SaveChanges();
         }
         
         public IEnumerable<string> GetDatabases(int connectionId)
