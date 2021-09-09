@@ -1,6 +1,6 @@
 <div class="header">
   <div class="header-content">
-    <p>افزودن اتصال جدید</p>
+    <p>افزودن دیتاست جدید</p>
     <button mat-icon-button (click)="onClose()">
       <img src="assets/images/close.svg" alt="close" />
     </button>
@@ -8,7 +8,7 @@
 </div>
 <form (ngSubmit)="onSubmit()" #form="ngForm">
   <mat-form-field appearance="outline">
-    <mat-label>نام اتصال</mat-label>
+    <mat-label>نام دیتاست</mat-label>
     <input
       type="text"
       ngModel
@@ -32,16 +32,21 @@
       </mat-expansion-panel-header>
       <div class="panel-body">
         <p>اتصال های موجود:</p>
-        <button mat-stroked-button (click)="isLocalHost = true">
+        <button mat-button class="active_btn" (click)="isLocalHost = true">
           اتصال محلی
         </button>
-        <!-- <button mat-button>اتصال ۱</button>
-        <button mat-button>اتصال ۲</button> -->
+        <button mat-button *ngFor="let btn of templist">{{ btn.name }}</button>
+        <button mat-button>اتصال ۲</button>
         <mat-divider></mat-divider>
 
         <p>اعمال دیگر:</p>
 
-        <button class="btn-add" mat-raised-button color="primary">
+        <button
+          class="btn-add"
+          mat-raised-button
+          color="primary"
+          (click)="addNewConnection()"
+        >
           <img src="assets/images/add.svg" alt="" />
           افزودن اتصال جدید
         </button>
@@ -59,9 +64,13 @@
 
   <mat-accordion *ngIf="isLocalHost">
     <div class="panel-body">
-      <button class="btn-drop" (click)="file.click()">
+      <button class="btn-drop" (click)="file.click()" *ngIf="!hasName">
         <img src="assets/images/upload.svg" alt="" />
         انتخاب <span>فایل</span>
+      </button>
+      <button class="btn-drop" (click)="file.click()" *ngIf="hasName">
+        <img src="assets/images/upload.svg" alt="" />
+        {{ initDatasetName }}
       </button>
       <input
         style="display: none"
