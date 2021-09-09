@@ -14,7 +14,18 @@ namespace API.Aggregation
 
         public override string ToString()
         {
-            return Type + "(" + ColumnName + ")" + " AS " + OutputColumnName + " ";
+            string result = "";
+            if (Type == AggregationType.None)
+            {
+                result += ColumnName + " ";
+                if (OutputColumnName != null)
+                    result += "AS " + OutputColumnName + " ";
+            }
+            else
+                result += $"{Type}({ColumnName}) AS {OutputColumnName} ";
+
+            
+            return result;
         }
     }
 
@@ -24,6 +35,7 @@ namespace API.Aggregation
         Sum,
         Avg,
         Min,
-        Max
+        Max,
+        None
     }
 }
