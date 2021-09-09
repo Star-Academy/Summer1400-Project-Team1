@@ -154,7 +154,10 @@ namespace API
 
         public List<PipelineModel> GetPipelines()
         {
-            return _context.Pipeline.ToList();
+            return _context.Pipeline
+                .Include(p=>p.Source)
+                .Include(p => p.Destination)
+                .ToList();
         }
 
         public PipelineModel GetPipeline(int pipelineId)
@@ -166,11 +169,13 @@ namespace API
             return pipeline;
         }
 
-        public int AddPipeline(string name)
+        public int AddPipeline(string name,int sid, int did)
         {
             var pipeline = new PipelineModel()
             {
                 Name = name,
+                Source = _context.Dataset.Find(sid),
+                Destination = _context.Dataset.Find(did),
                 DateCreated = DateTime.Now
             };
             _context.Pipeline.Add(pipeline);
@@ -185,6 +190,24 @@ namespace API
             }
 
             return pipeline.Id;
+        }
+
+        public void UpdatePipeline(int id, string name, int sid, int did)
+        {
+            var pipeline = _context.Pipeline.Find(id);
+            if (pipeline == null) throw new Exception("not found");
+            pipeline.Name = name;
+            pipeline.Source = _context.Dataset.Find(sid);
+            pipeline.Destination = _context.Dataset.Find(did);
+            _context.SaveChanges();
+        }
+
+        public void DeletePipeline(int id)
+        {
+            var pipeline = _context.Pipeline.Find(id);
+            if (pipeline == null) throw new Exception("not found");
+            _context.Pipeline.Remove(pipeline);
+            _context.SaveChanges();
         }
 
         public List<ComponentModel> GetComponents(int pipelineId)
@@ -208,11 +231,6 @@ namespace API
 
         public void AddAggregateComponent(int pipelineId, string name, AggregationModel aggregationModel, int orderId)
         {
-            /*if (!_context.Database.EnsureCreated())
-            {
-                Console.Error.WriteLine("database not created");
-                return;
-            }*/
             PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
             if (pipeline == null)
                 throw new Exception("pipeline not found");
@@ -297,7 +315,7 @@ namespace API
             return _context.JoinComponent.Find(componentId);
         }
 
-        public void UpdataComponent(int pipelineId, int componentId, string name)
+        public void UpdateComponent(int pipelineId, int componentId, string name)
         {
             PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
             if (pipeline == null)

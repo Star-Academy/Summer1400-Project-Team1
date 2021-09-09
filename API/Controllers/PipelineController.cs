@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.Json;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -24,27 +25,65 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok(JsonSerializer.Serialize(_databaseHandler.GetPipelines()));
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetPipeline(int id)
         {
-            Console.WriteLine("get pipeline" + id);
-            return Ok();
+            return Ok(_databaseHandler.GetPipeline(id));
         }
 
         [HttpPost]
-        public void Post()
+        public IActionResult Post([FromBody] JsonElement body)
         {
+            var sid = -1;
+            var did = -1;
+            if (body.TryGetProperty("SourceId", out var source)) sid = source.GetInt32();
+            if(body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
+            try
+            {
+                return Ok(_databaseHandler.AddPipeline(body.GetProperty("Name").GetString(), sid, did));
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPatch]
         [Route("{id}")]
-        public void Patch(int id)
+        public IActionResult Patch(int id,[FromBody] JsonElement body)
         {
-            Console.WriteLine("id is :" + id);
+            var sid = -1;
+            var did = -1;
+            if (body.TryGetProperty("SourceId", out var source)) sid = source.GetInt32();
+            if(body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
+            try
+            {
+                _databaseHandler.UpdatePipeline(id,body.GetProperty("Name").GetString(), sid, did);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _databaseHandler.DeletePipeline(id);
+                return Delete(id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         void AddAggregate(int pipelineId, int orderId, string name, string body)
@@ -105,7 +144,8 @@ namespace API.Controllers
                 return BadRequest(e.Message);
             }
             
-            if(name != null) _databaseHandler.UpdataComponent(pid,cid,name);
+            if(name != null) _databaseHandler.UpdateComponent(pid,cid,name);
+            if (body.ToString() == "{}") return Ok();
             
             switch (componentInfo.Item1)
             {
@@ -126,6 +166,7 @@ namespace API.Controllers
             var replace = JsonSerializer.Deserialize<FilterModel>(json);
             if (replace != null)
             {
+                Console.WriteLine(replace.ToString());
                 try
                 {
                     _databaseHandler.UpdateFilterComponent(id, replace);
@@ -301,7 +342,7 @@ namespace API.Controllers
             return Ok();
         }
         
-        [HttpPost]
+        [HttpGet]
         [Route("{pid}/run/{id}")]
         public IActionResult RunByIndex(int pid,int id)
         {
@@ -309,7 +350,7 @@ namespace API.Controllers
             pipeline.LoadFromModel(_databaseHandler.GetPipeline(pid));
             try
             {
-                pipeline.RunByIndex(id);
+                return Ok(pipeline.RunByIndex(id));
             }
             catch (Exception e)
             {

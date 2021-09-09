@@ -21,9 +21,10 @@ namespace API
         void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
         List<PipelineModel> GetPipelines();
-
         PipelineModel GetPipeline(int pipelineId);
-        int AddPipeline(string name);
+        int AddPipeline(string name,int sid,int did);
+        void UpdatePipeline(int id, string name, int sid, int did);
+        void DeletePipeline(int id);
         List<ComponentModel> GetComponents(int pipelineId);
         void AddAggregateComponent(int pipelineId, string name, AggregationModel aggregationModel, int orderId);
         void AddFilterComponent(int pipelineId, string body,string name, int orderId);
@@ -32,7 +33,7 @@ namespace API
         AggregationModel GetAggregateComponent(int componentId);
         FilterModel GetFilterComponent(int componentId);
         JoinModel GetJoinComponent(int componentId);
-        void UpdataComponent(int pipelineId, int componentId, string name);
+        void UpdateComponent(int pipelineId, int componentId, string name);
         void UpdateAggregateComponent(int id, AggregationModel newModel);
         void UpdateFilterComponent(int id, FilterModel newModel);
         void UpdateJoinComponent(int id, JoinModel newModel);
