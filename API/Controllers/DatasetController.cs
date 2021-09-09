@@ -111,6 +111,10 @@ namespace API.Controllers
         [HttpPost("sql")]
         public IActionResult AddSqlDataset(SqlDataset sqlDataset)
         {
+            Console.WriteLine(sqlDataset.Name);
+            Console.WriteLine(sqlDataset.ConnectionId);
+            Console.WriteLine(sqlDataset.DatabaseName);
+            Console.WriteLine(sqlDataset.TableName);
             _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
                 sqlDataset.DatabaseName,sqlDataset.TableName);
             return Ok();
@@ -127,9 +131,9 @@ namespace API.Controllers
 
     public class SqlDataset
     {
-        public readonly string Name;
-        public readonly int ConnectionId;
-        public readonly string DatabaseName;
-        public readonly string TableName;
+        public string Name { get; set; }
+        public int ConnectionId { get; set; }
+        public string DatabaseName { get; set; }
+        public string TableName { get; set; }
     }
 }

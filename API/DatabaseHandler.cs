@@ -70,13 +70,15 @@ namespace API
             connectionModel.Server = newConnectionModel.Server;
             connectionModel.Username = newConnectionModel.Username;
             connectionModel.Password = newConnectionModel.Password;
+            connectionModel.BuildConnectionString();
+            _context.SaveChanges();
         }
         
         public IEnumerable<string> GetDatabases(int connectionId)
         {
             var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
             var databases = _sqlIoHandler.GetDatabases(serverConnectionString);
-
+            
             return databases;
         }
 
@@ -115,6 +117,7 @@ namespace API
             {
                 Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
             });
+            _context.SaveChanges();
         }
 
         public void AddCsvDataset(string pathToCsv, string name, bool isHeaderIncluded)
