@@ -95,9 +95,9 @@ namespace API
             return _context.Dataset.ToList();
         }
         
-        public DatasetModel GetDataset(int id)
+        public IEnumerable<PipelineModel> GetDatasetPipelines(int id)
         {
-            return _context.Dataset.Find(id);
+            return _context.Pipeline.Where(model => model.Source.Id == id);
         }
 
         public void DeleteDataset(int id)

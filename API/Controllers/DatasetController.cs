@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using API.Aggregation;
-using API.Filter;
-using API.Join;
-using API.Models;
+using API.SqlIOHandler;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace API.Controllers
@@ -110,7 +103,7 @@ namespace API.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetDataset(int id)
         {
-            var dataset = _databaseHandler.GetDataset(id);
+            var dataset = _databaseHandler.GetDatasetPipelines(id);
             return Ok(JsonConvert.SerializeObject(dataset));
         }
 
@@ -130,12 +123,5 @@ namespace API.Controllers
         }
         
     }
-
-    public class SqlDataset
-    {
-        public string Name { get; set; }
-        public int ConnectionId { get; set; }
-        public string DatabaseName { get; set; }
-        public string TableName { get; set; }
-    }
+    
 }
