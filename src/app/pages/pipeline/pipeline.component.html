@@ -135,12 +135,12 @@
     </div>
 
     <div class="details-sidebar" [ngClass]="{
-             'filter': selectedNode?.nodeType === NodeType.FILTER,
-             'join':  selectedNode?.nodeType === NodeType.JOIN,
-             'aggregate':  selectedNode?.nodeType === NodeType.AGGREGATE
+             'filter': (pipelineService.selectedNode$ | async)?.nodeType === NodeType.FILTER,
+             'join':  (pipelineService.selectedNode$ | async)?.nodeType === NodeType.JOIN,
+             'aggregate':  (pipelineService.selectedNode$ | async)?.nodeType === NodeType.AGGREGATE
              }"
          [hidden]="!expandSidebar">
-        <app-sidebar [selectedNode]="selectedNode"
+        <app-sidebar
         ></app-sidebar>
     </div>
 </main>

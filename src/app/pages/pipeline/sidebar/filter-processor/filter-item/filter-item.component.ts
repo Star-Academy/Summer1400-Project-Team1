@@ -1,8 +1,17 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { Filter } from "../../../../../models/filter-node";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 import { map, startWith } from "rxjs/operators";
+import {
+  Filter,
+  FilterOperand,
+  FilterOperator,
+} from "../../../../../models/graph/processor-nodes/filter-node";
+
+interface Operator {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: "app-filter-item",
@@ -10,29 +19,23 @@ import { map, startWith } from "rxjs/operators";
   styleUrls: ["./filter-item.component.scss"],
 })
 export class FilterItemComponent implements OnInit {
-  @Input() index!: number;
-  @Input() length!: number;
-  @Input() item!: Filter;
-
-  panelOpenState: boolean = true;
-
+  @Input() filter!: FilterOperand;
+  @Output() deleteFilter = new EventEmitter<Filter>();
   operatorControl = new FormControl("", Validators.required);
 
   myControl = new FormControl();
   myControl1 = new FormControl();
   options: string[] = ["One", "Two", "Three"];
 
-  operators = [">", "<", "=="];
   filteredOptions!: Observable<string[]>;
-
-  logicExp?: string;
-  operator1!: string;
-
+  operators: Operator[] = [
+    { value: ">", viewValue: "کوچکتر" },
+    { value: "<", viewValue: "بزرگتر" },
+    { value: "=", viewValue: "برابر" },
+  ];
   constructor() {}
 
   ngOnInit(): void {
-    this.operator1 = this.item.operator;
-
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(""),
       map((value) => this._filter(value))
@@ -44,5 +47,7 @@ export class FilterItemComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
-  onDelete() {}
+  onDelete() {
+    this.deleteFilter.emit(this.filter);
+  }
 }

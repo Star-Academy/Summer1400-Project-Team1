@@ -1,8 +1,8 @@
-<ng-container *ngIf="selectedNode else noNodeSelected">
+<ng-container *ngIf="pipelineService.selectedNode$ | async as selectedNode else noNodeSelected">
     <div [ngSwitch]="selectedNode.nodeType">
 
         <div *ngSwitchCase="NodeType.FILTER">
-            <app-filter-processor [filterNode]="selectedNode"></app-filter-processor>
+            <app-filter-processor [filterNode]="$any(selectedNode)"></app-filter-processor>
         </div>
         <div *ngSwitchCase="NodeType.JOIN">
             <app-join-processor [joinNode]="$any(selectedNode)"></app-join-processor>

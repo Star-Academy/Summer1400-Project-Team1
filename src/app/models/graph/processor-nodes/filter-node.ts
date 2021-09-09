@@ -8,16 +8,21 @@ export class FilterNode extends ProcessorNode {
   }
 }
 
-abstract class Filter {
-  constructor(parent: FilterOperator | null) {}
+export abstract class Filter {
+  children?: Filter[];
+  constructor(public parent: FilterOperator | null) {}
 }
 
-class FilterOperator extends Filter {
-  operator: "AND" | "OR" = "AND";
-  children: Filter[] = [];
+export class FilterOperator extends Filter {
+  operator: "AND" | "OR";
+  constructor(parent: FilterOperator | null) {
+    super(parent);
+    this.children = [new FilterOperand(this)];
+    this.operator = "AND";
+  }
 }
 
-class FilterOperand extends Filter {
+export class FilterOperand extends Filter {
   key!: string;
   operator!: Operator;
   value!: string;

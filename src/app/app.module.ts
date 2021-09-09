@@ -38,6 +38,9 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { FilterItemComponent } from "./pages/pipeline/sidebar/filter-processor/filter-item/filter-item.component";
 import { TableInputOutputComponent } from "./pages/pipeline/table-input-output/table-input-output.component";
+import { MatTreeModule } from "@angular/material/tree";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatMenuModule } from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -81,6 +84,9 @@ import { TableInputOutputComponent } from "./pages/pipeline/table-input-output/t
     MatAutocompleteModule,
     DragDropModule,
     MatButtonToggleModule,
+    MatTreeModule,
+    MatTooltipModule,
+    MatMenuModule,
   ],
 
   providers: [],

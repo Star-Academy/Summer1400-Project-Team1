@@ -1,24 +1,79 @@
 <div class="main-wrapper">
-    <header>
-        <p>filter</p>
-        <button mat-icon-button>
-            <img (click)="onAddFilter()" src="assets/images/add-black.svg" alt="">
-        </button>
-    </header>
+    <section>
+        <header>
+            <p>{{filterNode.name}}</p>
+            <button mat-icon-button>
+                <img src="assets/images/delete.svg" alt="">
+            </button>
+        </header>
+        <main>
+            <mat-tree #tree [dataSource]="dataSource" [treeControl]="treeControl" class="filter-tree">
+                <mat-tree-node *matTreeNodeDef="let filter " matTreeNodeToggle>
+                    <app-filter-item
+                            [filter]="filter"
+                            (deleteFilter)="deleteFilter(filter)"
+                    ></app-filter-item>
+                </mat-tree-node>
+                <mat-nested-tree-node *matTreeNodeDef="let filter; when: hasChild ">
+                    <div class="mat-tree-node">
+                        <button mat-icon-button matTreeNodeToggle
+                        >
+                            <mat-icon class="mat-icon-rtl-mirror">
+                                {{treeControl.isExpanded(filter) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                        </button>
+                        <button mat-stroked-button [color]="filter.operator==='AND'?'primary':
+                                 filter.operator==='OR'?'accent'
+                                 :undefined">{{filter.operator}}</button>
 
-    <main>
-        <app-filter-item
-                *ngFor="let item of filtersList;let i = index;let l = count" [index]="i"
-                         [item]="item"
-                            [length]="l"
-        ></app-filter-item>
+                        <button mat-icon-button
+                                matTooltip="اضافه کردن فیلتر"
+                                [matTooltipPosition]="'below'"
+                                [matTooltipShowDelay]="1000"
+                                (click)="addFilter(filter)"
+                        >
+                            <img src="assets/images/filter.svg" alt="">
+                        </button>
+                        <button mat-icon-button
+                                matTooltip="اضافه کردن منطق"
+                                [matTooltipPosition]="'below'"
+                                [matTooltipShowDelay]="1000"
+                                [matMenuTriggerFor]="menu"
+                                (click)="addLogic(filter)"
+                        >
+                            <img src="assets/images/add-black.svg" alt="">
+                        </button>
+                        <mat-menu #menu="matMenu" yPosition="above">
+                            <button mat-menu-item>
+                                <mat-icon>add</mat-icon>
+                                <span>AND</span>
+                            </button>
+                            <button mat-menu-item>
+                                <mat-icon>add</mat-icon>
+                                <span>OR</span>
+                            </button>
+                        </mat-menu>
+                        <button mat-icon-button (click)="deleteFilter(filter)">
+                            <img src="assets/images/delete.svg" alt="">
+                        </button>
 
-    </main>
+
+                    </div>
+
+                    <div [class.filter-tree-invisible]="!treeControl.isExpanded(filter)"
+                         role="group">
+                        <ng-container matTreeNodeOutlet></ng-container>
+                    </div>
+
+                </mat-nested-tree-node>
+            </mat-tree>
+        </main>
+    </section>
 
     <div class='actions-wrapper'>
         <div class='validate-wrapper'>
             <button type="submit" mat-raised-button color='primary'>اعمال</button>
         </div>
-        <button mat-stroked-button color='primary' (click)='onClose()'>لغو</button>
+        <button mat-stroked-button color='primary'>لغو</button>
     </div>
 </div>

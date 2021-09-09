@@ -31,7 +31,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
   @ViewChild("graphContainer", { static: true })
   private container;
 
-  constructor(public router: Router, private graphService: GraphService) {}
+  constructor(
+    public router: Router,
+    private graphService: GraphService,
+    public pipelineService: PipelineService
+  ) {}
   ngOnInit(): void {
     document.onmouseup = () => {
       this.previewResize.isResizing = false;
@@ -64,10 +68,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sidebarProcessorTypeSub.unsubscribe();
     this.processorSub.unsubscribe();
-  }
-
-  get selectedNode() {
-    return this.graphService.selectedNode;
   }
 
   get NodeType() {

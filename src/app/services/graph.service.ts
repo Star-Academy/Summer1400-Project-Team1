@@ -12,6 +12,7 @@ import { JoinNode } from "../models/graph/processor-nodes/join-node";
 import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
 import { MatDialog } from "@angular/material/dialog";
 import { Dataset } from "../models/dataset";
+import { PipelineService } from "./pipeline.service";
 
 @Injectable({
   providedIn: "root",
@@ -20,9 +21,11 @@ export class GraphService {
   nodes: Node[] = [];
   edges: Edge[] = [];
 
-  selectedNode?: Node;
-
-  constructor(private ogmaService: OgmaService, private dialog: MatDialog) {}
+  constructor(
+    private ogmaService: OgmaService,
+    private dialog: MatDialog,
+    private pipelineService: PipelineService
+  ) {}
 
   constructGraph(container: HTMLElement) {
     this.ogmaService.initConfig({
@@ -65,7 +68,7 @@ export class GraphService {
     if (node instanceof TerminalNode) {
       this.onTerminalNodeClicked(node);
     }
-    this.selectedNode = node;
+    this.pipelineService.selectNode(node);
   }
 
   onTerminalNodeClicked(terminalNode: TerminalNode) {

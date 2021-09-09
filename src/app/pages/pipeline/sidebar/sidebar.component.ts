@@ -1,6 +1,9 @@
 import { Component, Input, OnInit, Output } from "@angular/core";
 import { EventEmitter } from "@angular/core";
 import { Node, NodeType } from "../../../models/graph/node";
+import { Observable } from "rxjs";
+import { PipelineService } from "../../../services/pipeline.service";
+import { GraphService } from "../../../services/graph.service";
 
 @Component({
   selector: "app-sidebar",
@@ -8,11 +11,9 @@ import { Node, NodeType } from "../../../models/graph/node";
   styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
-  @Input() selectedNode?: Node;
-
   @Output() openChooseProcessorDialog = new EventEmitter<void>();
 
-  constructor() {}
+  constructor(public pipelineService: PipelineService) {}
 
   ngOnInit(): void {}
 
