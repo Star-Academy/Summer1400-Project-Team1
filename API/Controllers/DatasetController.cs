@@ -104,17 +104,13 @@ namespace API.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetDataset(int id)
         {
-            var dataset = _databaseHandler.GetDataset(id);
+            var dataset = _databaseHandler.GetDatasetPipelines(id);
             return Ok(JsonConvert.SerializeObject(dataset));
         }
 
         [HttpPost("sql")]
         public IActionResult AddSqlDataset(SqlDataset sqlDataset)
         {
-            Console.WriteLine(sqlDataset.Name);
-            Console.WriteLine(sqlDataset.ConnectionId);
-            Console.WriteLine(sqlDataset.DatabaseName);
-            Console.WriteLine(sqlDataset.TableName);
             _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
                 sqlDataset.DatabaseName,sqlDataset.TableName);
             return Ok();
