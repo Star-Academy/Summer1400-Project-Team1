@@ -18,6 +18,7 @@
       placeholder=""
       required
     />
+    {{ initDatasetName }}
   </mat-form-field>
 
   <mat-accordion>
@@ -34,8 +35,8 @@
         <button mat-stroked-button (click)="isLocalHost = true">
           اتصال محلی
         </button>
-        <button mat-button>اتصال ۱</button>
-        <button mat-button>اتصال ۲</button>
+        <!-- <button mat-button>اتصال ۱</button>
+        <button mat-button>اتصال ۲</button> -->
         <mat-divider></mat-divider>
 
         <p>اعمال دیگر:</p>
