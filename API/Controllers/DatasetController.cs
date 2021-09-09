@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -96,8 +97,15 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult GetDatasets()
         {
-            var datasets = _databaseHandler.GetDatasets().ToList();
-            return Ok(datasets);
+            var datasets = _databaseHandler.GetDatasets();
+            return Ok(JsonConvert.SerializeObject(datasets));
+        }
+        
+        [HttpGet("{id:int}")]
+        public IActionResult GetDataset(int id)
+        {
+            var dataset = _databaseHandler.GetDataset(id);
+            return Ok(JsonConvert.SerializeObject(dataset));
         }
 
         [HttpPost("sql")]
@@ -105,6 +113,13 @@ namespace API.Controllers
         {
             _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
                 sqlDataset.DatabaseName,sqlDataset.TableName);
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteDataset(int id)
+        {
+            _databaseHandler.DeleteDataset(id);
             return Ok();
         }
         

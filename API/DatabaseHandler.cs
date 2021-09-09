@@ -52,6 +52,26 @@ namespace API
             return newConnection.Id;
         }
 
+        public void DeleteConnection(int id)
+        {
+            var connectionModel = _context.Connection.Find(id);
+            if (connectionModel == null)
+                throw new Exception("connection not found");
+            _context.Connection.Remove(connectionModel);
+            _context.SaveChanges();
+        }
+
+        public void UpdateConnection(int id, ConnectionModel newConnectionModel)
+        {
+            var connectionModel = _context.Connection.Find(id);
+            if (connectionModel == null)
+                throw new Exception("connectionNot found");
+            connectionModel.Name = newConnectionModel.Name;
+            connectionModel.Server = newConnectionModel.Server;
+            connectionModel.Username = newConnectionModel.Username;
+            connectionModel.Password = newConnectionModel.Password;
+        }
+        
         public IEnumerable<string> GetDatabases(int connectionId)
         {
             var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
@@ -71,6 +91,20 @@ namespace API
         public List<DatasetModel> GetDatasets()
         {
             return _context.Dataset.ToList();
+        }
+        
+        public DatasetModel GetDataset(int id)
+        {
+            return _context.Dataset.Find(id);
+        }
+
+        public void DeleteDataset(int id)
+        {
+            var dataset = _context.Dataset.Find(id);
+            if (dataset == null)
+                throw new Exception("dataset not found");
+            _context.Dataset.Remove(dataset);
+            _context.SaveChanges();
         }
 
         public void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableName)

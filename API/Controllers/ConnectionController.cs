@@ -29,6 +29,8 @@ namespace API.Controllers
         public IActionResult GetConnectionInfo(int id)
         {
             var connectionInfo = _databaseHandler.GetConnection(id);
+            if (connectionInfo == null)
+                return Ok("connection not found");
             return Ok(JsonConvert.SerializeObject(connectionInfo));
         }
 
@@ -54,6 +56,34 @@ namespace API.Controllers
             var id = _databaseHandler.AddConnection(connectionModel.Name, connectionModel.Server,
                 connectionModel.Username, connectionModel.Password);
             return Ok(id);
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteConnection(int id)
+        {
+            try
+            {
+                _databaseHandler.DeleteConnection(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Ok("connection not found");
+            }
+        }
+
+        [HttpPatch("{id:int}")]
+        public IActionResult PatchConnection([FromRoute] int id,[FromBody] ConnectionModel newConnectionModel)
+        {
+            try
+            {
+                _databaseHandler.UpdateConnection(id,newConnectionModel);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Ok("connection not found");
+            }
         }
     }
 }

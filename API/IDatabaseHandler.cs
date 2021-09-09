@@ -9,9 +9,13 @@ namespace API
         List<ConnectionModel> GetConnections();
         ConnectionModel GetConnection(int connectionId);
         int AddConnection(string name,string server,string username,string password);
+        void DeleteConnection(int id);
+        void UpdateConnection(int id, ConnectionModel newConnectionModel);
         IEnumerable<string> GetDatabases(int connectionId);
         IEnumerable<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
+        DatasetModel GetDataset(int id);
+        void DeleteDataset(int id);
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
         void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
