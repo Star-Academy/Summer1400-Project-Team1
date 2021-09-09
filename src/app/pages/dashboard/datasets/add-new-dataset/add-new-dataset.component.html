@@ -1,54 +1,99 @@
-<div class='header'>
-    <div class='header-content'>
-        <p>افزودن پایگاه داده جدید</p>
-        <button mat-icon-button  (click)='onClose()'>
-            <img src='assets/images/close.svg' alt='close'>
-        </button>
-    </div>
-
+<div class="header">
+  <div class="header-content">
+    <p>افزودن اتصال جدید</p>
+    <button mat-icon-button (click)="onClose()">
+      <img src="assets/images/close.svg" alt="close" />
+    </button>
+  </div>
 </div>
-<form (ngSubmit)='onSubmit()' #form="ngForm" >
-    <mat-form-field appearance='outline'>
-        <mat-label>نام پایگاه داده</mat-label>
-        <input type='text' ngModel name="datasetName" #datasetName="ngModel" matInput placeholder='' required>
-    </mat-form-field>
+<form (ngSubmit)="onSubmit()" #form="ngForm">
+  <mat-form-field appearance="outline">
+    <mat-label>نام اتصال</mat-label>
+    <input
+      type="text"
+      ngModel
+      name="datasetName"
+      #datasetName="ngModel"
+      matInput
+      placeholder=""
+      required
+    />
+  </mat-form-field>
 
+  <mat-accordion>
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> اتصال </mat-panel-title>
+        <mat-panel-description> انتخاب اتصال </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="panel-body">
+        <p>اتصال های موجود:</p>
+        <button mat-stroked-button (click)="isLocalHost = true">
+          اتصال محلی
+        </button>
+        <button mat-button>اتصال ۱</button>
+        <button mat-button>اتصال ۲</button>
+        <mat-divider></mat-divider>
 
-    <mat-accordion>
-        <mat-expansion-panel (opened)='panelOpenState = true'
-                             (closed)='panelOpenState = false'>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    اتصال
-                </mat-panel-title>
-                <mat-panel-description>
-                    انتخاب اتصال
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class='panel-body'>
-                <p>اتصال های موجود:</p>
-                <button  mat-stroked-button  >اتصال محلی</button>
-                <button mat-button>اتصال ۱</button>
-                <button mat-button>اتصال ۲</button>
-                <mat-divider></mat-divider>
+        <p>اعمال دیگر:</p>
 
-                <p>اعمال دیگر:</p>
+        <button class="btn-add" mat-raised-button color="primary">
+          <img src="assets/images/add.svg" alt="" />
+          افزودن اتصال جدید
+        </button>
 
-                <button class='btn-add' mat-raised-button color='primary'>
-                    <img src='assets/images/add.svg' alt=''>
-                    افزودن اتصال جدید
-                </button>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+        <input
+          style="display: none"
+          type="file"
+          accept=".csv"
+          (change)="onUpload($event)"
+          #file
+        />
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
-    <div class='actions-wrapper'>
-        <div class='validate-wrapper'>
-            <button type="submit" mat-raised-button color='primary'>اعتبار سنجی</button>
-            <button mat-stroked-button color='primary'>مشاهده نمونه</button>
-        </div>
-        <button mat-stroked-button color='primary' (click)='onClose()'>لغو</button>
+  <mat-accordion *ngIf="isLocalHost">
+    <div class="panel-body">
+      <button class="btn-drop" (click)="file.click()">
+        <img src="assets/images/upload.svg" alt="" />
+        انتخاب <span>فایل</span>
+      </button>
+      <input
+        style="display: none"
+        type="file"
+        accept=".csv"
+        (change)="onUpload($event)"
+        #file
+      />
 
-
+      <mat-form-field appearance="outline">
+        <mat-label>جداکننده</mat-label>
+        <input
+          type="text"
+          ngModel
+          name="datasetSeparator"
+          #datasetSeparator="ngModel"
+          matInput
+          placeholder=""
+          required
+        />
+      </mat-form-field>
     </div>
+  </mat-accordion>
+
+  <mat-accordion> </mat-accordion>
+
+  <div class="actions-wrapper">
+    <div class="validate-wrapper">
+      <button type="submit" mat-raised-button color="primary">
+        اعتبار سنجی
+      </button>
+      <button mat-stroked-button color="primary">مشاهده نمونه</button>
+    </div>
+    <button mat-stroked-button color="primary" (click)="onClose()">لغو</button>
+  </div>
 </form>

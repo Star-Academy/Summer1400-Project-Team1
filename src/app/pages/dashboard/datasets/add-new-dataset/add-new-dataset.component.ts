@@ -8,9 +8,11 @@ import {NgForm} from '@angular/forms';
   styleUrls: ['./add-new-dataset.component.scss']
 })
 export class AddNewDatasetComponent implements OnInit {
+  
   @ViewChild('form', {static: false}) form!: NgForm;
   datasetName!:string;
   panelOpenState: boolean=false;
+  isLocalHost:boolean=false;
 
   constructor(private location: Location) { }
 
@@ -26,4 +28,10 @@ export class AddNewDatasetComponent implements OnInit {
     onClose() {
         this.location.back();
     }
+
+    onUpload(event: any) {
+      if (event.target !== null) console.log(event.target.files);
+    }
+
+
 }

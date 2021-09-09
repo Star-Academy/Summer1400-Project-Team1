@@ -34,6 +34,7 @@ export class DatasetsComponent implements OnInit, OnDestroy {
 
   onUpload(event: any) {
     if (event.target !== null) console.log(event.target.files);
+    this.router.navigate(['/datasets/add']);
   }
 
   onDatasetClick(row: DatasetRow) {

@@ -7,8 +7,8 @@
     background: hsla(211, 27%, 45%, 1);
     height: 7rem;
     width: 100%;
-    .header-content{
-      width:65%;
+    .header-content {
+      width: 65%;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -26,8 +26,6 @@
       height: 1.5rem;
       width: 1.5rem;
     }
-
-
   }
 
   form {
@@ -37,16 +35,16 @@
     flex-direction: column;
     gap: 2rem;
     font-size: 1.5rem;
-    .panel-body{
+
+    .panel-body {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      button{
-        width:fit-content;
-
+      button {
+        width: fit-content;
       }
       .btn-add {
-        width:fit-content;
+        width: fit-content;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -55,24 +53,43 @@
           height: 2rem;
           width: 2rem;
         }
-
       }
     }
-    .actions-wrapper{
+    .actions-wrapper {
       height: 6rem;
       width: 100%;
       margin-top: 3rem;
       display: flex;
       align-items: center;
-       justify-content: space-between;
-      .validate-wrapper{
+      justify-content: space-between;
+
+      .validate-wrapper {
         display: flex;
         align-items: center;
         gap: 1rem;
       }
     }
   }
-
-
 }
 
+.btn-drop {
+  background: #fff;
+  border-style: dashed;
+  height: 100%;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  width: 100% !important;
+
+  & > img {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+  & > span {
+    color: hsla(204, 94%, 39%, 1);
+    font-weight: bold;
+  }
+
+  &:hover {
+    background: hsla(204, 94%, 59%, 0.22);
+  }
+}

@@ -6,9 +6,9 @@ $--item-boarder: hsla(0, 0%, 0%, 0.21);
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding:1.5rem 1rem;
+  padding: 1.5rem 1rem;
   background: $--item-bg-color;
-  border-bottom: .1rem solid $--item-boarder;
+  border-bottom: 0.1rem solid $--item-boarder;
 
   &:hover {
     background: $--item-bg-color--hovered;
@@ -22,5 +22,4 @@ $--item-boarder: hsla(0, 0%, 0%, 0.21);
   p {
     font-size: 2rem;
   }
-
 }
