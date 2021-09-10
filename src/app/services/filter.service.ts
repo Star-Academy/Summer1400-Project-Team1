@@ -1,43 +1,27 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { Subject } from "rxjs";
 import {
   Filter,
-  FilterNode,
   FilterOperand,
   FilterOperator,
 } from "../models/graph/processor-nodes/filter-node";
-import { PipelineService } from "./pipeline.service";
-import { Node, NodeType } from "../models/graph/node";
 
 @Injectable({
   providedIn: "root",
 })
 export class FilterService {
-  dataChange!: BehaviorSubject<Filter>;
+  dataChange = new Subject<void>();
 
-  get data(): Filter {
-    return this.dataChange.value!;
-  }
-
-  constructor(pipelineService: PipelineService) {
-    pipelineService.selectedNode$.subscribe((node) => {
-      if (node.nodeType === NodeType.FILTER)
-        this.dataChange.next((node as FilterNode).root);
-    });
-  }
-
-  initService(root: Filter) {
-    this.dataChange = new BehaviorSubject<Filter>(root);
-  }
+  constructor() {}
 
   addFilter(parent: FilterOperator) {
     parent.children?.push(new FilterOperand(parent));
-    this.dataChange.next(this.data);
+    this.dataChange.next();
   }
 
-  addLogic(parent: FilterOperator) {
-    parent.children?.push(new FilterOperator(parent));
-    this.dataChange.next(this.data);
+  addLogic(parent: FilterOperator, operator: "AND" | "OR") {
+    parent.children?.push(new FilterOperator(parent, operator));
+    this.dataChange.next();
   }
 
   deleteFilter(filter: Filter) {
@@ -46,70 +30,6 @@ export class FilterService {
       (child) => child !== filter
     );
     if (filter.parent!.children.length === 0) this.deleteFilter(filter.parent!);
-    this.dataChange.next(this.data);
+    this.dataChange.next();
   }
-
-  // removeParent(parentFilter: Filter) {
-  //   // parentFilter.deleteFilter()
-  //   // this.data.children.forEach(filter1=>{
-  //   //     console.log("aaaaaaaaa")
-  //   //     filter1.children.filter(filter=>filter.id!==-1);
-  //   // })
-  //   // this.dataChange.next(this.data);
-  // }
-
-  //
-  //   addLogicFilter(parentFilter: Filter, conditionType: ConditionType) {
-  //     parentFilter.children.push(new Filter(0, conditionType, [
-  //       new Filter(0,)
-  //     ],));
-  //     this.dataChange.next(this.data);
-  //   }
-  //
-  //   createRoot(root: string) {
-  //     switch (root) {
-  //       case 'FILTER':
-  //         this.dataChange.next(new Filter(0));
-  //         break;
-  //       case 'AND':
-  //         this.dataChange.next(new Filter(0, ConditionType.AND, [
-  //           new Filter(0)
-  //         ]))
-  //         break;
-  //       case 'OR':
-  //         this.dataChange.next(new Filter(0, ConditionType.OR, [
-  //           new Filter(0)
-  //         ]))
-  //         break;
-  //
-  //     }
-  //   }
-  //
-  //   addRoot(logic: ConditionType) {
-  //     this.dataChange.next(new Filter(0, logic, [
-  //       this.data
-  //     ]))
-  //
-  //   }
-  //
-  //   updateFilter(newFilter: Filter, currentFilter: Filter) {
-  //     currentFilter.key = newFilter.key;
-  //     currentFilter.operator = newFilter.operator;
-  //     currentFilter.value = newFilter.value;
-  //     this.dataChange.next(this.data);
-  //   }
-  // }
-
-  /*
-   * parent{
-   * ////
-   * children:[
-   * (),
-   * ()
-   * ]
-   * }
-   *
-   *
-   *
-   * */
 }

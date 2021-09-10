@@ -2,8 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { PipelineService } from "../../../../services/pipeline.service";
-import { Aggregate } from "../../../../models/aggregate-node";
 import { AggregateNode } from "../../../../models/graph/processor-nodes/aggregate-node";
 
 interface AggregateType {

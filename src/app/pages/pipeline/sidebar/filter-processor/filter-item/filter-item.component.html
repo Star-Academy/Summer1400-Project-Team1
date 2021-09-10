@@ -6,15 +6,15 @@
                 <p>okspof</p>
             </mat-panel-title>
 
-            <div class="delete">
-                <img (click)="onDelete()" src="assets/images/delete.svg" alt="">
-            </div>
+            <button class="delete" (click)="onDelete($event)">
+                <img src="assets/images/delete.svg" alt="">
+            </button>
 
         </mat-expansion-panel-header>
 
         <div class='panel-body'>
             <form #form="ngForm">
-                <mat-form-field   appearance="fill">
+                <mat-form-field >
                     <mat-label>نام ستون</mat-label>
                     <input type="text"
                            aria-label="ستون"
@@ -29,7 +29,7 @@
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
-                <mat-form-field class="operator-select" appearance="fill" >
+                <mat-form-field class="operator-select">
                     <mat-label>شرط</mat-label>
                     <mat-select
                             [(value)]="filter.operator"
@@ -46,7 +46,7 @@
                 </mat-form-field>
 
                 <!--  <p>{{Control.value.name}}</p>-->
-                <mat-form-field  appearance="fill">
+                <mat-form-field>
                     <mat-label>مقدار</mat-label>
                     <input type="text"
                            aria-label="مقدار"

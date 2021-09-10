@@ -16,8 +16,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   pipelineTitle = "نام پایپلاین";
   isEditingPipelineTitle = false;
   expandSidebar = false;
-  sidebarProcessorType: string = "initial";
-  sidebarProcessorTypeSub!: Subscription;
+  expandSidebarSub!: Subscription;
   expandPreview = false;
   isModalOpen = false;
   previewResize = {
@@ -25,21 +24,15 @@ export class PipelineComponent implements OnInit, OnDestroy {
     previewHeight: 300,
     lastYPosition: 0,
   };
-  processor: string = "initial";
-  processorSub!: Subscription;
 
-  @ViewChild("graphContainer", { static: true })
-  private container;
-
-  constructor(
-    public router: Router,
-    private graphService: GraphService,
-    public pipelineService: PipelineService
-  ) {}
+  constructor(public router: Router, public pipelineService: PipelineService) {}
   ngOnInit(): void {
     document.onmouseup = () => {
       this.previewResize.isResizing = false;
     };
+    this.pipelineService.openSidebar.subscribe(
+      () => (this.expandSidebar = true)
+    );
   }
 
   editPipelineName(ngForm: NgForm) {
@@ -66,8 +59,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.sidebarProcessorTypeSub.unsubscribe();
-    this.processorSub.unsubscribe();
+    this.expandSidebarSub.unsubscribe();
   }
 
   get NodeType() {

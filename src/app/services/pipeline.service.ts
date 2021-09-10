@@ -8,21 +8,9 @@ import { Node } from "../models/graph/node";
   providedIn: "root",
 })
 export class PipelineService {
-  private selectedNodeSource = new Subject<Node>();
-  public selectedNode$ = this.selectedNodeSource.asObservable();
+  private _selectedNode?: Node;
+  openSidebar = new Subject<void>();
 
-  private _nodes!: Node[];
-  private _sourceDataset!: Dataset;
-  private _destinationDataset!: Dataset;
-  private _hasSourceNode: boolean = false;
-  private _hasDestinationNode: boolean = false;
-  private _currentSidebarProcessor: string = "initial";
-  currentSidebarProcessorChanged = new Subject<string>();
-  nodesChanged = new Subject<Node[]>();
-  hasSourceNodeChanged = new Subject<boolean>();
-  hasDestinationNodeChanged = new Subject<boolean>();
-  sourceDatasetChanged = new Subject<Dataset>();
-  destinationDatasetChanged = new Subject<Dataset>();
   pipelineTemp: Pipeline[] = [
     new Pipeline(),
     new Pipeline(),
@@ -35,23 +23,15 @@ export class PipelineService {
   pipelineChanged = new Subject<Pipeline[]>();
   pipelineRowsChanged = new Subject<PipelineRow[]>();
 
-  selectNode(node: Node) {
-    this.selectedNodeSource.next(node);
-  }
-
-  get nodes(): Node[] {
-    return this._nodes;
-  }
-
   constructor() {}
 
-  get currentSidebarProcessor(): string {
-    return this._currentSidebarProcessor;
+  get selectedNode(): Node {
+    return this._selectedNode!;
   }
 
-  set currentSidebarProcessor(value: string) {
-    this._currentSidebarProcessor = value;
-    this.currentSidebarProcessorChanged.next(value);
+  set selectedNode(value: Node) {
+    this._selectedNode = value;
+    this.openSidebar.next();
   }
 
   get pipelines(): Pipeline[] {
@@ -77,25 +57,5 @@ export class PipelineService {
 
   getPipeline() {
     this.pipelines = this.pipelineTemp;
-  }
-
-  toggleSideBar = new Subject<boolean>();
-
-  get destinationDataset(): Dataset {
-    return this._destinationDataset;
-  }
-
-  set destinationDataset(value: Dataset) {
-    this._destinationDataset = value;
-    this.destinationDatasetChanged.next(value);
-  }
-
-  get sourceDataset(): Dataset {
-    return this._sourceDataset;
-  }
-
-  set sourceDataset(value: Dataset) {
-    this._sourceDataset = value;
-    this.sourceDatasetChanged.next(value);
   }
 }

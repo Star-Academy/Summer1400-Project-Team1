@@ -1,6 +1,11 @@
-<ng-container *ngIf="pipelineService.selectedNode$ | async as selectedNode else noNodeSelected">
-    <div [ngSwitch]="selectedNode.nodeType">
-
+<ng-container *ngIf="pipelineService.selectedNode as selectedNode else noNodeSelected">
+    <div [ngSwitch]="selectedNode.nodeType" class="sidebar-wrapper">
+        <header>
+            <p>{{selectedNode.name}}</p>
+            <button mat-icon-button>
+                <img src="assets/images/delete.svg" alt="">
+            </button>
+        </header>
         <div *ngSwitchCase="NodeType.FILTER">
             <app-filter-processor [filterNode]="$any(selectedNode)"></app-filter-processor>
         </div>

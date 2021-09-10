@@ -13,6 +13,7 @@ import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
 import { MatDialog } from "@angular/material/dialog";
 import { Dataset } from "../models/dataset";
 import { PipelineService } from "./pipeline.service";
+import { Subscription } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -25,7 +26,11 @@ export class GraphService {
     private ogmaService: OgmaService,
     private dialog: MatDialog,
     private pipelineService: PipelineService
-  ) {}
+  ) {
+    this.ogmaService.deleteEdge.subscribe((edgeId) => {
+      this.edges = this.edges.filter((edge) => edge.id !== edgeId);
+    });
+  }
 
   constructGraph(container: HTMLElement) {
     this.ogmaService.initConfig({
@@ -68,7 +73,7 @@ export class GraphService {
     if (node instanceof TerminalNode) {
       this.onTerminalNodeClicked(node);
     }
-    this.pipelineService.selectNode(node);
+    this.pipelineService.selectedNode = node;
   }
 
   onTerminalNodeClicked(terminalNode: TerminalNode) {
@@ -113,14 +118,15 @@ export class GraphService {
         newNode = new AggregateNode("aggregate");
         break;
     }
-    this.addNodeInBetween(newNode!, edge);
+    this.insertNode(newNode!, edge);
   }
 
-  addNodeInBetween(node: Node, edge: Edge) {
+  insertNode(node: Node, edge: Edge) {
     this.removeEdge(edge);
     this.addNode(node);
     this.addEdge(new Edge(edge.src, node));
     this.addEdge(new Edge(node, edge.dest));
+    this.pipelineService.selectedNode = node;
     return this.runLayout();
   }
 

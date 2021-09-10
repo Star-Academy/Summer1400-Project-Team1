@@ -5,7 +5,6 @@ import { map, startWith } from "rxjs/operators";
 import {
   Filter,
   FilterOperand,
-  FilterOperator,
 } from "../../../../../models/graph/processor-nodes/filter-node";
 
 interface Operator {
@@ -47,7 +46,9 @@ export class FilterItemComponent implements OnInit {
       option.toLowerCase().includes(filterValue)
     );
   }
-  onDelete() {
+
+  onDelete(event: Event) {
     this.deleteFilter.emit(this.filter);
+    event.stopPropagation();
   }
 }

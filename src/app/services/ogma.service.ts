@@ -3,6 +3,7 @@ import * as Ogma from "../../assets/ogma.min.js";
 import { Node, NodeType } from "../models/graph/node";
 import { Edge } from "../models/graph/edge";
 import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
+import { Subject } from "rxjs";
 
 interface OgmaClass {
   name: string;
@@ -14,6 +15,7 @@ interface OgmaClass {
   providedIn: "root",
 })
 export class OgmaService {
+  deleteEdge = new Subject<number>();
   ogma: Ogma;
   ogmaClasses: OgmaClass[] = [
     {
@@ -193,6 +195,10 @@ export class OgmaService {
 
   removeNode(node: Node) {
     this.ogma.removeNode(node.id);
+    this.ogma
+      .getNode(node.id)
+      .getAdjacentEdges()
+      .forEach((edge) => this.deleteEdge.next(edge.getId()));
   }
 
   removeEdge(edge: Edge) {

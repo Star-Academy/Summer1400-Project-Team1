@@ -2,8 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { PipelineService } from "../../../../services/pipeline.service";
-import { Join } from "../../../../models/join-node";
 import { JoinNode } from "../../../../models/graph/processor-nodes/join-node";
 import { DatasetService } from "../../../../services/dataset.service";
 interface JoinType {
