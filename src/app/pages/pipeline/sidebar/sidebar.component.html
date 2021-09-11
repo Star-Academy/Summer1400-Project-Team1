@@ -2,7 +2,7 @@
     <div [ngSwitch]="selectedNode.nodeType" class="sidebar-wrapper">
         <header>
             <p>{{selectedNode.name}}</p>
-            <button mat-icon-button>
+            <button mat-icon-button (click)="openDialog()">
                 <img src="assets/images/delete.svg" alt="">
             </button>
         </header>

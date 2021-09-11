@@ -26,11 +26,7 @@ export class GraphService {
     private ogmaService: OgmaService,
     private dialog: MatDialog,
     private pipelineService: PipelineService
-  ) {
-    this.ogmaService.deleteEdge.subscribe((edgeId) => {
-      this.edges = this.edges.filter((edge) => edge.id !== edgeId);
-    });
-  }
+  ) {}
 
   constructGraph(container: HTMLElement) {
     this.ogmaService.initConfig({
@@ -133,6 +129,16 @@ export class GraphService {
   removeNode(node: Node) {
     this.nodes = this.nodes.filter((el) => el !== node);
     this.ogmaService.removeNode(node);
+    this.attachAdjacentNodes(node);
+    return this.runLayout();
+  }
+
+  attachAdjacentNodes(node: Node) {
+    const incomingEdge = this.edges.find((edge) => edge.dest === node);
+    const outgoingEdge = this.edges.find((edge) => edge.src === node);
+    this.addEdge(new Edge(incomingEdge!.src, outgoingEdge!.dest));
+    this.removeEdge(incomingEdge!);
+    this.removeEdge(outgoingEdge!);
   }
 
   removeEdge(edge: Edge) {

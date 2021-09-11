@@ -41,6 +41,7 @@ import { TableInputOutputComponent } from "./pages/pipeline/table-input-output/t
 import { MatTreeModule } from "@angular/material/tree";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatMenuModule } from "@angular/material/menu";
+import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-node/dialog-delete-node-dialog.component";
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { MatMenuModule } from "@angular/material/menu";
     AggregateProcessorComponent,
     FilterItemComponent,
     TableInputOutputComponent,
+    DialogDeleteNodeDialog,
   ],
   imports: [
     BrowserModule,

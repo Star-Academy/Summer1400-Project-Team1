@@ -15,7 +15,6 @@ interface OgmaClass {
   providedIn: "root",
 })
 export class OgmaService {
-  deleteEdge = new Subject<number>();
   ogma: Ogma;
   ogmaClasses: OgmaClass[] = [
     {
@@ -195,10 +194,6 @@ export class OgmaService {
 
   removeNode(node: Node) {
     this.ogma.removeNode(node.id);
-    this.ogma
-      .getNode(node.id)
-      .getAdjacentEdges()
-      .forEach((edge) => this.deleteEdge.next(edge.getId()));
   }
 
   removeEdge(edge: Edge) {
