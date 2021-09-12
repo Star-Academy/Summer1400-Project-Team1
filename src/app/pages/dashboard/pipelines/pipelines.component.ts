@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { PipelineRow } from "src/app/models/pipeline";
+import { PipelinePageService } from "src/app/services/pipeline-page.service";
 import { PipelineService } from "src/app/services/pipeline.service";
 
 @Component({
@@ -13,7 +14,7 @@ export class PipelinesComponent implements OnInit {
   pipelineRowsSub!: Subscription;
   displayedColumns: string[] = ["شماره", "نام", "تاریخ ساخت"];
 
-  constructor(public pipelineService: PipelineService) {}
+  constructor(public pipelineService: PipelineService, private pipelinePageService: PipelinePageService) {}
 
   ngOnInit(): void {
     this.pipelineService.getPipeline();
@@ -23,6 +24,9 @@ export class PipelinesComponent implements OnInit {
         this.pipelineRows = pipelineRows;
       }
     );
+    this.pipelinePageService.getPipelines().subscribe(
+      (res) => console.log(res)
+    )
   }
 
   onPipelineClick(row: PipelineRow) {
