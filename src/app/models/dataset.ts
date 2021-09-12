@@ -1,12 +1,13 @@
-import { Table } from "./table";
+import { TableClass } from "./table";
 
 export class Dataset {
-  data = new Table();
+  data = new TableClass();
   constructor(
-    public id: number = -1,
-    public name: string = "testName",
-    public connectionName: string = "testConnectionName",
-    public createdAt: string = "testDate"
+    public Id: number,
+    public Name: string,
+    public DateCreated: string,
+    public Table: string,
+    public Connection?: string
   ) {}
 }
 

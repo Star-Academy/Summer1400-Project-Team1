@@ -58,15 +58,13 @@
     .actions-wrapper {
       height: 6rem;
       width: 100%;
-      margin-top: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .validate-wrapper {
+      margin-top: 2rem;
+    
+      .bottons-wrapper {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        justify-content: space-between;
+        margin-top: 1.5rem;
       }
     }
   }
@@ -92,6 +90,11 @@
   &:hover {
     background: hsla(204, 94%, 59%, 0.22);
   }
+}
+mat-radio-group{
+  display: flex;
+  align-items: center;
+  gap: 3rem;
 }
 
 .active_btn {

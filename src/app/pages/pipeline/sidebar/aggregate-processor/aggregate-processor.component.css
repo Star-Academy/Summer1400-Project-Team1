@@ -1,69 +1,63 @@
-:host {
+:host main {
+  height: 90%;
+  overflow-y: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  gap: 0.5rem;
 }
 
-:host .header {
-  background: #547292;
-  height: 7rem;
+:host main mat-accordion form {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-}
-
-:host .header .header-content {
-  width: 40%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-:host .header p {
-  font-size: 2rem;
-  color: #fff;
-}
-
-:host .header img {
-  height: 1.5rem;
-  width: 1.5rem;
-}
-
-:host form {
-  width: 40%;
-  margin-top: 5rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   font-size: 1.5rem;
 }
 
-:host form .panel-body {
+:host main .delete {
+  margin-left: 1.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+:host main .delete:hover {
+  background-color: rgba(200, 200, 200, 0.6);
+}
+
+:host main img {
+  height: 2rem;
+  width: 2rem;
+}
+
+:host main .panel-body {
+  border-radius: 0.5rem;
+  background-color: white;
+  padding: 1.5rem;
+}
+
+:host main .panel-body form {
+  font-size: 1.5rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -71,16 +65,12 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  gap: 1.5rem;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
-:host form .panel-body button {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
-:host form .panel-body .btn-add {
+:host main .panel-body .btn-add {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -94,15 +84,15 @@
   background: var(--color-primary);
 }
 
-:host form .panel-body .btn-add img {
+:host main .panel-body .btn-add img {
   height: 2rem;
   width: 2rem;
 }
 
-:host form .actions-wrapper {
+:host .actions-wrapper {
   height: 6rem;
   width: 100%;
-  margin-top: 3rem;
+  margin-top: 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -114,7 +104,7 @@
           justify-content: space-between;
 }
 
-:host form .actions-wrapper .validate-wrapper {
+:host .actions-wrapper .validate-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -123,4 +113,4 @@
           align-items: center;
   gap: 1rem;
 }
-/*# sourceMappingURL=add-new-connection.component.css.map */
+/*# sourceMappingURL=aggregate-processor.component.css.map */

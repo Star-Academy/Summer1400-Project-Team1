@@ -7,7 +7,7 @@
                     <mat-label>دیتاست</mat-label>
                     <mat-select required [(ngModel)]="joinNode.dataset" name="dataset">
                         <mat-option *ngFor="let dataset of datasetService.datasetsTemp" [value]="dataset">
-                            {{dataset.name}}
+                            {{dataset.Name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

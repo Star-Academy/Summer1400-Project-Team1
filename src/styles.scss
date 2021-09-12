@@ -46,6 +46,7 @@ $finalProject-theme: mat.define-light-theme(
   --color-secondary-dark: #c53c3c;
 
   --color-error: hsl(0, 100%, 50%);
+  --color-success: hsl(96, 100%, 23%);
 
   --color-bg-source: hsla(0, 0%, 27%, .3);
   --color-border-source: hsla(0, 0%, 27%, .8);
@@ -131,10 +132,13 @@ ul {
 
 .error-alert {
   border-right: 4px solid var(--color-error);
-
-  button {
+   button {
     color: var(--color-error);
   }
+}
+
+.success-alert {
+  border-right: 4px solid var(--color-success);
 }
 
 

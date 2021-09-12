@@ -1,3 +1,4 @@
+
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Location } from "@angular/common";
 import { NgForm } from "@angular/forms";
@@ -9,12 +10,13 @@ import { Subscription } from "rxjs";
 import { Alert, AlertType } from "src/app/utils/alert";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
+
 @Component({
-  selector: "app-add-new-dataset",
-  templateUrl: "./add-new-dataset.component.html",
-  styleUrls: ["./add-new-dataset.component.scss"],
+  selector: 'app-add-local-dataset',
+  templateUrl: './add-local-dataset.component.html',
+  styleUrls: ['./add-local-dataset.component.scss']
 })
-export class AddNewDatasetComponent implements OnInit, OnDestroy {
+export class AddLocalDatasetComponent implements OnInit, OnDestroy {
   @ViewChild("form", { static: false }) form!: NgForm;
   panelOpenState: boolean = false;
   isLocalHost: boolean = false;

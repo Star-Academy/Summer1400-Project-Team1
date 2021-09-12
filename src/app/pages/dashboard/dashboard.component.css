@@ -1,83 +1,162 @@
-.main {
-  flex-grow: 1;
+:host {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+
+:host .main {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
   height: 100%;
   min-height: 100%;
 }
 
-.container {
+:host .container {
   width: 100%;
-  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
-.sidebar {
+:host .sidebar {
   width: 15rem;
   font-size: 1.5rem;
   height: 100%;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(var(--color-primary-dark)), to(var(--color-primary)));
   background-image: linear-gradient(180deg, var(--color-primary-dark), var(--color-primary));
+  -webkit-transition: width 0.3s ease;
   transition: width 0.3s ease;
 }
-.sidebar > ul {
+
+:host .sidebar > ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   list-style: none;
 }
-.sidebar > ul > li {
+
+:host .sidebar > ul > li {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-shrink: 0;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   width: calc(100% - 1.5rem);
-  padding: 1rem;
+  margin: 0.5rem 1rem;
   color: white;
   cursor: pointer;
+  -webkit-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+}
+
+:host .sidebar > ul > li a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: white;
+  width: 100%;
+  padding: 1rem;
   border-radius: 0.2rem;
-  transition: 0.3s all ease;
 }
-.sidebar > ul > li.toggle-sidebar {
-  cursor: default;
-}
-.sidebar > ul > li.toggle-sidebar mat-icon {
-  cursor: pointer;
-  color: var(--color-gray-85);
-  transition: 0.3s all ease;
-}
-.sidebar > ul > li.toggle-sidebar mat-icon:hover {
-  color: var(--color-gray-95);
-}
-.sidebar > ul > li:hover:not(:first-child) {
+
+:host .sidebar > ul > li a:not(.selected):hover {
   background-color: rgba(255, 255, 255, 0.123);
 }
-.sidebar > ul > li > span {
+
+:host .sidebar > ul > li a.selected {
+  background-color: white;
+  color: var(--color-primary);
+}
+
+:host .sidebar > ul > li a.selected span > svg {
+  fill: var(--color-primary);
+}
+
+:host .sidebar > ul > li.toggle-sidebar {
+  cursor: default;
+  padding-right: 1rem;
+}
+
+:host .sidebar > ul > li.toggle-sidebar mat-icon {
+  cursor: pointer;
+  color: var(--color-gray-85);
+  -webkit-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+}
+
+:host .sidebar > ul > li.toggle-sidebar mat-icon:hover {
+  color: var(--color-gray-95);
+}
+
+:host .sidebar > ul > li span {
   width: 2rem;
   height: 2rem;
   margin-right: 0.2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
-.sidebar > ul > li > span > svg {
+
+:host .sidebar > ul > li span svg {
   fill: white;
   width: 4rem;
 }
-.sidebar > ul > li > div {
+
+:host .sidebar > ul > li div {
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
   margin-right: 1rem;
-  flex-grow: 1;
-  flex-shrink: 0;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
-.sidebar.hide {
+:host .sidebar.hide {
   width: 6rem;
 }
-.sidebar.hide > ul > .toggle-sidebar mat-icon {
-  transform: rotate(180deg);
+
+:host .sidebar.hide > ul > .toggle-sidebar mat-icon {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
 }
 
-.sidebar.hide > ul > li > div {
+:host .sidebar.hide > ul > li > a > div {
   opacity: 0;
 }
-
 /*# sourceMappingURL=dashboard.component.css.map */

@@ -1,0 +1,89 @@
+<div class="header">
+    <div class="header-content">
+      <p>افزودن دیتاست جدید</p>
+      <button mat-icon-button (click)="onClose()">
+        <img src="assets/images/close.svg" alt="close" />
+      </button>
+    </div>
+  </div>
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <mat-form-field appearance="outline">
+      <mat-label>نام دیتاست</mat-label>
+      <input
+        type="text"
+        ngModel
+        name="datasetName"
+        #datasetName="ngModel"
+        matInput
+        placeholder=""
+        required
+      />
+    </mat-form-field>
+  
+    
+  
+    <mat-accordion  >
+      <div class="panel-body">
+        <button class="btn-drop" (click)="file.click()" *ngIf="!hasName">
+          <img src="assets/images/upload.svg" alt="" />
+          انتخاب <span>فایل</span>
+        </button>
+        <button class="btn-drop" (click)="file.click()" *ngIf="hasName">
+          <img src="assets/images/upload.svg" alt="" />
+          {{ initDatasetName }}
+        </button>
+        <input
+          style="display: none"
+          type="file"
+          accept=".csv"
+          (change)="onUpload($event)"
+          required
+          #file
+        />
+        <mat-form-field appearance="outline">
+          <mat-label>جداکننده</mat-label>
+          <input
+            type="text"
+            ngModel
+            name="datasetSeparator"
+            #datasetSeparator="ngModel"
+            matInput
+          />
+        </mat-form-field>
+        <div>عنوان ستون‌ها</div>
+  
+        <mat-radio-group
+        
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          [(ngModel)]="haveHeader"
+          [ngModelOptions]="{standalone: true}"
+          required
+        >
+          <mat-radio-button
+             [value]="true"
+             color="primary"
+          >دارد</mat-radio-button>  
+             <mat-radio-button
+             [value]="false"
+             color="primary"
+  
+          >ندارد</mat-radio-button>
+        </mat-radio-group>
+  
+      </div>
+    </mat-accordion>
+  
+    <mat-accordion> </mat-accordion>
+  
+    <div class="actions-wrapper">
+      <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+      <div class="bottons-wrapper">
+        <button type="submit"
+        [disabled]="inProgress||!form.valid"
+        mat-raised-button color="primary">{{inProgress?'در حال بارگزاری ...':'افزودن'}}</button>
+        <button mat-stroked-button color="primary" (click)="onClose()">لغو</button>
+      </div>
+    </div>
+  </form>
+  

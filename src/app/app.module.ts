@@ -10,7 +10,6 @@ import { ConnectionsComponent } from "./pages/dashboard/connections/connections.
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatIconModule } from "@angular/material/icon";
 import { PipelineComponent } from "./pages/pipeline/pipeline.component";
-import { DatasetItemComponent } from "./pages/dashboard/datasets/dataset-item/dataset-item.component";
 import { AddNewDatasetComponent } from "./pages/dashboard/datasets/add-new-dataset/add-new-dataset.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -24,7 +23,10 @@ import { DialogProcessorSelectDialog } from "./pages/pipeline/pipeline-graph/pro
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
+ 
 import { DialogSelectDatasetDialog } from "./pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import { PipelineGraphComponent } from "./pages/pipeline/pipeline-graph/pipeline-graph.component";
 import { PipelinesComponent } from "./pages/dashboard/pipelines/pipelines.component";
@@ -42,6 +44,8 @@ import { MatTreeModule } from "@angular/material/tree";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatMenuModule } from "@angular/material/menu";
 import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-node/dialog-delete-node-dialog.component";
+import { HttpClientModule } from "@angular/common/http";
+import { AddLocalDatasetComponent } from './pages/dashboard/datasets/add-local-dataset/add-local-dataset.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,6 @@ import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-n
     DatasetsComponent,
     ConnectionsComponent,
     PipelineComponent,
-    DatasetItemComponent,
     AddNewDatasetComponent,
     AddNewConnectionComponent,
     AddNewConnectionComponent,
@@ -66,9 +69,11 @@ import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-n
     FilterItemComponent,
     TableInputOutputComponent,
     DialogDeleteNodeDialog,
+    AddLocalDatasetComponent,
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatIconModule,
@@ -89,6 +94,9 @@ import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-n
     MatTreeModule,
     MatTooltipModule,
     MatMenuModule,
+    MatRadioModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
 
   providers: [],

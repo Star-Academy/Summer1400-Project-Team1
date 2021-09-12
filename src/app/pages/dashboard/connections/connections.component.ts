@@ -11,14 +11,13 @@ import { ConnectionService } from "src/app/services/connection.service";
 export class ConnectionsComponent implements OnInit {
   connectionsRows!: ConnectionRow[];
   connectionRowsSub!: Subscription;
-  displayedColumns: string[] = ["شماره", "نام اتصال", "تاریخ ساخت"];
+  displayedColumns: string[] = ["شماره", "نام اتصال","نوع اتصال","کاربر", "تاریخ ساخت"];
 
   constructor(public connectionService: ConnectionService) {}
 
   ngOnInit(): void {
-    this.connectionService.getConnection();
-    this.connectionsRows = this.connectionService.connectionRows;
-    this.connectionRowsSub =
+    this.connectionService.getConnections();
+     this.connectionRowsSub =
       this.connectionService.connectionRowsChanged.subscribe(
         (connectionRows: ConnectionRow[]) => {
           this.connectionsRows = connectionRows;
@@ -27,7 +26,7 @@ export class ConnectionsComponent implements OnInit {
   }
 
   onConnectionClick(row: ConnectionRow) {
-    console.log(row.connection.name);
+    console.log(row.connection.Name);
   }
 
   ngOnDestroy(): void {

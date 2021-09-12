@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DatasetItemComponent } from './dataset-item.component';
+import { AddLocalDatasetComponent } from './add-local-dataset.component';
 
-describe('DatasetItemComponent', () => {
-  let component: DatasetItemComponent;
-  let fixture: ComponentFixture<DatasetItemComponent>;
+describe('AddLocalDatasetComponent', () => {
+  let component: AddLocalDatasetComponent;
+  let fixture: ComponentFixture<AddLocalDatasetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DatasetItemComponent ]
+      declarations: [ AddLocalDatasetComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DatasetItemComponent);
+    fixture = TestBed.createComponent(AddLocalDatasetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

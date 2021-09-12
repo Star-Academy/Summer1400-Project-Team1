@@ -13,14 +13,22 @@
   </ng-container>
 
   <ng-container matColumnDef="نام اتصال">
-    <th mat-header-cell *matHeaderCellDef>نام پایگاه</th>
-    <td mat-cell *matCellDef="let element">{{ element.connection.name }}</td>
+    <th mat-header-cell *matHeaderCellDef>نام اتصال</th>
+    <td mat-cell *matCellDef="let element">{{ element.connection.Name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="نوع اتصال">
+    <th mat-header-cell *matHeaderCellDef>نوع اتصال</th>
+    <td mat-cell *matCellDef="let element">{{ element.connection.Server }}</td>
+  </ng-container>
+  <ng-container matColumnDef="کاربر">
+    <th mat-header-cell *matHeaderCellDef>کاربر</th>
+    <td mat-cell *matCellDef="let element">{{ element.connection.Username }}</td>
   </ng-container>
 
   <ng-container matColumnDef="تاریخ ساخت">
     <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.connection.createdAt }}
+      {{ element.connection.DateCreated | date }}
     </td>
   </ng-container>
 

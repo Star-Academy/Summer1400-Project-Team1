@@ -4,11 +4,13 @@ import {Injectable} from '@angular/core';
   providedIn: 'root',
 })
 export class SendRequestService {
+  public static baseUrl:string = 'https://localhost:5001/api/v1/';
   public static async sendRequest(
     url: string,
     hasJson: boolean,
     body?: object
   ): Promise<any> {
+
     const init: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
@@ -18,7 +20,8 @@ export class SendRequestService {
       init.method = 'POST';
       init.body = JSON.stringify(body);
     }
-    return fetch(url, init).then((res) => {
+    //TODO ino taghir dadam havestoon bashe ;)
+    return fetch(this.baseUrl+url, init).then((res) => {
       if (res.ok) {
         if (hasJson) return res.json();
         return;

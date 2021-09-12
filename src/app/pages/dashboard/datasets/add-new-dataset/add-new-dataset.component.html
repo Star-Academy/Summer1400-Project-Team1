@@ -18,10 +18,9 @@
       placeholder=""
       required
     />
-    {{ initDatasetName }}
   </mat-form-field>
 
-  <mat-accordion>
+  <mat-accordion *ngIf="!isLocalHost">
     <mat-expansion-panel
       (opened)="panelOpenState = true"
       (closed)="panelOpenState = false"
@@ -35,7 +34,7 @@
         <button mat-button class="active_btn" (click)="isLocalHost = true">
           اتصال محلی
         </button>
-        <button mat-button *ngFor="let btn of templist">{{ btn.name }}</button>
+        <button mat-button *ngFor="let btn of templist"></button>
         <button mat-button>اتصال ۲</button>
         <mat-divider></mat-divider>
 
@@ -77,9 +76,9 @@
         type="file"
         accept=".csv"
         (change)="onUpload($event)"
+        required
         #file
       />
-
       <mat-form-field appearance="outline">
         <mat-label>جداکننده</mat-label>
         <input
@@ -88,22 +87,41 @@
           name="datasetSeparator"
           #datasetSeparator="ngModel"
           matInput
-          placeholder=""
-          required
         />
       </mat-form-field>
+      <div>عنوان ستون‌ها</div>
+
+      <mat-radio-group
+      
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        [(ngModel)]="haveHeader"
+        [ngModelOptions]="{standalone: true}"
+        required
+      >
+        <mat-radio-button
+           [value]="true"
+           color="primary"
+        >دارد</mat-radio-button>  
+           <mat-radio-button
+           [value]="false"
+           color="primary"
+
+        >ندارد</mat-radio-button>
+      </mat-radio-group>
+
     </div>
   </mat-accordion>
 
   <mat-accordion> </mat-accordion>
 
   <div class="actions-wrapper">
-    <div class="validate-wrapper">
-      <button type="submit" mat-raised-button color="primary">
-        اعتبار سنجی
-      </button>
-      <button mat-stroked-button color="primary">مشاهده نمونه</button>
+    <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+    <div class="bottons-wrapper">
+      <button type="submit"
+      [disabled]="inProgress||!form.valid"
+      mat-raised-button color="primary">{{inProgress?'در حال بارگزاری ...':'افزودن'}}</button>
+      <button mat-stroked-button color="primary" (click)="onClose()">لغو</button>
     </div>
-    <button mat-stroked-button color="primary" (click)="onClose()">لغو</button>
   </div>
 </form>

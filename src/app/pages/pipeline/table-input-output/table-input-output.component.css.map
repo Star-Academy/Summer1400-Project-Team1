@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,iBAAiB,GAAG,GAAG,CAAC;EACtB,MAAM,EAAE,eAAe;CACxB",
+    "sources": [
+        "table-input-output.component.scss"
+    ],
+    "names": [],
+    "file": "table-input-output.component.css"
+}

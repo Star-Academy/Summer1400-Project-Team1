@@ -1,3 +1,3 @@
-export class Table {
+export class TableClass {
   columns = ["ONE", "TWO", "THREE"];
 }

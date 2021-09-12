@@ -1,31 +1,58 @@
 .select-dataset-container {
   width: 100%;
   min-height: 20vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 1rem;
 }
+
 .select-dataset-container table {
   width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   margin-right: 5%;
+  -webkit-box-shadow: unset;
+          box-shadow: unset;
+  border: 0.1rem solid rgba(179, 168, 168, 0.226);
+  padding: 0.5rem;
+  border-radius: 0.8rem;
 }
+
+.select-dataset-container table td :nth-child(3) {
+  border-bottom: unset;
+}
+
+.select-dataset-container table td {
+  border-bottom: 0.1rem solid rgba(179, 168, 168, 0.226);
+}
+
 .select-dataset-container table .mat-row .mat-cell {
-  border-bottom: 1px solid transparent;
   border-top: 1px solid transparent;
   cursor: pointer;
 }
+
 .select-dataset-container table .mat-row:hover .mat-cell {
   background: rgba(224, 220, 220, 0.29);
 }
 
 .actions {
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: row-reverse;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
   margin-right: -3.2rem;
   margin-top: 1rem;
 }
-
-/*# sourceMappingURL=add-destination-dialog.component.css.map */
+/*# sourceMappingURL=dialog-select-dataset-dialog.component.css.map */
