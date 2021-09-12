@@ -113,7 +113,7 @@ namespace API
         {
             var dataset = new DatasetModel()
             {
-                Name = name, Table = name, DateCreated = DateTime.Now, Connection = null
+                Name = name, DateCreated = DateTime.Now, Connection = null
             };
             _context.Dataset.Add(dataset);
             _context.SaveChanges();
@@ -126,7 +126,7 @@ namespace API
             _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
             _context.Dataset.Add(new DatasetModel()
             {
-                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now, Table = tableName
+                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
             });
             _context.SaveChanges();
         }
@@ -137,7 +137,7 @@ namespace API
             _csvHandler.CsvToSql(name);
             _context.Dataset.Add(new DatasetModel()
             {
-                Connection = null, Name = name, DateCreated = DateTime.Now, Table = name
+                Connection = null, Name = name, DateCreated = DateTime.Now
             });
             _context.SaveChanges();
         }

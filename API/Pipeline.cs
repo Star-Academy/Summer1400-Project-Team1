@@ -87,8 +87,8 @@ namespace API
 
         public void LoadFromModel(PipelineModel pipelineModel)
         {
-            if(pipelineModel.Source != null)SourceDataset = pipelineModel.Source.Table;
-            if(pipelineModel.Destination != null)DestinationDataset = pipelineModel.Destination.Table;
+            if(pipelineModel.Source != null)SourceDataset = pipelineModel.Source.Name;
+            if(pipelineModel.Destination != null)DestinationDataset = pipelineModel.Destination.Name;
             
              pipelineModel.Components.Sort((c1,c2) => c1.OrderId-c2.OrderId);
 

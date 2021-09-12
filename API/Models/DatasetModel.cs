@@ -8,7 +8,6 @@ namespace API.Models
         [Key]
         public int Id { get; set;}
         public string Name { get; set; }
-        public string Table { get; set; }
         public ConnectionModel Connection { get; set; }
         public DateTime DateCreated { get; set; }
     }
