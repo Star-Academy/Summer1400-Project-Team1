@@ -42,6 +42,7 @@ import { MatTreeModule } from "@angular/material/tree";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatMenuModule } from "@angular/material/menu";
 import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-node/dialog-delete-node-dialog.component";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-n
     MatTreeModule,
     MatTooltipModule,
     MatMenuModule,
+    HttpClientModule
   ],
 
   providers: [],
