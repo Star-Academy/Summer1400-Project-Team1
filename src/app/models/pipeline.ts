@@ -1,7 +1,8 @@
 export class  Pipeline{
-    constructor(public id:number =-1,
-                public name:string="testName",
-                public createdAt:string="testDate")
+    constructor(public Id:number,
+                public Name:string,
+                public Components: Node[],
+                public DataCreated: string)
     {}
 }
 

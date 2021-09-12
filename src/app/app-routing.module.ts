@@ -7,6 +7,8 @@ import { AddNewDatasetComponent } from "./pages/dashboard/datasets/add-new-datas
 import { ConnectionsComponent } from "./pages/dashboard/connections/connections.component";
 import { AddNewConnectionComponent } from "./pages/dashboard/connections/add-new-connection/add-new-connection.component";
 import { PipelinesComponent } from "./pages/dashboard/pipelines/pipelines.component";
+import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/add-pipeline.component";
+
 import { AddLocalDatasetComponent } from "./pages/dashboard/datasets/add-local-dataset/add-local-dataset.component";
 //TODO change route animation
 const routes: Routes = [
@@ -20,6 +22,7 @@ const routes: Routes = [
       { path: "connection", component: ConnectionsComponent },
        { path: "connection/add", component: AddNewConnectionComponent },
       { path: "pipelines", component: PipelinesComponent },
+      { path: "pipelines/add", component: AddPipelineComponent}
     ],
   },
   { path: "datasets/addlocal", component: AddLocalDatasetComponent },

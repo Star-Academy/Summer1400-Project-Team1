@@ -39,4 +39,14 @@ table {
   .mat-row:hover .mat-cell {
     background: $--item-bg-color--hovered;
   }
+
+  .delete-btn {
+    background-color: transparent;
+    border: unset;
+    border-radius: 999px;
+    img{
+      width: 2rem;
+      height: 2rem;
+    }
+  }
 }
