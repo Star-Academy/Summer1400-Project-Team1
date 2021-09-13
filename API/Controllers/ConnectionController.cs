@@ -1,6 +1,5 @@
 using System;
 using API.Models;
-using API.SqlIOHandler;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -30,7 +29,7 @@ namespace API.Controllers
         {
             var connectionInfo = _databaseHandler.GetConnection(id);
             if (connectionInfo == null)
-                return Ok("connection not found");
+                return BadRequest("connection not found");
             return Ok(JsonConvert.SerializeObject(connectionInfo));
         }
 
@@ -39,6 +38,8 @@ namespace API.Controllers
         public IActionResult GetDatabases(int id)
         {
             var databases = _databaseHandler.GetDatabases(id);
+            if (databases == null)
+                return BadRequest("connection not found");
             return Ok(JsonConvert.SerializeObject(databases));
         }
 
@@ -47,15 +48,24 @@ namespace API.Controllers
         public IActionResult GetTables(int id, string name)
         {
             var tables = _databaseHandler.GetTables(id, name);
+            if (tables == null)
+                return BadRequest("database not found");
             return Ok(JsonConvert.SerializeObject(tables));
         }
 
         [HttpPost]
         public IActionResult AddConnection(ConnectionModel connectionModel)
         {
-            var id = _databaseHandler.AddConnection(connectionModel.Name, connectionModel.Server,
-                connectionModel.Username, connectionModel.Password);
-            return Ok(id);
+            try
+            {
+                var id = _databaseHandler.AddConnection(connectionModel.Name, connectionModel.Server,
+                    connectionModel.Username, connectionModel.Password);
+                return Ok(id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("duplicate connection name");
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -68,21 +78,21 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return Ok("connection not found");
+                return BadRequest("connection not found");
             }
         }
 
         [HttpPatch("{id:int}")]
-        public IActionResult PatchConnection([FromRoute] int id,[FromBody] ConnectionModel newConnectionModel)
+        public IActionResult PatchConnection([FromRoute] int id, [FromBody] ConnectionModel newConnectionModel)
         {
             try
             {
-                _databaseHandler.UpdateConnection(id,newConnectionModel);
+                _databaseHandler.UpdateConnection(id, newConnectionModel);
                 return Ok();
             }
             catch (Exception e)
             {
-                return Ok("connection not found");
+                return BadRequest("connection not found");
             }
         }
     }

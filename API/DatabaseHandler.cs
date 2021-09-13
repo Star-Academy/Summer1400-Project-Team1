@@ -76,7 +76,9 @@ namespace API
         
         public IEnumerable<string> GetDatabases(int connectionId)
         {
-            var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
+            var serverConnectionString = _context.Connection.Find(connectionId)?.ConnectionString;
+            if (serverConnectionString == null)
+                return null;
             var databases = _sqlIoHandler.GetDatabases(serverConnectionString);
             
             return databases;
@@ -84,6 +86,8 @@ namespace API
 
         public IEnumerable<string> GetTables(int connectionId, string databaseName)
         {
+            if (!GetDatabases(connectionId).Contains(databaseName) || _context.Connection.Find(connectionId) == null)
+                return null;
             var connectionStringToDatabase =
                 _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
             var tables = _sqlIoHandler.GetTables(connectionStringToDatabase);
@@ -94,7 +98,7 @@ namespace API
         {
             return _context.Dataset.ToList();
         }
-        
+        //TODO
         public IEnumerable<PipelineModel> GetDatasetPipelines(int id)
         {
             return _context.Pipeline.Where(model => model.Source.Id == id);

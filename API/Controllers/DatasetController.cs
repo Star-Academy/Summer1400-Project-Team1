@@ -100,6 +100,8 @@ namespace API.Controllers
             return Ok(JsonConvert.SerializeObject(datasets));
         }
         
+        //must be changed
+        //TODO
         [HttpGet("{id:int}")]
         public IActionResult GetDataset(int id)
         {
@@ -110,16 +112,31 @@ namespace API.Controllers
         [HttpPost("sql")]
         public IActionResult AddSqlDataset(SqlDataset sqlDataset)
         {
-            _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
-                sqlDataset.DatabaseName,sqlDataset.TableName);
-            return Ok();
+            try
+            {
+                _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
+                    sqlDataset.DatabaseName,sqlDataset.TableName);
+                return Ok("sql dataset added");
+            }
+            catch (Exception e)
+            {
+                return BadRequest("duplicate dataset name");
+            }
         }
 
         [HttpDelete("{id:int}")]
         public IActionResult DeleteDataset(int id)
         {
-            _databaseHandler.DeleteDataset(id);
-            return Ok();
+            try
+            {
+                _databaseHandler.DeleteDataset(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("dataset not found");
+            }
+            
         }
         
     }
