@@ -8,6 +8,7 @@ using API.SqlIOHandler;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
+using YamlDotNet.Serialization;
 
 namespace API
 {
@@ -169,6 +170,32 @@ namespace API
             return pipeline;
         }
 
+        public void AddYmlPipeline(string pathToYml)
+        {
+            var file = File.OpenText(pathToYml);
+            var serializer = new DeserializerBuilder()
+                .WithTypeConverter(new PipelineYamlTypeConvertor(this))
+                .Build();
+            var pipeline = serializer.Deserialize(file);
+            Console.WriteLine("");
+
+        }
+
+        public string GetPipelineYml(int pipelineId)
+        {
+            var pipeline = GetPipeline(pipelineId);
+            var serializer = new SerializerBuilder()
+                .WithTypeConverter(new PipelineYamlTypeConvertor(this))
+                .Build();
+            var yml = serializer.Serialize(pipeline);
+            var folderName = Path.Combine("Resources", "YMLs");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var path = Path.Combine(pathToSave, $"{pipeline.Name}.yml");
+            using var writer = new StreamWriter(path);
+            writer.Write(yml);
+            return path;
+        }
+
         public int AddPipeline(string name,int sid, int did)
         {
             var pipeline = new PipelineModel()
@@ -185,8 +212,7 @@ namespace API
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return 0;
+                throw new Exception("pipeline with this name already exists");
             }
 
             return pipeline.Id;
@@ -195,10 +221,12 @@ namespace API
         public void UpdatePipeline(int id, string name, int sid, int did)
         {
             var pipeline = _context.Pipeline.Find(id);
+            _context.Entry(pipeline).Reference(p => p.Source).Load();
+            _context.Entry(pipeline).Reference(p => p.Destination).Load();
             if (pipeline == null) throw new Exception("not found");
             pipeline.Name = name;
-            pipeline.Source = _context.Dataset.Find(sid);
-            pipeline.Destination = _context.Dataset.Find(did);
+            if(sid != -1)pipeline.Source = _context.Dataset.Find(sid);
+            if(did != -1)pipeline.Destination = _context.Dataset.Find(did);
             _context.SaveChanges();
         }
 

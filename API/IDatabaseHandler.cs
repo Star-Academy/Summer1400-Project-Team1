@@ -22,6 +22,8 @@ namespace API
         string GetCsvDataset(int datasetId);
         List<PipelineModel> GetPipelines();
         PipelineModel GetPipeline(int pipelineId);
+        void AddYmlPipeline(string pathToYml);
+        string GetPipelineYml(int pipelineId);
         int AddPipeline(string name,int sid,int did);
         void UpdatePipeline(int id, string name, int sid, int did);
         void DeletePipeline(int id);
