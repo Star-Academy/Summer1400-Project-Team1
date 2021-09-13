@@ -14,6 +14,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { Dataset } from "../models/dataset";
 import { PipelineService } from "./pipeline.service";
 import { Subject, Subscription } from "rxjs";
+import { Pipeline } from "../models/pipeline";
 
 @Injectable({
   providedIn: "root",
@@ -35,12 +36,12 @@ export class GraphService {
       container: container,
     });
     this.ogmaService.ogma.events.onClick((event) => this.handleEvents(event));
-    this.initGraph();
+    // this.initGraph();
   }
 
-  initGraph() {
-    const srcNode = new SourceNode("source");
-    const destNode = new DestinationNode("destination");
+  initGraph(pipeline:Pipeline) {
+    const srcNode = new SourceNode(pipeline.Source.Name,pipeline.Source);
+    const destNode = new DestinationNode(pipeline.Destination.Name,pipeline.Destination);
     const initialEdge = new Edge(srcNode, destNode);
     this.addNode(srcNode);
     this.addNode(destNode);

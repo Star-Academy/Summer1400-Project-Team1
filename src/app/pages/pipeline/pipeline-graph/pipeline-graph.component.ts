@@ -46,8 +46,8 @@ export class PipelineGraphComponent implements AfterContentInit {
   setDataset(terminalNode: TerminalNode, dataset: Dataset) {
     let obs =
       terminalNode.nodeType === NodeType.SOURCE
-        ? this.pipelineService.setSrcDataset(this.pipeline.Id, dataset.Id)
-        : this.pipelineService.setDestDataset(this.pipeline.Id, dataset.Id);
+        ? this.pipelineService.setSrcDataset(this.pipeline, dataset.Id)
+        : this.pipelineService.setDestDataset(this.pipeline, dataset.Id);
     obs.toPromise().then(() => {
       terminalNode.dataset = dataset;
       this.ogmaService.updateTerminalNode(terminalNode);
@@ -56,6 +56,7 @@ export class PipelineGraphComponent implements AfterContentInit {
 
   ngAfterContentInit(): void {
     this.graphService.constructGraph(this.container.nativeElement);
+    this.graphService.initGraph(this.pipeline)
   }
 
   zoomIn() {

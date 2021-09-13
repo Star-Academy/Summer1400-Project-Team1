@@ -69,11 +69,10 @@ export class PipelineService {
 
   getPipelineById(id: number) {
     return this.http
-      .get<{ id: number; name: string; dateCreated: string }>(
+      .get<Pipeline>(
         this.BASE_URL + id
       )
-      .pipe(map((res) => new Pipeline(res.id, res.name, [], res.dateCreated)));
-  }
+    }
 
   editPipelineName(id: number, newName: string) {
     return this.http
@@ -81,13 +80,14 @@ export class PipelineService {
       .pipe(switchMap(() => this.getPipelineById(id)));
   }
 
-  setSrcDataset(pipelineId: number, srcId: number) {
-    return this.http.patch(this.BASE_URL + pipelineId, { SourceId: srcId });
+  setSrcDataset(pipeline: Pipeline, srcId: number) {
+    return this.http.patch(this.BASE_URL + pipeline.Id, { SourceId: srcId , Name : pipeline.Name});
   }
 
-  setDestDataset(pipelineId: number, destId: number) {
-    return this.http.patch(this.BASE_URL + pipelineId, {
+  setDestDataset(pipeline: Pipeline, destId: number) {
+    return this.http.patch(this.BASE_URL + pipeline.Id, {
       DestinationId: destId,
+      Name : pipeline.Name
     });
   }
 }

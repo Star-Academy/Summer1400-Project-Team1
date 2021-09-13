@@ -4,8 +4,9 @@ import { Dataset } from "../../dataset";
 export abstract class TerminalNode extends Node {
   protected _dataset?: Dataset;
 
-  protected constructor(name: string, nodeType: NodeType) {
+  protected constructor(name: string, nodeType: NodeType,dataset:Dataset) {
     super(name, nodeType);
+    
   }
 
   get dataset() {

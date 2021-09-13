@@ -48,7 +48,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
           this.pipelineService.getPipelineById(+params.get("id")!)
         )
       )
-      .subscribe((pipeline) => (this.pipeline = pipeline));
+      .subscribe((pipeline) => {
+        this.pipeline = pipeline;
+        console.log(pipeline);
+        
+      });
   }
 
   editPipelineName(pipeline: Pipeline, ngForm: NgForm) {
