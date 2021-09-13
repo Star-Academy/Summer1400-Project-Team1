@@ -15,7 +15,7 @@ namespace API
         IEnumerable<string> GetDatabases(int connectionId);
         IEnumerable<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
-        void GetDatasetStatistics(int id);
+        int GetDatasetStatistics(int id);
         public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count);
         SqlDataReader GetDatasetSamples(int id, int count);
         void DeleteDataset(int id);

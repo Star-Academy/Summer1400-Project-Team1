@@ -56,5 +56,16 @@ namespace API.SqlIOHandler
             _sqlHandler.Close();
             return samples;
         }
+        
+        public int GetNumberOfRows(string tableName)
+        {
+            if (!_sqlHandler.IsOpen())
+                _sqlHandler.Open();
+            const string countQuery = "COUNT *";
+            var cmd = new SqlCommand(countQuery, _sqlHandler.Connection);
+            var numberOfRows = (int)cmd.ExecuteScalar();
+            _sqlHandler.Close();
+            return numberOfRows;
+        }
     }
 }

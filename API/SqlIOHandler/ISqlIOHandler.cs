@@ -10,5 +10,6 @@ namespace API.SqlIOHandler
         IEnumerable<string> GetTables(string sourceConnectionString);
         void ImportDataFromSql(ConnectionModel connectionModel,string datasetNAme, string databaseName, string tableName);
         SqlDataReader GetTableSample(string tableName, int count);
+        int GetNumberOfRows(string tableName);
     }
 }

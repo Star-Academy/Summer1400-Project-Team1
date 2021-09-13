@@ -96,12 +96,19 @@ namespace API.Controllers
             return Ok(JsonConvert.SerializeObject(datasets));
         }
         
-        // [HttpGet("{id:int}")]
-        // public IActionResult GetDataset(int id)
-        // {
-        //     //TODO
-        //     return null;
-        // }
+        [HttpGet("{id:int}")]
+        public IActionResult GetDataset(int id)
+        {
+            try
+            {
+                var numberOfRows = _databaseHandler.GetDatasetStatistics(id);
+                return Ok(JsonConvert.SerializeObject(numberOfRows));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("dataset not found");
+            }
+        }
         
         [HttpGet("{id:int}")]
         public IActionResult GetDataset(int id,string type,int count)
