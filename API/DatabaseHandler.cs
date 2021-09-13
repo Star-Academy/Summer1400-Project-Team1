@@ -174,10 +174,11 @@ namespace API
         {
             var file = File.OpenText(pathToYml);
             var serializer = new DeserializerBuilder()
-                .WithTypeConverter(new PipelineYamlTypeConvertor(this))
+                .WithTypeConverter(new PipelineYamlTypeConvertor(this,_context))
                 .Build();
-            var pipeline = serializer.Deserialize(file);
-            Console.WriteLine("");
+            var pipeline = serializer.Deserialize(file) as PipelineModel;
+            _context.Pipeline.Add(pipeline);
+            _context.SaveChanges();
 
         }
 
@@ -185,7 +186,7 @@ namespace API
         {
             var pipeline = GetPipeline(pipelineId);
             var serializer = new SerializerBuilder()
-                .WithTypeConverter(new PipelineYamlTypeConvertor(this))
+                .WithTypeConverter(new PipelineYamlTypeConvertor(this,_context))
                 .Build();
             var yml = serializer.Serialize(pipeline);
             var folderName = Path.Combine("Resources", "YMLs");
