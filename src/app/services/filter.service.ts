@@ -25,11 +25,15 @@ export class FilterService {
   }
 
   deleteFilter(filter: Filter) {
-    if (!filter.parent) return;
-    filter.parent!.children = filter.parent!.children!.filter(
-      (child) => child !== filter
-    );
-    if (filter.parent!.children.length === 0) this.deleteFilter(filter.parent!);
+    if (!filter.parent) {
+      filter.children = [];
+    }
+    else {
+      filter.parent!.children = filter.parent!.children!.filter(
+        (child) => child !== filter
+      );
+      if (filter.parent!.children.length === 0) this.deleteFilter(filter.parent!);  
+    }
     this.dataChange.next();
   }
 }

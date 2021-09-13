@@ -2,7 +2,7 @@
     <div [ngSwitch]="selectedNode.nodeType" class="sidebar-wrapper">
         <header>
             <p>{{selectedNode.name}}</p>
-            <button mat-icon-button (click)="openDialog()">
+            <button mat-icon-button>
                 <img src="assets/images/delete.svg" alt="">
             </button>
         </header>
@@ -21,7 +21,7 @@
 <ng-template #noNodeSelected>
     <main>
         <p>پردازه‌ای انتخاب نشده</p>
-        <button mat-raised-button color='primary' (click)="openDialog()">انتخاب</button>
+        <button mat-raised-button color='primary'>انتخاب</button>
     </main>
 </ng-template>
 

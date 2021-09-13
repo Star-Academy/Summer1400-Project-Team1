@@ -50,8 +50,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
       )
       .subscribe((pipeline) => {
         this.pipeline = pipeline;
-        console.log(pipeline);
-        
       });
   }
 

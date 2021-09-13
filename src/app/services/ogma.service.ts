@@ -178,13 +178,18 @@ export class OgmaService {
     ogmaNode.addClass(ogmaClass);
   }
 
-  updateTerminalNode(node: TerminalNode) {
-    const prevClass = !node.dataset ? "terminal filled" : "terminal empty";
-    const newClass = node.dataset ? "terminal filled" : "terminal empty";
+
+  fillTerminalNode(node: TerminalNode) {
     const ogmaNode = this.ogma.getNode(node.id);
-    ogmaNode.removeClass(prevClass);
-    ogmaNode.addClass(newClass);
-    ogmaNode.setAttributes({ text: { content: node.dataset?.Name } });
+    ogmaNode.removeClass("terminal empty");
+    ogmaNode.addClass("terminal filled");
+    ogmaNode.setAttributes({text: {content: node.dataset.Name}})
+  }
+
+  emptyTerminalNode(terminalNode: Node) {
+    const ogmaNode = this.ogma.getNode(terminalNode.id);
+    ogmaNode.removeClass("terminal filled");
+    ogmaNode.addClass("terminal empty")
   }
 
   addEdge(edge: Edge) {

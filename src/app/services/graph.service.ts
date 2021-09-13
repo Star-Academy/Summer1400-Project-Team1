@@ -15,6 +15,7 @@ import { Dataset } from "../models/dataset";
 import { PipelineService } from "./pipeline.service";
 import { Subject, Subscription } from "rxjs";
 import { Pipeline } from "../models/pipeline";
+import { switchMap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
@@ -24,10 +25,10 @@ export class GraphService {
   edges: Edge[] = [];
 
   clickedNode = new Subject<Node>();
+  clickedEdge = new Subject<Edge>();
 
   constructor(
     private ogmaService: OgmaService,
-    private dialog: MatDialog,
     private pipelineService: PipelineService
   ) {}
 
@@ -36,12 +37,14 @@ export class GraphService {
       container: container,
     });
     this.ogmaService.ogma.events.onClick((event) => this.handleEvents(event));
-    // this.initGraph();
   }
 
-  initGraph(pipeline:Pipeline) {
-    const srcNode = new SourceNode(pipeline.Source.Name,pipeline.Source);
-    const destNode = new DestinationNode(pipeline.Destination.Name,pipeline.Destination);
+  initGraph(pipeline: Pipeline) {
+    const srcNode = new SourceNode(pipeline.Source?.Name, pipeline.Source);
+    const destNode = new DestinationNode(
+      pipeline.Destination?.Name,
+      pipeline.Destination
+    );
     const initialEdge = new Edge(srcNode, destNode);
     this.addNode(srcNode);
     this.addNode(destNode);
@@ -73,34 +76,7 @@ export class GraphService {
   }
 
   onEdgeClicked(edge: Edge) {
-    this.promptProcessorSelectDialog(edge);
-  }
-
-  promptProcessorSelectDialog(edge: Edge) {
-    const dialogRef = this.dialog.open(DialogProcessorSelectDialog, {
-      autoFocus: false,
-      width: "67.5rem",
-    });
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res) this.addProcessor(res, edge);
-      else this.unselectEdge(edge);
-    });
-  }
-
-  addProcessor(nodeType: NodeType, edge: Edge) {
-    let newNode: Node;
-    switch (nodeType) {
-      case NodeType.FILTER:
-        newNode = new FilterNode("filter");
-        break;
-      case NodeType.JOIN:
-        newNode = new JoinNode("join");
-        break;
-      case NodeType.AGGREGATE:
-        newNode = new AggregateNode("aggregate");
-        break;
-    }
-    this.insertNode(newNode!, edge);
+    this.clickedEdge.next(edge)
   }
 
   insertNode(node: Node, edge: Edge) {
@@ -140,17 +116,5 @@ export class GraphService {
   addEdge(edge: Edge) {
     this.edges.push(edge);
     this.ogmaService.addEdge(edge);
-  }
-
-  unselectEdge(edge: Edge) {
-    this.ogmaService.unSelectEdge(edge);
-  }
-
-  zoomIn() {
-    this.ogmaService.zoomIn();
-  }
-
-  zoomOut() {
-    this.ogmaService.zoomOut();
   }
 }

@@ -68,7 +68,7 @@ export class PipelineService {
   }
 
   getPipelineById(id: number) {
-    return this.http
+    return this.http                            
       .get<Pipeline>(
         this.BASE_URL + id
       )
