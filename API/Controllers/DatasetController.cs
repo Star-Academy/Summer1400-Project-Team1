@@ -23,6 +23,8 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
+            if (name == null)
+                return BadRequest("invalid input");
             return Ok(_databaseHandler.AddDataset(name));
         }
         
@@ -100,15 +102,15 @@ namespace API.Controllers
             return Ok(JsonConvert.SerializeObject(datasets));
         }
         
-        [HttpGet("{id:int}")]
-        public IActionResult GetDataset(int id)
-        {
-            //TODO
-            return null;
-        }
+        // [HttpGet("{id:int}")]
+        // public IActionResult GetDataset(int id)
+        // {
+        //     //TODO
+        //     return null;
+        // }
         
         [HttpGet("{id:int}")]
-        public IActionResult GetDataset(int id,[FromQuery] string type,[FromQuery]int count)
+        public IActionResult GetDataset(int id,string type,int count)
         {
             switch (type)
             {
