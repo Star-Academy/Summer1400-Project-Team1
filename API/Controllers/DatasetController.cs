@@ -38,24 +38,18 @@ namespace API.Controllers
                 var folderName = Path.Combine("Resources", "CSVs");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                if (file.Length > 0)
-                {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
+                if (file.Length <= 0) return BadRequest();
+                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
 
-                    using (var stream = new FileStream(fullPath,FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-                    
-                    _databaseHandler.AddCsvDataset(fullPath,name,header);
-                    return Ok(new {dbPath});
-                }
-                else
+                using (var stream = new FileStream(fullPath,FileMode.Create))
                 {
-                    return BadRequest();
+                    file.CopyTo(stream);
                 }
+                    
+                _databaseHandler.AddCsvDataset(fullPath,name,header);
+                return Ok(new {dbPath});
 
             }
             catch (Exception e)

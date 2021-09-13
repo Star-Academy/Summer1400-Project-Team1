@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using YamlDotNet.Serialization;
 
 namespace API.Models
 {
@@ -9,6 +10,7 @@ namespace API.Models
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
         public DatasetModel Source { get; set; }
         public DatasetModel Destination { get; set; }

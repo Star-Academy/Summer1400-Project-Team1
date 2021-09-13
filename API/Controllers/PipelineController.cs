@@ -1,10 +1,15 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using YamlDotNet.Serialization;
+using ContentDispositionHeaderValue = System.Net.Http.Headers.ContentDispositionHeaderValue;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace API.Controllers
@@ -32,7 +37,7 @@ namespace API.Controllers
         [Route("{id}")]
         public IActionResult GetPipeline(int id)
         {
-            return Ok(_databaseHandler.GetPipeline(id));
+            return Ok(JsonSerializer.Serialize(_databaseHandler.GetPipeline(id)));
         }
 
         [HttpPost]
@@ -48,7 +53,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
         }
 
@@ -166,7 +171,6 @@ namespace API.Controllers
             var replace = JsonSerializer.Deserialize<FilterModel>(json);
             if (replace != null)
             {
-                Console.WriteLine(replace.ToString());
                 try
                 {
                     _databaseHandler.UpdateFilterComponent(id, replace);
@@ -358,6 +362,68 @@ namespace API.Controllers
             }
 
             return Ok();
+        }
+        
+        private string GetContentType(string path)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            
+            if (!provider.TryGetContentType(path, out contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            
+            return contentType;
+        }
+
+        [HttpGet,DisableRequestSizeLimit]
+        [Route("{id}/yml")]
+        public async Task<IActionResult> DownloadYml(int id)
+        {
+            var filePath = _databaseHandler.GetPipelineYml(id);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+
+            var memory = new MemoryStream();
+            await using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+            
+        }
+        
+        [HttpPost, DisableRequestSizeLimit]
+        [Route("yml")]
+        public IActionResult UploadYml()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("Resources", "YMLs");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (file.Length <= 0) return BadRequest();
+                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+
+                using (var stream = new FileStream(fullPath,FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+                    
+                _databaseHandler.AddYmlPipeline(fullPath);
+                return Ok(new {dbPath});
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"internal server error {e}");
+            }
         }
     }
 }
