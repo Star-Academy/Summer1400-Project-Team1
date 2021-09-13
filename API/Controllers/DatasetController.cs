@@ -100,13 +100,33 @@ namespace API.Controllers
             return Ok(JsonConvert.SerializeObject(datasets));
         }
         
-        //must be changed
-        //TODO
         [HttpGet("{id:int}")]
         public IActionResult GetDataset(int id)
         {
-            var dataset = _databaseHandler.GetDatasetPipelines(id);
-            return Ok(JsonConvert.SerializeObject(dataset));
+            return null;
+        }
+        
+        [HttpGet("{id:int}")]
+        public IActionResult GetDataset(int id,[FromQuery] string type,[FromQuery]int count)
+        {
+            switch (type)
+            {
+                case "pipeline": 
+                    var pipelines = _databaseHandler.GetDatasetPipelines(id, count);
+                    return Ok(pipelines);
+                case "sample":
+                    try
+                    {
+                        var samples = _databaseHandler.GetDatasetSamples(id,count);
+                        return Ok(samples);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest("invalid id");
+                    }
+                default: 
+                    return BadRequest("invalid inputs");
+            }
         }
 
         [HttpPost("sql")]

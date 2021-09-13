@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Data;
 using System.Linq;
 using API.Models;
 using API.SqlIOHandler;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting.Internal;
 
 namespace API
 {
@@ -98,10 +96,23 @@ namespace API
         {
             return _context.Dataset.ToList();
         }
-        //TODO
-        public IEnumerable<PipelineModel> GetDatasetPipelines(int id)
+
+        public void GetDatasetStatistics(int id)
         {
-            return _context.Pipeline.Where(model => model.Source.Id == id);
+            var tableName = _context.Dataset.Find(id).Name;   
+        }
+        
+        public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count)
+        {
+            return _context.Pipeline.Where(model => model.Source.Id == id).Take(count);
+        }
+        
+        public SqlDataReader GetDatasetSamples(int id, int count)
+        {
+            var tableName = _context.Dataset.Find(id).Name;
+            if (tableName == null)
+                throw new Exception("dataset not found");
+            return _sqlIoHandler.GetTableSample(tableName,count);
         }
 
         public void DeleteDataset(int id)
@@ -127,7 +138,7 @@ namespace API
         public void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableName)
         {
             var connectionModel = _context.Connection.Find(connectionId);
-            _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
+            _sqlIoHandler.ImportDataFromSql(connectionModel,datasetName, databaseName, tableName);
             _context.Dataset.Add(new DatasetModel()
             {
                 Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
