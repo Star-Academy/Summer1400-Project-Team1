@@ -46,7 +46,7 @@ namespace API.Controllers
             var sid = -1;
             var did = -1;
             if (body.TryGetProperty("SourceId", out var source)) sid = source.GetInt32();
-            if(body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
+            if (body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
             try
             {
                 return Ok(_databaseHandler.AddPipeline(body.GetProperty("Name").GetString(), sid, did));
@@ -59,15 +59,15 @@ namespace API.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public IActionResult Patch(int id,[FromBody] JsonElement body)
+        public IActionResult Patch(int id, [FromBody] JsonElement body)
         {
             var sid = -1;
             var did = -1;
             if (body.TryGetProperty("SourceId", out var source)) sid = source.GetInt32();
-            if(body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
+            if (body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
             try
             {
-                _databaseHandler.UpdatePipeline(id,body.GetProperty("Name").GetString(), sid, did);
+                _databaseHandler.UpdatePipeline(id, body.GetProperty("Name").GetString(), sid, did);
                 return Ok();
             }
             catch (Exception e)
@@ -114,7 +114,7 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("{id}/component")]
-        public void PostComponent(int id, string type, int index, string name,[FromBody] JsonElement body)
+        public void PostComponent(int id, string type, int index, string name, [FromBody] JsonElement body)
         {
             switch (type)
             {
@@ -137,7 +137,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{pid}/component/{cid}")]
-        public IActionResult PatchComponent(int pid, int cid,[FromQuery] string name,[FromBody] JsonElement body)
+        public IActionResult PatchComponent(int pid, int cid, [FromQuery] string name, [FromBody] JsonElement body)
         {
             Tuple<ComponentType, int> componentInfo;
             try
@@ -148,14 +148,14 @@ namespace API.Controllers
             {
                 return BadRequest(e.Message);
             }
-            
-            if(name != null) _databaseHandler.UpdateComponent(pid,cid,name);
+
+            if (name != null) _databaseHandler.UpdateComponent(pid, cid, name);
             if (body.ToString() == "{}") return Ok();
-            
+
             switch (componentInfo.Item1)
             {
                 case ComponentType.Filter:
-                    return PatchFilter(componentInfo.Item2,body.ToString());
+                    return PatchFilter(componentInfo.Item2, body.ToString());
                 case ComponentType.Join:
                     return PatchJoin(componentInfo.Item2, body.ToString());
                 case ComponentType.Aggregation:
@@ -163,7 +163,6 @@ namespace API.Controllers
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
 
         private IActionResult PatchFilter(int id, string json)
@@ -179,7 +178,6 @@ namespace API.Controllers
                 {
                     return BadRequest(e.Message);
                 }
-                
             }
             else
             {
@@ -218,8 +216,14 @@ namespace API.Controllers
             {
                 return BadRequest();
             }
+
             try
             {
+                if (!json.ToLower().Contains("jointype"))
+                {
+                    model.JoinType = _databaseHandler.GetJoinComponent(id).JoinType;
+                }
+
                 _databaseHandler.UpdateJoinComponent(id, model);
             }
             catch (Exception e)
@@ -282,7 +286,7 @@ namespace API.Controllers
                 Component = aggregation
             });
         }
-        
+
         private IActionResult GetJoin(int id)
         {
             var join = _databaseHandler.GetJoinComponent(id);
@@ -345,10 +349,10 @@ namespace API.Controllers
 
             return Ok();
         }
-        
+
         [HttpGet]
         [Route("{pid}/run/{id}")]
-        public IActionResult RunByIndex(int pid,int id)
+        public IActionResult RunByIndex(int pid, int id)
         {
             var pipeline = new Pipeline(_sqlHandler, _databaseHandler);
             pipeline.LoadFromModel(_databaseHandler.GetPipeline(pid));
@@ -363,21 +367,21 @@ namespace API.Controllers
 
             return Ok();
         }
-        
+
         private string GetContentType(string path)
         {
             var provider = new FileExtensionContentTypeProvider();
             string contentType;
-            
+
             if (!provider.TryGetContentType(path, out contentType))
             {
                 contentType = "application/octet-stream";
             }
-            
+
             return contentType;
         }
 
-        [HttpGet,DisableRequestSizeLimit]
+        [HttpGet, DisableRequestSizeLimit]
         [Route("{id}/yml")]
         public async Task<IActionResult> DownloadYml(int id)
         {
@@ -390,12 +394,12 @@ namespace API.Controllers
             {
                 await stream.CopyToAsync(memory);
             }
+
             memory.Position = 0;
 
             return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
-            
         }
-        
+
         [HttpPost, DisableRequestSizeLimit]
         [Route("yml")]
         public IActionResult UploadYml()
@@ -411,14 +415,13 @@ namespace API.Controllers
                 var fullPath = Path.Combine(pathToSave, fileName);
                 var dbPath = Path.Combine(folderName, fileName);
 
-                using (var stream = new FileStream(fullPath,FileMode.Create))
+                using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
-                    
+
                 _databaseHandler.AddYmlPipeline(fullPath);
                 return Ok(new {dbPath});
-
             }
             catch (Exception e)
             {
