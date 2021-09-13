@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using API.Models;
+using System.Data.SqlClient;
 
 namespace API.SqlIOHandler
 {
@@ -7,6 +8,8 @@ namespace API.SqlIOHandler
     {
         IEnumerable<string> GetDatabases(string sourceConnectionString);
         IEnumerable<string> GetTables(string sourceConnectionString);
-        void ImportDataFromSql(ConnectionModel connectionModel, string databaseName, string tableName);
+        void ImportDataFromSql(ConnectionModel connectionModel,string datasetNAme, string databaseName, string tableName);
+        SqlDataReader GetTableSample(string tableName, int count);
+        int GetNumberOfRows(string tableName);
     }
 }

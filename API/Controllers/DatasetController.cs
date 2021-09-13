@@ -23,6 +23,8 @@ namespace API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] string name)
         {
+            if (name == null)
+                return BadRequest("invalid input");
             return Ok(_databaseHandler.AddDataset(name));
         }
         
@@ -97,23 +99,68 @@ namespace API.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetDataset(int id)
         {
-            var dataset = _databaseHandler.GetDatasetPipelines(id);
-            return Ok(JsonConvert.SerializeObject(dataset));
+            try
+            {
+                var numberOfRows = _databaseHandler.GetDatasetStatistics(id);
+                return Ok(JsonConvert.SerializeObject(numberOfRows));
+            }
+            catch (Exception e)
+            {
+                return BadRequest("dataset not found");
+            }
+        }
+        
+        [HttpGet("{id:int}")]
+        public IActionResult GetDataset(int id,string type,int count)
+        {
+            switch (type)
+            {
+                case "pipeline": 
+                    var pipelines = _databaseHandler.GetDatasetPipelines(id, count);
+                    return Ok(pipelines);
+                case "sample":
+                    try
+                    {
+                        var samples = _databaseHandler.GetDatasetSamples(id,count);
+                        return Ok(samples);
+                    }
+                    catch (Exception e)
+                    {
+                        return BadRequest("invalid id");
+                    }
+                default: 
+                    return BadRequest("invalid inputs");
+            }
         }
 
         [HttpPost("sql")]
         public IActionResult AddSqlDataset(SqlDataset sqlDataset)
         {
-            _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
-                sqlDataset.DatabaseName,sqlDataset.TableName);
-            return Ok();
+            try
+            {
+                _databaseHandler.AddSqlDataset(sqlDataset.Name,sqlDataset.ConnectionId,
+                    sqlDataset.DatabaseName,sqlDataset.TableName);
+                return Ok("sql dataset added");
+            }
+            catch (Exception e)
+            {
+                return BadRequest("duplicate dataset name");
+            }
         }
 
         [HttpDelete("{id:int}")]
         public IActionResult DeleteDataset(int id)
         {
-            _databaseHandler.DeleteDataset(id);
-            return Ok();
+            try
+            {
+                _databaseHandler.DeleteDataset(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("dataset not found");
+            }
+            
         }
         
     }

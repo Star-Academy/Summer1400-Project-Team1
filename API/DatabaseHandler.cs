@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using API.Models;
 using API.SqlIOHandler;
-using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
 using YamlDotNet.Serialization;
@@ -62,22 +62,24 @@ namespace API
             _context.SaveChanges();
         }
 
-        public void UpdateConnection(int id, ConnectionModel newConnectionModel)
+        public void UpdateConnection(int id, string name, string server, string username, string password)
         {
             var connectionModel = _context.Connection.Find(id);
             if (connectionModel == null)
                 throw new Exception("connectionNot found");
-            connectionModel.Name = newConnectionModel.Name;
-            connectionModel.Server = newConnectionModel.Server;
-            connectionModel.Username = newConnectionModel.Username;
-            connectionModel.Password = newConnectionModel.Password;
+            connectionModel.Name = name ?? connectionModel.Name;
+            connectionModel.Server = server ?? connectionModel.Server;
+            connectionModel.Username = username ?? connectionModel.Username;
+            connectionModel.Password = password ?? connectionModel.Password;
             connectionModel.BuildConnectionString();
             _context.SaveChanges();
         }
         
         public IEnumerable<string> GetDatabases(int connectionId)
         {
-            var serverConnectionString = _context.Connection.Find(connectionId).ConnectionString;
+            var serverConnectionString = _context.Connection.Find(connectionId)?.ConnectionString;
+            if (serverConnectionString == null)
+                return null;
             var databases = _sqlIoHandler.GetDatabases(serverConnectionString);
             
             return databases;
@@ -85,6 +87,8 @@ namespace API
 
         public IEnumerable<string> GetTables(int connectionId, string databaseName)
         {
+            if (!GetDatabases(connectionId).Contains(databaseName) || _context.Connection.Find(connectionId) == null)
+                return null;
             var connectionStringToDatabase =
                 _context.Connection.Find(connectionId).ConnectionString + $"Database={databaseName};";
             var tables = _sqlIoHandler.GetTables(connectionStringToDatabase);
@@ -95,10 +99,26 @@ namespace API
         {
             return _context.Dataset.ToList();
         }
-        
-        public IEnumerable<PipelineModel> GetDatasetPipelines(int id)
+
+        public int GetDatasetStatistics(int id)
         {
-            return _context.Pipeline.Where(model => model.Source.Id == id);
+            var tableName = _context.Dataset.Find(id).Name;
+            if (tableName == null)
+                throw new Exception("dataset not found");
+            return _sqlIoHandler.GetNumberOfRows(tableName);
+        }
+        
+        public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count)
+        {
+            return _context.Pipeline.Where(model => model.Source.Id == id).Take(count);
+        }
+        
+        public SqlDataReader GetDatasetSamples(int id, int count)
+        {
+            var tableName = _context.Dataset.Find(id).Name;
+            if (tableName == null)
+                throw new Exception("dataset not found");
+            return _sqlIoHandler.GetTableSample(tableName,count);
         }
 
         public void DeleteDataset(int id)
@@ -124,7 +144,7 @@ namespace API
         public void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableName)
         {
             var connectionModel = _context.Connection.Find(connectionId);
-            _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
+            _sqlIoHandler.ImportDataFromSql(connectionModel,datasetName, databaseName, tableName);
             _context.Dataset.Add(new DatasetModel()
             {
                 Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
@@ -361,8 +381,10 @@ namespace API
             var oldModel = _context.AggregateComponent.Find(id);
             if (oldModel == null)
                 throw new Exception("not found");
-            oldModel.AggregateFunctions = newModel.AggregateFunctions;
-            oldModel.GroupByItems = newModel.GroupByItems;
+            if(newModel.AggregateFunctions!=null)
+                oldModel.AggregateFunctions = newModel.AggregateFunctions;
+            if(newModel.GroupByItems!=null)
+                oldModel.GroupByItems = newModel.GroupByItems;
             _context.SaveChanges();
         }
 
@@ -371,8 +393,12 @@ namespace API
             var oldModel = _context.FilterComponent.Find(id);
             if (oldModel == null)
                 throw new Exception("not found");
-            oldModel.Query = newModel.Query;
-            _context.SaveChanges();
+            if (oldModel.Query!=newModel.Query)
+            {
+                oldModel.Query = newModel.Query;
+                _context.SaveChanges();    
+            }
+            
         }
 
         public void UpdateJoinComponent(int id, JoinModel newModel)

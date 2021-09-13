@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using API.Models;
 
 namespace API
@@ -10,11 +11,13 @@ namespace API
         ConnectionModel GetConnection(int connectionId);
         int AddConnection(string name,string server,string username,string password);
         void DeleteConnection(int id);
-        void UpdateConnection(int id, ConnectionModel newConnectionModel);
+        void UpdateConnection(int id, string name, string server, string username, string password);
         IEnumerable<string> GetDatabases(int connectionId);
         IEnumerable<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
-        public IEnumerable<PipelineModel> GetDatasetPipelines(int id);
+        int GetDatasetStatistics(int id);
+        public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count);
+        SqlDataReader GetDatasetSamples(int id, int count);
         void DeleteDataset(int id);
         int AddDataset(string name);
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);

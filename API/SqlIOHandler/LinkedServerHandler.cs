@@ -30,12 +30,12 @@
             _sqlHandler.Close();
         }
         
-        public void ImportToNewTable(string serverLinkedWith,string sourceDataBaseName, string sourceTableName)
+        public void ImportToNewTable(string serverLinkedWith,string destinationTableName,string sourceDataBaseName, string sourceTableName)
         {
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
             var selectQuery =
-                $"SELECT * INTO {sourceTableName} FROM {serverLinkedWith}.{sourceDataBaseName}.dbo.{sourceTableName}";
+                $"SELECT * INTO {destinationTableName} FROM {serverLinkedWith}.{sourceDataBaseName}.dbo.{sourceTableName}";
             _sqlHandler.ExecuteSQLQuery(selectQuery);
             _sqlHandler.Close();
         }

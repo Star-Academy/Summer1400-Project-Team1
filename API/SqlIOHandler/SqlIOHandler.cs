@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,10 +9,12 @@ namespace API.SqlIOHandler
     public class SqlIOHandler : ISqlIOHandler
     {
         private readonly ILinkedServerHandler _linkedServerHandler;
+        private readonly ISqlHandler _sqlHandler;
 
-        public SqlIOHandler(ILinkedServerHandler linkedServerHandler)
+        public SqlIOHandler(ILinkedServerHandler linkedServerHandler, ISqlHandler sqlHandler)
         {
             _linkedServerHandler = linkedServerHandler;
+            _sqlHandler = sqlHandler;
         }
 
         public IEnumerable<string> GetDatabases(string sourceConnectionString)
@@ -38,11 +39,33 @@ namespace API.SqlIOHandler
             return tablesName;
         }
 
-        public void ImportDataFromSql(ConnectionModel connectionModel, string databaseName, string tableName)
+        public void ImportDataFromSql(ConnectionModel connectionModel,string datasetName, string databaseName, string tableName)
         {
             _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
-            _linkedServerHandler.ImportToNewTable(connectionModel.Server, databaseName, tableName);
+            _linkedServerHandler.ImportToNewTable(connectionModel.Server,datasetName, databaseName, tableName);
             _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+        }
+
+        public SqlDataReader GetTableSample(string tableName, int count)
+        {
+            if (!_sqlHandler.IsOpen())
+                _sqlHandler.Open();
+            var selectQuery = $"SELECT TOP {count} FROM {tableName}";
+            var cmd = new SqlCommand(selectQuery, _sqlHandler.Connection);
+            var samples = cmd.ExecuteReader();
+            _sqlHandler.Close();
+            return samples;
+        }
+        
+        public int GetNumberOfRows(string tableName)
+        {
+            if (!_sqlHandler.IsOpen())
+                _sqlHandler.Open();
+            const string countQuery = "COUNT *";
+            var cmd = new SqlCommand(countQuery, _sqlHandler.Connection);
+            var numberOfRows = (int)cmd.ExecuteScalar();
+            _sqlHandler.Close();
+            return numberOfRows;
         }
     }
 }
