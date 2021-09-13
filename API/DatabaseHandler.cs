@@ -314,8 +314,10 @@ namespace API
             var oldModel = _context.AggregateComponent.Find(id);
             if (oldModel == null)
                 throw new Exception("not found");
-            oldModel.AggregateFunctions = newModel.AggregateFunctions;
-            oldModel.GroupByItems = newModel.GroupByItems;
+            if(newModel.AggregateFunctions!=null)
+                oldModel.AggregateFunctions = newModel.AggregateFunctions;
+            if(newModel.GroupByItems!=null)
+                oldModel.GroupByItems = newModel.GroupByItems;
             _context.SaveChanges();
         }
 
