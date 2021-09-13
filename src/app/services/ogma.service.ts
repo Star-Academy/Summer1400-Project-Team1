@@ -41,7 +41,6 @@ export class OgmaService {
         },
         color: "#89c9db",
         text: {
-          content: "filled",
           position: "bottom",
         },
         shape: "square",
@@ -185,6 +184,7 @@ export class OgmaService {
     const ogmaNode = this.ogma.getNode(node.id);
     ogmaNode.removeClass(prevClass);
     ogmaNode.addClass(newClass);
+    ogmaNode.setAttributes({ text: { content: node.dataset?.Name } });
   }
 
   addEdge(edge: Edge) {

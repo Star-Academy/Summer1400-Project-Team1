@@ -25,10 +25,6 @@ export class PipelinesComponent implements OnInit {
     );
   }
 
-  onPipelineClick(row: PipelineRow) {
-    console.log(row.pipeline.Name);
-  }
-
   deletePipeline(pipeline: Pipeline, event: Event) {
     this.pipelineService.deletePipeline(pipeline.Id)
     event.stopPropagation();

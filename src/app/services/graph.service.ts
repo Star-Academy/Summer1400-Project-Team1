@@ -13,7 +13,7 @@ import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
 import { MatDialog } from "@angular/material/dialog";
 import { Dataset } from "../models/dataset";
 import { PipelineService } from "./pipeline.service";
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -21,6 +21,8 @@ import { Subscription } from "rxjs";
 export class GraphService {
   nodes: Node[] = [];
   edges: Edge[] = [];
+
+  clickedNode = new Subject<Node>();
 
   constructor(
     private ogmaService: OgmaService,
@@ -66,24 +68,7 @@ export class GraphService {
   }
 
   onNodeClicked(node: Node) {
-    if (node instanceof TerminalNode) {
-      this.onTerminalNodeClicked(node);
-    }
-    this.pipelineService.selectedNode = node;
-  }
-
-  onTerminalNodeClicked(terminalNode: TerminalNode) {
-    if (!terminalNode.dataset) this.promptDatasetSelectDialog(terminalNode);
-  }
-
-  promptDatasetSelectDialog(terminalNode: TerminalNode) {
-    const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
-      width: "50vw",
-    });
-    dialogRef.afterClosed().subscribe((dataset: Dataset) => {
-      terminalNode.dataset = dataset;
-      this.ogmaService.updateTerminalNode(terminalNode);
-    });
+    this.clickedNode.next(node);
   }
 
   onEdgeClicked(edge: Edge) {

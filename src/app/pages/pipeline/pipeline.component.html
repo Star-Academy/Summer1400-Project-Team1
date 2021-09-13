@@ -8,23 +8,23 @@
     </button>
     <div class="pipeline-subheader">
         <div *ngIf="!isEditingPipelineTitle" class="current-title">
-            <h1 (dblclick)="isEditingPipelineTitle = true">{{ pipelineTitle }}</h1>
+            <h1 (dblclick)="isEditingPipelineTitle = true">{{pipeline.Name}}</h1>
             <mat-icon (click)="isEditingPipelineTitle = true">edit</mat-icon>
         </div>
         <form
                 *ngIf="isEditingPipelineTitle"
-                #editTitleForm="ngForm"
-                (ngSubmit)="editPipelineName(editTitleForm)"
+                #editNameForm="ngForm"
+                (ngSubmit)="editPipelineName(pipeline, editNameForm)"
                 class="edit-title"
         >
             <mat-form-field>
                 <input
-                        name="newTitle"
-                        [ngModel]="pipelineTitle"
+                        name="newName"
+                        [ngModel]="pipeline.Name"
                         matInput
                         type="text"
                         required
-                        (keyup.enter)="editPipelineName(editTitleForm)"
+                        (keyup.enter)="editPipelineName(pipeline, editNameForm)"
                 />
                 <button
                         mat-button
@@ -85,9 +85,9 @@
 
 <main (mousemove)="handleResize($event)">
 
-      <div class="graph-template-container">
-        <app-pipeline-graph></app-pipeline-graph>
-      </div>
+    <div class="graph-template-container">
+        <app-pipeline-graph [pipeline]="pipeline"></app-pipeline-graph>
+    </div>
 
     <div
             class="preview-container"
@@ -144,4 +144,3 @@
         ></app-sidebar>
     </div>
 </main>
-

@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { PipelineService } from "src/app/services/pipeline.service";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { PipelineGraphComponent } from "./pipeline-graph/pipeline-graph.component";
 import { GraphService } from "../../services/graph.service";
 import { NodeType } from "../../models/graph/node";
+import { switchMap } from "rxjs/operators";
+import { Pipeline } from "../../models/pipeline";
 
 @Component({
   selector: "app-pipeline",
@@ -13,10 +15,12 @@ import { NodeType } from "../../models/graph/node";
   styleUrls: ["./pipeline.component.scss"],
 })
 export class PipelineComponent implements OnInit, OnDestroy {
-  pipelineTitle = "نام پایپلاین";
+  // pipeline$!: Observable<Pipeline>;
+  pipeline!: Pipeline;
   isEditingPipelineTitle = false;
   expandSidebar = false;
   expandSidebarSub!: Subscription;
+  pipelineSub!: Subscription;
   expandPreview = false;
   isModalOpen = false;
   previewResize = {
@@ -25,18 +29,34 @@ export class PipelineComponent implements OnInit, OnDestroy {
     lastYPosition: 0,
   };
 
-  constructor(public router: Router, public pipelineService: PipelineService) {}
+  constructor(
+    public router: Router,
+    public pipelineService: PipelineService,
+    public route: ActivatedRoute
+  ) {}
+
   ngOnInit(): void {
     document.onmouseup = () => {
       this.previewResize.isResizing = false;
     };
-    this.pipelineService.openSidebar.subscribe(
+    this.expandSidebarSub = this.pipelineService.openSidebar.subscribe(
       () => (this.expandSidebar = true)
     );
+    this.pipelineSub = this.route.paramMap
+      .pipe(
+        switchMap((params) =>
+          this.pipelineService.getPipelineById(+params.get("id")!)
+        )
+      )
+      .subscribe((pipeline) => (this.pipeline = pipeline));
   }
 
-  editPipelineName(ngForm: NgForm) {
-    this.pipelineTitle = ngForm.value.newTitle;
+  editPipelineName(pipeline: Pipeline, ngForm: NgForm) {
+    this.pipelineSub = this.pipelineService
+      .editPipelineName(pipeline.Id, ngForm.value.newName)
+      .subscribe((pipeline) => {
+        this.pipeline = pipeline;
+      });
     this.isEditingPipelineTitle = false;
   }
 
@@ -60,6 +80,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.expandSidebarSub.unsubscribe();
+    this.pipelineSub.unsubscribe();
   }
 
   get NodeType() {

@@ -35,7 +35,7 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr
     mat-row
-    (click)="onPipelineClick(row)"
+    [routerLink]="['/pipeline', row.pipeline.Id]"
     *matRowDef="let row; columns: displayedColumns"
   ></tr>
 </table>

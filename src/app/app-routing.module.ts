@@ -27,7 +27,7 @@ const routes: Routes = [
   },
   { path: "datasets/addlocal", component: AddLocalDatasetComponent },
   { path: "datasets/add", component: AddNewDatasetComponent },
-  { path: "pipeline", component: PipelineComponent },
+  { path: "pipeline/:id", component: PipelineComponent },
 ];
 
 @NgModule({
