@@ -8,7 +8,7 @@
     height: 7rem;
     width: 100%;
     .header-content {
-      width: 65%;
+      width: 55%;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -29,37 +29,40 @@
   }
 
   form {
-    width: 65%;
+    width: 55%;
     margin-top: 5rem;
+    height:80vh;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
     font-size: 1.5rem;
-
-    .panel-body {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      button {
-        width: fit-content;
-      }
-      .btn-add {
-        width: fit-content;
+    mat-stepper {
+        overflow-y:auto;
+      
+      .item-wrapper {
         display: flex;
         align-items: center;
         gap: 1rem;
-        background: var(--color-primary);
-        img {
-          height: 2rem;
-          width: 2rem;
+        width: 100%;
+        padding: 1rem;
+        h4,
+        p {
+          width: 33%;
         }
+      
+      }
+      .list-header {
+         border: 2px solid transparent;
+        border-radius: 1rem;
+  
       }
     }
+   
     .actions-wrapper {
       height: 6rem;
       width: 100%;
       margin-top: 2rem;
-    
+
       .bottons-wrapper {
         display: flex;
         align-items: center;
@@ -68,36 +71,4 @@
       }
     }
   }
-}
-
-.btn-drop {
-  background: #fff;
-  border-style: dashed;
-  height: 100%;
-  padding: 0.8rem 1rem;
-  cursor: pointer;
-  width: 100% !important;
-
-  & > img {
-    height: 2.5rem;
-    width: 2.5rem;
-  }
-  & > span {
-    color: hsla(204, 94%, 39%, 1);
-    font-weight: bold;
-  }
-
-  &:hover {
-    background: hsla(204, 94%, 59%, 0.22);
-  }
-}
-mat-radio-group{
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-}
-
-.active_btn {
-  background-color: #da72c0 !important;
-  color: #000000 !important;
 }

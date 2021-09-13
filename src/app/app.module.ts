@@ -25,8 +25,7 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-
-
+import {MatStepperModule} from '@angular/material/stepper';
 import { DialogSelectDatasetDialog } from "./pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import { PipelineGraphComponent } from "./pages/pipeline/pipeline-graph/pipeline-graph.component";
 import { PipelinesComponent } from "./pages/dashboard/pipelines/pipelines.component";
@@ -47,6 +46,7 @@ import { DialogDeleteNodeDialog } from "./pages/pipeline/sidebar/dialog-delete-n
 import { HttpClientModule } from "@angular/common/http";
 import { AddLocalDatasetComponent } from './pages/dashboard/datasets/add-local-dataset/add-local-dataset.component';
 import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/add-pipeline.component";
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -71,8 +71,8 @@ import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/a
     FilterItemComponent,
     TableInputOutputComponent,
     DialogDeleteNodeDialog,
-    AddPipelineComponent
-  ],
+    AddPipelineComponent,
+   ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -98,7 +98,9 @@ import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/a
     MatMenuModule,
     MatRadioModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatStepperModule,
+    MatListModule
   ],
 
   providers: [],

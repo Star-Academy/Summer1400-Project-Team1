@@ -20,6 +20,8 @@ export class DatasetService {
   private _datasets!: Dataset[];
   private _datasetsRows!: DatasetRow[];
 
+  databases= new BehaviorSubject<{Id:number,Name:string}[]>([]);
+
   datasetsChanged = new Subject<Dataset[]>();
   datasetsRowsChanged = new BehaviorSubject<DatasetRow[]>([]);
   messageChanged = new BehaviorSubject<string>("");
@@ -52,10 +54,31 @@ export class DatasetService {
   async getDatasets() {
     const url = "dataset";
     this.isLoadingData.next(true);
-    let res = await SendRequestService.sendRequest(url, true);
+    let res = await SendRequestService.sendRequest(url, true);    
     this.datasets = res;
     this.isLoadingData.next(false);
   }
+
+
+  async getDatabasesByConnectionId(connectionId:number){
+    const url = `connection/${connectionId}/database`;
+    return await SendRequestService.sendRequest(url, true);
+  }
+
+  async getDatasetsByDatabaseName(database:string,connectionId:number){
+    const url = `connection/${connectionId}/database/${database}`;
+    return await SendRequestService.sendRequest(url, true);
+  }
+
+  async addDatasets(body:any){
+    const url = "dataset/sql";
+    
+    return await SendRequestService.sendRequest(url, true, body);
+  }
+
+
+
+
 
   async uploadFile(name: string, haveHeader: boolean, file: File) {
     this.inProgress.next(true);

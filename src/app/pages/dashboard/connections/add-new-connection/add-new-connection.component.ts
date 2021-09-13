@@ -30,6 +30,8 @@ export class AddNewConnectionComponent implements OnInit,OnDestroy {
     if (!this.saveNeeded) this.location.back();
   }
 
+
+  //TODO check password and other erros 
   onSubmit() {
     if (!this.form.valid) return;
     this.connectionService
