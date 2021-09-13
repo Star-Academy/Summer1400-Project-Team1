@@ -99,7 +99,7 @@ namespace API
 
         public void GetDatasetStatistics(int id)
         {
-            var tableName = _context.Dataset.Find(id).Name;   
+           //TODO 
         }
         
         public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count)
