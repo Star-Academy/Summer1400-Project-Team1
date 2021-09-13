@@ -392,8 +392,12 @@ namespace API
             var oldModel = _context.FilterComponent.Find(id);
             if (oldModel == null)
                 throw new Exception("not found");
-            oldModel.Query = newModel.Query;
-            _context.SaveChanges();
+            if (oldModel.Query!=newModel.Query)
+            {
+                oldModel.Query = newModel.Query;
+                _context.SaveChanges();    
+            }
+            
         }
 
         public void UpdateJoinComponent(int id, JoinModel newModel)
