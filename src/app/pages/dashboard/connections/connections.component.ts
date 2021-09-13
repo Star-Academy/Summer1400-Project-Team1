@@ -13,6 +13,10 @@ export class ConnectionsComponent implements OnInit {
   connectionRowsSub!: Subscription;
   displayedColumns: string[] = ["شماره", "نام اتصال","نوع اتصال","کاربر", "تاریخ ساخت"];
 
+
+  isLoading = false;
+  isLoadingSub!: Subscription;
+
   constructor(public connectionService: ConnectionService) {}
 
   ngOnInit(): void {
@@ -23,6 +27,9 @@ export class ConnectionsComponent implements OnInit {
           this.connectionsRows = connectionRows;
         }
       );
+      this.isLoadingSub=this.connectionService.isLoadingData.subscribe(isLoading=>{
+        this.isLoading =isLoading;
+    });
   }
 
   onConnectionClick(row: ConnectionRow) {
@@ -31,5 +38,6 @@ export class ConnectionsComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.connectionRowsSub.unsubscribe();
+    this.isLoadingSub.unsubscribe();
   }
 }

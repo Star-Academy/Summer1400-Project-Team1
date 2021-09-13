@@ -3,13 +3,13 @@ import { Dataset, DatasetRow } from "../models/dataset";
 import { BehaviorSubject, Subject } from "rxjs";
 import { SendRequestService } from "./send-request.service";
 import { HttpClient, HttpEventType } from "@angular/common/http";
-
+import { ResponseMessages } from "../utils/response-messages";
 
 @Injectable({
   providedIn: "root",
 })
 export class DatasetService {
-  public static readonly UPLOADED: string="uploaded"
+
 
   datasetsTemp: Dataset[] = [
     new Dataset(1, " دیتاست ۱", "کانکشن ۱", "۸/۱۲"),
@@ -24,6 +24,7 @@ export class DatasetService {
   datasetsRowsChanged = new BehaviorSubject<DatasetRow[]>([]);
   messageChanged = new BehaviorSubject<string>("");
   inProgress = new BehaviorSubject<boolean>(false);
+  isLoadingData = new BehaviorSubject<boolean>(false);
 
   get datasets(): Dataset[] {
     return this._datasets;
@@ -46,36 +47,36 @@ export class DatasetService {
     this.datasetsRowsChanged.next(value);
   }
 
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
 
   async getDatasets() {
     const url = "dataset";
+    this.isLoadingData.next(true);
     let res = await SendRequestService.sendRequest(url, true);
     this.datasets = res;
-   }
+    this.isLoadingData.next(false);
+  }
 
-  async uploadFile(name:string,haveHeader:boolean,file:File){
-    console.log(file,name,haveHeader);
+  async uploadFile(name: string, haveHeader: boolean, file: File) {
     this.inProgress.next(true);
-    const url=`https://localhost:5001/api/v1/dataset/csv/?name=${name}&header=${haveHeader}`
+    const url = `https://localhost:5001/api/v1/dataset/csv/?name=${name}&header=${haveHeader}`;
 
     let fileToUpload = <File>file;
     const formData = new FormData();
-    formData.append('file', fileToUpload, fileToUpload.name);
-    this.http.post(url, formData, {reportProgress: true, observe: 'events'})
-      .subscribe(event => {
-    if (event.type === HttpEventType.Response) {
-          this.messageChanged.next(DatasetService.UPLOADED);
+    formData.append("file", fileToUpload, fileToUpload.name);
+    this.http
+      .post(url, formData, { reportProgress: true, observe: "events" })
+      .subscribe(
+        (event) => {
+          if (event.type === HttpEventType.Response) {
+            this.messageChanged.next(ResponseMessages.SUCCESS);
+            this.inProgress.next(false);
+          }
+        },
+        (error) => {
+          this.messageChanged.next(ResponseMessages.FAILED);
           this.inProgress.next(false);
-         }
-      },
-    //   (error) => {
-    //     console.log("error");
-    // },
-      
+        }
       );
-    
   }
 }

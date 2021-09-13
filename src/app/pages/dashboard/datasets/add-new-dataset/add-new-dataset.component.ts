@@ -8,6 +8,7 @@ import { DatasetService } from "src/app/services/dataset.service";
 import { Subscription } from "rxjs";
 import { Alert, AlertType } from "src/app/utils/alert";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ResponseMessages } from "src/app/utils/response-messages";
 
 @Component({
   selector: "app-add-new-dataset",
@@ -49,9 +50,10 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
     this.progressSub = this.datasetService.inProgress.subscribe((inProgress:boolean) => {
       this.inProgress =inProgress;
     });
+    //TODO add error message
     this.messageSub = this.datasetService.messageChanged.subscribe((message:string) => {
       this.message = message;
-      if (message===DatasetService.UPLOADED) {
+      if (message===ResponseMessages.SUCCESS) {
         Alert.showAlert(
           this.snackBar,
           "با موفقیت بارگزاری شد",

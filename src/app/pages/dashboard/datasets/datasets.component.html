@@ -19,10 +19,10 @@
 <!--<div class='dataset-list-container'>-->
 <!--    <app-dataset-item *ngFor='let dataset of datasets' [item]='dataset'></app-dataset-item>-->
 <!--</div>-->
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <div class='table-wrapper'>
-  <mat-spinner *ngIf="false"></mat-spinner>
 
-<table mat-table [dataSource]="datasetsRows" class="mat-elevation-z8">
+<table *ngIf="!isLoading" mat-table [dataSource]="datasetsRows" class="mat-elevation-z8">
   <ng-container matColumnDef="شماره">
     <th mat-header-cell *matHeaderCellDef>شماره</th>
     <td mat-cell *matCellDef="let element">{{ element.position }}</td>

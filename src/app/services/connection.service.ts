@@ -13,6 +13,9 @@ export class ConnectionService {
   connectionChanged = new Subject<Connection[]>();
   connectionRowsChanged = new BehaviorSubject<ConnectionRow[]>([]);
 
+  isLoadingData = new BehaviorSubject<boolean>(false);
+  inProgress = new BehaviorSubject<boolean>(false);
+
   get connections(): Connection[] {
     return this._connections;
   }
@@ -37,10 +40,11 @@ export class ConnectionService {
   constructor() {}
 
   async getConnections() {
+    this.isLoadingData.next(true);
     const url = "connection";
     let res = await SendRequestService.sendRequest(url, true);
     this.connections = res;
-    console.log(this.connections);
+    this.isLoadingData.next(false);
   }
   //TODO back should handle errors! including:required field, already exists name
   async createConnection(connection: {
@@ -49,10 +53,11 @@ export class ConnectionService {
     userName: string;
     password: string;
   }) {
+    this.inProgress.next(true);
     const url = "connection";
     const body = connection;
     let res = await SendRequestService.sendRequest(url, true, body);
     //TODO handle seccess or error response message
-    console.log(res);
+    this.inProgress.next(false);
   }
 }

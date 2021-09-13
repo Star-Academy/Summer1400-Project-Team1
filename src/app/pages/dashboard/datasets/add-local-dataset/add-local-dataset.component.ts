@@ -9,6 +9,7 @@ import { DatasetService } from "src/app/services/dataset.service";
 import { Subscription } from "rxjs";
 import { Alert, AlertType } from "src/app/utils/alert";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ResponseMessages } from "src/app/utils/response-messages";
 
 
 @Component({
@@ -53,18 +54,24 @@ export class AddLocalDatasetComponent implements OnInit, OnDestroy {
     });
     this.messageSub = this.datasetService.messageChanged.subscribe((message:string) => {
       this.message = message;
-      if (message===DatasetService.UPLOADED) {
+      if (message===ResponseMessages.SUCCESS) {
+        this.onClose();
         Alert.showAlert(
           this.snackBar,
           "با موفقیت بارگزاری شد",
           AlertType.success,
-          "",
-          2000,
-          ()=>{}
+          
       );
 
-        // this.onClose();
-      }
+      }else if (message===ResponseMessages.FAILED) {
+        Alert.showAlert(
+          this.snackBar,
+          "بارگزاری ناموفق",
+          AlertType.error,
+          
+      );
+    }
+
     });
   }
 
@@ -89,6 +96,9 @@ export class AddLocalDatasetComponent implements OnInit, OnDestroy {
   onUpload(event: any) {
     if (event.target !== null)
       this.storedDataService.datasetFile = event.target.files[0];
+      this.initDatasetName =  event.target.files[0].name;
+      this.isLocalHost = true;
+      this.hasName = true;
   }
 
   addNewConnection() {

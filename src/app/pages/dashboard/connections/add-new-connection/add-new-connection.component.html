@@ -62,11 +62,13 @@
   </mat-form-field>
 
   <div class="actions-wrapper">
-    <div class="validate-wrapper">
-      <button type="submit" mat-raised-button color="primary">
-      افزودن
-      </button>
+    <mat-progress-bar *ngIf="inProgress" mode="indeterminate"></mat-progress-bar>
+
+    <div class="bottons-wrapper">
+      <button type="submit"
+      [disabled]="inProgress||!form.valid"
+      mat-raised-button color="primary">{{inProgress?'در حال بارگزاری ...':'افزودن'}}</button>
+      <button mat-stroked-button color="primary" (click)="onClose()">لغو</button>
     </div>
-    <button mat-stroked-button color="primary" (click)="onClose()">لغو</button>
-  </div>
-</form>
+  </div> 
+ </form>

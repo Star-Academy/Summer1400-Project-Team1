@@ -14,6 +14,9 @@ export class DatasetsComponent implements OnInit, OnDestroy {
   datasetsRows!: DatasetRow[];
   datasetsRowsSub!: Subscription;
 
+  isLoading = false;
+  isLoadingSub!: Subscription;
+
   displayedColumns: string[] = ["شماره", "نام دیتاست", "اتصال", "تاریخ ساخت"];
 
   constructor(
@@ -29,6 +32,9 @@ export class DatasetsComponent implements OnInit, OnDestroy {
         this.datasetsRows = datasetsRows;
       }
     );
+    this.isLoadingSub=this.datasetService.isLoadingData.subscribe(isLoading=>{
+        this.isLoading =isLoading;
+    });
   }
   onAddDataset() {
     this.storedDataService.datasetFile = null;
@@ -48,5 +54,6 @@ export class DatasetsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.datasetsRowsSub.unsubscribe();
+    this.isLoadingSub.unsubscribe();
   }
 }

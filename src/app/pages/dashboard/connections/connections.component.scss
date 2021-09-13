@@ -25,20 +25,27 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
       width: 2rem;
     }
   }
-
-
 }
-table {
-  width: 98%;
-  margin: 1rem;
+.mat-spinner{
+  margin:auto auto;
+}
+.table-wrapper {
+  margin-top: 1rem;
+  height: 100vh;
+  padding-bottom: 10vh;
+  overflow-y: scroll;
+  table {
+    width: 98%;
+    margin: 1rem;
 
-  .mat-row .mat-cell {
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
-    cursor: pointer;
-  }
+    .mat-row .mat-cell {
+      border-bottom: 1px solid transparent;
+      border-top: 1px solid transparent;
+      cursor: pointer;
+    }
 
-  .mat-row:hover .mat-cell {
-    background: $--item-bg-color--hovered;
+    .mat-row:hover .mat-cell {
+      background: $--item-bg-color--hovered;
+    }
   }
 }
