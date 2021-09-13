@@ -62,15 +62,15 @@ namespace API
             _context.SaveChanges();
         }
 
-        public void UpdateConnection(int id, ConnectionModel newConnectionModel)
+        public void UpdateConnection(int id, string name, string server, string username, string password)
         {
             var connectionModel = _context.Connection.Find(id);
             if (connectionModel == null)
                 throw new Exception("connectionNot found");
-            connectionModel.Name = newConnectionModel.Name;
-            connectionModel.Server = newConnectionModel.Server;
-            connectionModel.Username = newConnectionModel.Username;
-            connectionModel.Password = newConnectionModel.Password;
+            connectionModel.Name = name ?? connectionModel.Name;
+            connectionModel.Server = server ?? connectionModel.Server;
+            connectionModel.Username = username ?? connectionModel.Username;
+            connectionModel.Password = password ?? connectionModel.Password;
             connectionModel.BuildConnectionString();
             _context.SaveChanges();
         }

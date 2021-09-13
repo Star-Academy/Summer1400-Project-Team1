@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -83,11 +84,17 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public IActionResult PatchConnection([FromRoute] int id, [FromBody] ConnectionModel newConnectionModel)
+        public IActionResult PatchConnection([FromRoute] int id, [FromBody] JsonElement body)
         {
+            string name = null, server = null, username = null, password = null;
             try
             {
-                _databaseHandler.UpdateConnection(id, newConnectionModel);
+                if (body.TryGetProperty("name", out var patchName)) name = patchName.GetString();
+                if (body.TryGetProperty("server", out var patchServer)) server = patchServer.GetString();
+                if (body.TryGetProperty("username", out var patchUsername)) username = patchUsername.GetString();
+                if (body.TryGetProperty("password", out var patchPassword)) password = patchPassword.GetString();
+                
+                _databaseHandler.UpdateConnection(id, name, server, username, password);
                 return Ok();
             }
             catch (Exception e)

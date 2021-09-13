@@ -11,7 +11,7 @@ namespace API
         ConnectionModel GetConnection(int connectionId);
         int AddConnection(string name,string server,string username,string password);
         void DeleteConnection(int id);
-        void UpdateConnection(int id, ConnectionModel newConnectionModel);
+        void UpdateConnection(int id, string name, string server, string username, string password);
         IEnumerable<string> GetDatabases(int connectionId);
         IEnumerable<string> GetTables(int connectionId, string databaseName);
         List<DatasetModel> GetDatasets();
