@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using API.Aggregation;
 using API.Filter;
 using API.Join;
 using API.Models;
+using Newtonsoft.Json;
 using static API.ComponentType;
 
 namespace API
@@ -85,8 +87,8 @@ namespace API
 
         public void LoadFromModel(PipelineModel pipelineModel)
         {
-            if(pipelineModel.Source != null)SourceDataset = pipelineModel.Source.Table;
-            if(pipelineModel.Destination != null)DestinationDataset = pipelineModel.Destination.Table;
+            if(pipelineModel.Source != null)SourceDataset = pipelineModel.Source.Name;
+            if(pipelineModel.Destination != null)DestinationDataset = pipelineModel.Destination.Name;
             
              pipelineModel.Components.Sort((c1,c2) => c1.OrderId-c2.OrderId);
 
@@ -95,8 +97,15 @@ namespace API
                 AddComponent(c);
             }
         }
-        
-        
+
+        public string GetSampleResult(string tableName)
+        {
+            if(!_sqlHandler.IsOpen())_sqlHandler.Open();
+            var adaptor = new SqlDataAdapter($"SELECT TOP 50 * FROM {tableName}", _sqlHandler.Connection);
+            var dataTable = new DataTable();
+            adaptor.Fill(dataTable);
+            return JsonConvert.SerializeObject(dataTable);
+        }
         public string RunByIndex(int index)
         {
             if (SourceDataset == "") return "";
@@ -112,7 +121,7 @@ namespace API
             {
                 destination = c.Execute(source);
                 if(source != SourceDataset) DeleteTable(source);
-                if (count == index) return destination;
+                if (count == index) return GetSampleResult(destination);
                 source = destination;
                 count++;
             }

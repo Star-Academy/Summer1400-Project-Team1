@@ -8,6 +8,7 @@ using API.SqlIOHandler;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
+using YamlDotNet.Serialization;
 
 namespace API
 {
@@ -113,7 +114,7 @@ namespace API
         {
             var dataset = new DatasetModel()
             {
-                Name = name, Table = name, DateCreated = DateTime.Now, Connection = null
+                Name = name, DateCreated = DateTime.Now, Connection = null
             };
             _context.Dataset.Add(dataset);
             _context.SaveChanges();
@@ -126,7 +127,7 @@ namespace API
             _sqlIoHandler.ImportDataFromSql(connectionModel, databaseName, tableName);
             _context.Dataset.Add(new DatasetModel()
             {
-                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now, Table = tableName
+                Connection = connectionModel, Name = datasetName, DateCreated = DateTime.Now
             });
             _context.SaveChanges();
         }
@@ -137,7 +138,7 @@ namespace API
             _csvHandler.CsvToSql(name);
             _context.Dataset.Add(new DatasetModel()
             {
-                Connection = null, Name = name, DateCreated = DateTime.Now, Table = name
+                Connection = null, Name = name, DateCreated = DateTime.Now
             });
             _context.SaveChanges();
         }
@@ -154,7 +155,10 @@ namespace API
 
         public List<PipelineModel> GetPipelines()
         {
-            return _context.Pipeline.ToList();
+            return _context.Pipeline
+                .Include(p=>p.Source)
+                .Include(p => p.Destination)
+                .ToList();
         }
 
         public PipelineModel GetPipeline(int pipelineId)
@@ -166,11 +170,39 @@ namespace API
             return pipeline;
         }
 
-        public int AddPipeline(string name)
+        public void AddYmlPipeline(string pathToYml)
+        {
+            var file = File.OpenText(pathToYml);
+            var serializer = new DeserializerBuilder()
+                .WithTypeConverter(new PipelineYamlTypeConvertor(this))
+                .Build();
+            var pipeline = serializer.Deserialize(file);
+            Console.WriteLine("");
+
+        }
+
+        public string GetPipelineYml(int pipelineId)
+        {
+            var pipeline = GetPipeline(pipelineId);
+            var serializer = new SerializerBuilder()
+                .WithTypeConverter(new PipelineYamlTypeConvertor(this))
+                .Build();
+            var yml = serializer.Serialize(pipeline);
+            var folderName = Path.Combine("Resources", "YMLs");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            var path = Path.Combine(pathToSave, $"{pipeline.Name}.yml");
+            using var writer = new StreamWriter(path);
+            writer.Write(yml);
+            return path;
+        }
+
+        public int AddPipeline(string name,int sid, int did)
         {
             var pipeline = new PipelineModel()
             {
                 Name = name,
+                Source = _context.Dataset.Find(sid),
+                Destination = _context.Dataset.Find(did),
                 DateCreated = DateTime.Now
             };
             _context.Pipeline.Add(pipeline);
@@ -180,11 +212,30 @@ namespace API
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return 0;
+                throw new Exception("pipeline with this name already exists");
             }
 
             return pipeline.Id;
+        }
+
+        public void UpdatePipeline(int id, string name, int sid, int did)
+        {
+            var pipeline = _context.Pipeline.Find(id);
+            _context.Entry(pipeline).Reference(p => p.Source).Load();
+            _context.Entry(pipeline).Reference(p => p.Destination).Load();
+            if (pipeline == null) throw new Exception("not found");
+            pipeline.Name = name;
+            if(sid != -1)pipeline.Source = _context.Dataset.Find(sid);
+            if(did != -1)pipeline.Destination = _context.Dataset.Find(did);
+            _context.SaveChanges();
+        }
+
+        public void DeletePipeline(int id)
+        {
+            var pipeline = _context.Pipeline.Find(id);
+            if (pipeline == null) throw new Exception("not found");
+            _context.Pipeline.Remove(pipeline);
+            _context.SaveChanges();
         }
 
         public List<ComponentModel> GetComponents(int pipelineId)
@@ -208,11 +259,6 @@ namespace API
 
         public void AddAggregateComponent(int pipelineId, string name, AggregationModel aggregationModel, int orderId)
         {
-            /*if (!_context.Database.EnsureCreated())
-            {
-                Console.Error.WriteLine("database not created");
-                return;
-            }*/
             PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
             if (pipeline == null)
                 throw new Exception("pipeline not found");
@@ -297,7 +343,7 @@ namespace API
             return _context.JoinComponent.Find(componentId);
         }
 
-        public void UpdataComponent(int pipelineId, int componentId, string name)
+        public void UpdateComponent(int pipelineId, int componentId, string name)
         {
             PipelineModel pipeline = _context.Pipeline.Find(pipelineId);
             if (pipeline == null)

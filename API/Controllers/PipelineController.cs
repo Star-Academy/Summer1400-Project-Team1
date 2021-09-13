@@ -1,9 +1,15 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using YamlDotNet.Serialization;
+using ContentDispositionHeaderValue = System.Net.Http.Headers.ContentDispositionHeaderValue;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace API.Controllers
@@ -24,27 +30,65 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok(JsonSerializer.Serialize(_databaseHandler.GetPipelines()));
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetPipeline(int id)
         {
-            Console.WriteLine("get pipeline" + id);
-            return Ok();
+            return Ok(JsonSerializer.Serialize(_databaseHandler.GetPipeline(id)));
         }
 
         [HttpPost]
-        public void Post()
+        public IActionResult Post([FromBody] JsonElement body)
         {
+            var sid = -1;
+            var did = -1;
+            if (body.TryGetProperty("SourceId", out var source)) sid = source.GetInt32();
+            if(body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
+            try
+            {
+                return Ok(_databaseHandler.AddPipeline(body.GetProperty("Name").GetString(), sid, did));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         [HttpPatch]
         [Route("{id}")]
-        public void Patch(int id)
+        public IActionResult Patch(int id,[FromBody] JsonElement body)
         {
-            Console.WriteLine("id is :" + id);
+            var sid = -1;
+            var did = -1;
+            if (body.TryGetProperty("SourceId", out var source)) sid = source.GetInt32();
+            if(body.TryGetProperty("DestinationId", out var destination)) did = destination.GetInt32();
+            try
+            {
+                _databaseHandler.UpdatePipeline(id,body.GetProperty("Name").GetString(), sid, did);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _databaseHandler.DeletePipeline(id);
+                return Delete(id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
         }
 
         void AddAggregate(int pipelineId, int orderId, string name, string body)
@@ -105,7 +149,8 @@ namespace API.Controllers
                 return BadRequest(e.Message);
             }
             
-            if(name != null) _databaseHandler.UpdataComponent(pid,cid,name);
+            if(name != null) _databaseHandler.UpdateComponent(pid,cid,name);
+            if (body.ToString() == "{}") return Ok();
             
             switch (componentInfo.Item1)
             {
@@ -301,7 +346,7 @@ namespace API.Controllers
             return Ok();
         }
         
-        [HttpPost]
+        [HttpGet]
         [Route("{pid}/run/{id}")]
         public IActionResult RunByIndex(int pid,int id)
         {
@@ -309,7 +354,7 @@ namespace API.Controllers
             pipeline.LoadFromModel(_databaseHandler.GetPipeline(pid));
             try
             {
-                pipeline.RunByIndex(id);
+                return Ok(pipeline.RunByIndex(id));
             }
             catch (Exception e)
             {
@@ -317,6 +362,68 @@ namespace API.Controllers
             }
 
             return Ok();
+        }
+        
+        private string GetContentType(string path)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+            
+            if (!provider.TryGetContentType(path, out contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            
+            return contentType;
+        }
+
+        [HttpGet,DisableRequestSizeLimit]
+        [Route("{id}/yml")]
+        public async Task<IActionResult> DownloadYml(int id)
+        {
+            var filePath = _databaseHandler.GetPipelineYml(id);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+
+            var memory = new MemoryStream();
+            await using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+            
+        }
+        
+        [HttpPost, DisableRequestSizeLimit]
+        [Route("yml")]
+        public IActionResult UploadYml()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("Resources", "YMLs");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (file.Length <= 0) return BadRequest();
+                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+
+                using (var stream = new FileStream(fullPath,FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+                    
+                _databaseHandler.AddYmlPipeline(fullPath);
+                return Ok(new {dbPath});
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"internal server error {e}");
+            }
         }
     }
 }
