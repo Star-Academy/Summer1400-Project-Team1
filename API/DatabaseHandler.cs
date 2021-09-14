@@ -113,7 +113,7 @@ namespace API
             return _context.Pipeline.Where(model => model.Source.Id == id).Take(count);
         }
         
-        public SqlDataReader GetDatasetSamples(int id, int count)
+        public string GetDatasetSamples(int id, int count)
         {
             var tableName = _context.Dataset.Find(id).Name;
             if (tableName == null)

@@ -117,7 +117,7 @@ namespace API.Controllers
             {
                 case "pipeline": 
                     var pipelines = _databaseHandler.GetDatasetPipelines(id, count);
-                    return Ok(pipelines);
+                    return Ok(JsonConvert.SerializeObject(pipelines));
                 case "sample":
                     try
                     {

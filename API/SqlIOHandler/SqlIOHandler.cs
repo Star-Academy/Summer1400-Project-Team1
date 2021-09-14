@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using API.Models;
+using Newtonsoft.Json;
 
 namespace API.SqlIOHandler
 {
@@ -46,7 +47,7 @@ namespace API.SqlIOHandler
             _linkedServerHandler.DropLinkedServer(connectionModel.Server);
         }
 
-        public SqlDataReader GetTableSample(string tableName, int count)
+        public string GetTableSample(string tableName, int count)
         {
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
@@ -54,7 +55,7 @@ namespace API.SqlIOHandler
             var cmd = new SqlCommand(selectQuery, _sqlHandler.Connection);
             var samples = cmd.ExecuteReader();
             _sqlHandler.Close();
-            return samples;
+            return SqlDataToJson(samples);
         }
         
         public int GetNumberOfRows(string tableName)
@@ -66,6 +67,14 @@ namespace API.SqlIOHandler
             var numberOfRows = (int)cmd.ExecuteScalar();
             _sqlHandler.Close();
             return numberOfRows;
+        }
+        
+        private string SqlDataToJson(IDataReader dataReader)
+        {
+            var dataTable = new DataTable();
+            dataTable.Load(dataReader);
+            var JSONString = JsonConvert.SerializeObject(dataTable);
+            return JSONString;
         }
     }
 }

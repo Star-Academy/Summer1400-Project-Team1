@@ -17,7 +17,7 @@ namespace API
         List<DatasetModel> GetDatasets();
         int GetDatasetStatistics(int id);
         public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count);
-        SqlDataReader GetDatasetSamples(int id, int count);
+        string GetDatasetSamples(int id, int count);
         void DeleteDataset(int id);
         int AddDataset(string name);
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
