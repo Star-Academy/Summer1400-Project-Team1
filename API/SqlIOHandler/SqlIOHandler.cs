@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -42,9 +43,17 @@ namespace API.SqlIOHandler
 
         public void ImportDataFromSql(ConnectionModel connectionModel,string datasetName, string databaseName, string tableName)
         {
-            _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
-            _linkedServerHandler.ImportToNewTable(connectionModel.Server,datasetName, databaseName, tableName);
-            _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+            try
+            {
+                _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
+                _linkedServerHandler.ImportToNewTable(connectionModel.Server,datasetName, databaseName, tableName);
+                _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+            }
+            catch (Exception e)
+            {
+                _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+                throw;
+            }
         }
 
         public string GetTableSample(string tableName, int count)

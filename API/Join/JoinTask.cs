@@ -24,6 +24,8 @@ namespace API.Join
             _joinType = joinType;
             _firstTablePk = firstTablePk;
             _secondTablePk = secondTablePk;
+            _firstTableMapping = new Dictionary<string, string>();
+            _secondTableMapping = new Dictionary<string, string>();
         }
 
         public JoinTask(ISqlHandler sqlHandler, string secondTableName, JoinType joinType,
@@ -57,6 +59,7 @@ namespace API.Join
 
         private void PutTableMappings(string sourceDataset)
         {
+            if(!_sqlHandler.IsOpen())_sqlHandler.Open();
             var sourceColumns = _sqlHandler.Connection.GetSchema("Columns", new[] {null, null, sourceDataset});
             foreach (DataRow rowColumn in sourceColumns.Rows)
             {
