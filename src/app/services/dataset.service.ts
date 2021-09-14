@@ -54,26 +54,32 @@ export class DatasetService {
   async getDatasets() {
     const url = "dataset";
     this.isLoadingData.next(true);
-    let res = await SendRequestService.sendRequest(url, true);    
+    let res = await SendRequestService.sendRequest(url,"GET", true);    
     this.datasets = res;
+     
     this.isLoadingData.next(false);
   }
 
 
   async getDatabasesByConnectionId(connectionId:number){
     const url = `connection/${connectionId}/database`;
-    return await SendRequestService.sendRequest(url, true);
+    return await SendRequestService.sendRequest(url,"GET", true);
   }
 
   async getDatasetsByDatabaseName(database:string,connectionId:number){
     const url = `connection/${connectionId}/database/${database}`;
-    return await SendRequestService.sendRequest(url, true);
+    return await SendRequestService.sendRequest(url,"GET", true);
   }
 
   async addDatasets(body:any){
     const url = "dataset/sql";
-    
-    return await SendRequestService.sendRequest(url, true, body);
+    console.log(body);
+    return await SendRequestService.sendRequest(url,"POST", true, body);
+  }
+
+  async deleteDataset(datasetId:number){
+    const url = `dataset/${datasetId}`;
+    return await SendRequestService.sendRequest(url,"DELETE", false);
   }
 
 
@@ -102,4 +108,16 @@ export class DatasetService {
         }
       );
   }
+
+
+
+
+
+
+ async getDatasetSample(datasetId: number){
+    const url = `dataset/${datasetId}/?type=sample&count=50`;
+    //api/v1/dataset/{id}/?type=pipeline|sample & count=50: 
+    return await SendRequestService.sendRequest(url,"GET", true);
+  }
+
 }

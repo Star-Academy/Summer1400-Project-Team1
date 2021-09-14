@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ConnectionRow } from "src/app/models/connection";
+import { Connection, ConnectionRow } from "src/app/models/connection";
 import { ConnectionService } from "src/app/services/connection.service";
 
 @Component({
@@ -11,13 +11,21 @@ import { ConnectionService } from "src/app/services/connection.service";
 export class ConnectionsComponent implements OnInit {
   connectionsRows!: ConnectionRow[];
   connectionRowsSub!: Subscription;
-  displayedColumns: string[] = ["شماره", "نام اتصال","نوع اتصال","کاربر", "تاریخ ساخت"];
+  displayedColumns: string[] = ["شماره", "نام اتصال","نوع اتصال","کاربر", "تاریخ ساخت","delete"];
 
 
   isLoading = false;
   isLoadingSub!: Subscription;
 
   constructor(public connectionService: ConnectionService) {}
+
+
+ async deleteConnection(connection: Connection,event: Event){
+   
+    await this.connectionService.deleteConnection(connection.Id);
+    this.connectionService.getConnections();
+    event.stopPropagation();
+  }
 
   ngOnInit(): void {
     this.connectionService.getConnections();

@@ -30,19 +30,28 @@
 
   <ng-container matColumnDef="نام دیتاست">
     <th mat-header-cell *matHeaderCellDef>نام دیتاست</th>
-    <td mat-cell *matCellDef="let element">{{ element.dataset.Table }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.dataset.Name }}</td>
   </ng-container>
 
-  <ng-container matColumnDef="اتصال">
+  <ng-container matColumnDef="نوع اتصال">
     <th mat-header-cell *matHeaderCellDef>اتصال</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.dataset.Connection===null? 'بدون اتصال':element.dataset.Connection }}
+      {{ element.dataset.Connection===null? 'localhost':element.dataset.Connection }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="تاریخ ساخت">
     <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
     <td mat-cell *matCellDef="let element">{{ element.dataset.DateCreated | date}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let element" style="text-align: end">
+      <button class="delete-btn" mat-button (click)="deleteDataset(element.dataset, $event)">
+        <img src="assets/images/delete.svg" alt="delete">
+      </button>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

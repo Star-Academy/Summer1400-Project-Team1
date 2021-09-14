@@ -3,7 +3,7 @@ import { Location } from "@angular/common";
 import { NgForm } from "@angular/forms";
 import { StoredDataService } from "src/app/services/stored-data.service";
 import { Router } from "@angular/router";
-import { Connection, ConnectionRow } from "../../../../models/connection";
+import { ConnectionRow } from "../../../../models/connection";
 import { DatasetService } from "src/app/services/dataset.service";
 import { Subscription } from "rxjs";
 import { Alert, AlertType } from "src/app/utils/alert";
@@ -24,7 +24,7 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
   initDatasetName = "";
   chooseConnectionLable: string = "انتخاب اتصال";
   chooseDatabaseLable: string = "انتخاب پایگاه داده";
-  chooseDatasetLable: string = "انتخاب دیتاست";
+  chooseDatasetLable: string = "انتخاب جدول";
 
   connectionList: ConnectionRow[] = [];
   selectedConnectionId!: number;
@@ -53,6 +53,7 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
 
   //TODO show selected connection in section title
   async onSelectConnection(connectionRow: ConnectionRow, stepper: any) {
+   try {
     this.selectedConnectionId = connectionRow.connection.Id;
     this.isLoadingData = true;
     let res = await this.datasetService.getDatabasesByConnectionId(
@@ -63,6 +64,11 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
     this.isLoadingData = false;
     this.databaseList = res;
     stepper.next();
+   } catch (error) {
+     console.log(error);
+     this.isLoadingData =false;
+     
+   }
   }
   async onSelectDatabase(database: string, stepper: any) {
     this.selectedDatabaseName = database;
@@ -79,7 +85,7 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
   }
   onSelectDataset(dataset: string, stepper: any) {
     this.selectedDatasetName = dataset;
-    this.chooseDatasetLable = "انتخاب دیتاست : " + dataset;
+    this.chooseDatasetLable = "انتخاب جدول : " + dataset;
     stepper.next();
   }
 

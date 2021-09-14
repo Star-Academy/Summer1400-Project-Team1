@@ -10,7 +10,7 @@ import { PipelineService } from "src/app/services/pipeline.service";
   styleUrls: ["./pipelines.component.scss"],
 })
 export class PipelinesComponent implements OnInit {
-  pipelineRows!: PipelineRow[];
+  pipelineRows!: PipelineRow[]; 
   pipelineRowsSub!: Subscription;
   displayedColumns: string[] = ["شماره", "نام", "تاریخ ساخت", "delete"];
 

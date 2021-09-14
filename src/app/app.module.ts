@@ -47,6 +47,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { AddLocalDatasetComponent } from './pages/dashboard/datasets/add-local-dataset/add-local-dataset.component';
 import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/add-pipeline.component";
 import {MatListModule} from '@angular/material/list';
+import { DatasetInfoComponent } from './pages/dashboard/datasets/dataset-info/dataset-info.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import {MatListModule} from '@angular/material/list';
     TableInputOutputComponent,
     DialogDeleteNodeDialog,
     AddPipelineComponent,
+    DatasetInfoComponent,
    ],
   imports: [
     BrowserModule,

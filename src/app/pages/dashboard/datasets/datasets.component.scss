@@ -79,5 +79,14 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
       background: $--item-bg-color--hovered;
     }
   }
+  .delete-btn {
+    background-color: transparent;
+    border: unset;
+    border-radius: 999px;
+    img{
+      width: 2rem;
+      height: 2rem;
+    }
+  }
   
 }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { DatasetRow } from "src/app/models/dataset";
+import { Dataset, DatasetRow } from "src/app/models/dataset";
 import { DatasetService } from "src/app/services/dataset.service";
 import { StoredDataService } from "src/app/services/stored-data.service";
 
@@ -17,12 +17,18 @@ export class DatasetsComponent implements OnInit, OnDestroy {
   isLoading = false;
   isLoadingSub!: Subscription;
 
-  displayedColumns: string[] = ["شماره", "نام دیتاست", "اتصال", "تاریخ ساخت"];
+  displayedColumns: string[] = [
+    "شماره",
+    "نام دیتاست",
+    "نوع اتصال",
+    "تاریخ ساخت",
+    "delete",
+  ];
 
   constructor(
     private datasetService: DatasetService,
     private storedDataService: StoredDataService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -32,9 +38,11 @@ export class DatasetsComponent implements OnInit, OnDestroy {
         this.datasetsRows = datasetsRows;
       }
     );
-    this.isLoadingSub=this.datasetService.isLoadingData.subscribe(isLoading=>{
-        this.isLoading =isLoading;
-    });
+    this.isLoadingSub = this.datasetService.isLoadingData.subscribe(
+      (isLoading) => {
+        this.isLoading = isLoading;
+      }
+    );
   }
   onAddDataset() {
     this.storedDataService.datasetFile = null;
@@ -42,14 +50,21 @@ export class DatasetsComponent implements OnInit, OnDestroy {
   }
 
   onUpload(event: any) {
-    if (event.target === null)return
+    if (event.target === null) return;
     this.storedDataService.datasetFile = event.target.files[0];
     this.router.navigateByUrl("datasets/addlocal");
   }
 
   onDatasetClick(row: DatasetRow) {
-    console.log(row.dataset.Name);
-    // this.router.navigate(["/pipeline"]).then();
+    let stringID = (row.dataset.Id).toString();
+    this.router.navigate([`/datasets/${row.dataset.Id}`], { queryParams: { id: stringID} });
+
+  }
+
+  async deleteDataset(dataset: Dataset, event: any) {
+    await this.datasetService.deleteDataset(dataset.Id);
+    this.datasetService.getDatasets();
+    event.stopPropagation();
   }
 
   ngOnDestroy(): void {

@@ -7,6 +7,7 @@ export class SendRequestService {
   public static baseUrl:string = 'https://localhost:5001/api/v1/';
   public static async sendRequest(
     url: string,
+    method: string,
     hasJson: boolean,
     body?: object
   ): Promise<any> {
@@ -16,8 +17,9 @@ export class SendRequestService {
         'Content-Type': 'application/json',
       },
     };
+    init.method = method;
     if (body) {
-      init.method = 'POST';
+      
       init.body = JSON.stringify(body);
     }
     //TODO ino taghir dadam havestoon bashe ;)

@@ -42,10 +42,19 @@ export class ConnectionService {
   async getConnections() {
     this.isLoadingData.next(true);
     const url = "connection";
-    let res = await SendRequestService.sendRequest(url, true);
+    let res = await SendRequestService.sendRequest(url, "GET",true);
     this.connections = res;
     this.isLoadingData.next(false);
   }
+
+
+  async deleteConnection(connectionId:number){
+    const url = `connection/${connectionId}`;
+    return await SendRequestService.sendRequest(url,"DELETE", false);
+  }
+
+
+  
   //TODO back should handle errors! including:required field, already exists name
   async createConnection(connection: {
     name: string;
@@ -56,8 +65,8 @@ export class ConnectionService {
     this.inProgress.next(true);
     const url = "connection";
     const body = connection;
-    let res = await SendRequestService.sendRequest(url, true, body);
-    //TODO handle seccess or error response message
+    let res = await SendRequestService.sendRequest(url,"POST", true, body);
+    //TODO handle success or error response message
     this.inProgress.next(false);
   }
 }
