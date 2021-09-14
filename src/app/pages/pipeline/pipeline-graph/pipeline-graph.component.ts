@@ -87,7 +87,7 @@ export class PipelineGraphComponent implements AfterContentInit {
                 obs = this.pipelineService.postAggregateNode(
                     this.pipeline.Id,
                     node as AggregateNode,
-                    this.graphService.getInsertedNodeIndex(edge)
+                    this.graphService.getPlacingIndex(edge)
                 );
                 break;
         }

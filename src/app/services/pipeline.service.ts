@@ -11,6 +11,7 @@ import { JoinNode } from "../models/graph/processor-nodes/join-node";
 import { FilterNode } from "../models/graph/processor-nodes/filter-node";
 import { GraphService } from "./graph.service";
 import { Edge } from "../models/graph/edge";
+import { ProcessorNode } from "../models/graph/processor-nodes/processor-node";
 
 @Injectable({
     providedIn: "root",
@@ -97,6 +98,9 @@ export class PipelineService {
         });
     }
 
+    deleteNode(pipelineId: number, OrderId: number) {
+      return this.http.delete(this.BASE_URL +  pipelineId + "/component/" + OrderId)
+    }
 
     postAggregateNode(pipelineId: number, node: AggregateNode, index: number) {
         let body = {

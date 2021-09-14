@@ -141,7 +141,7 @@
                  'aggregate':  pipelineService.selectedNode?.nodeType === NodeType.AGGREGATE
                  }"
              [hidden]="!expandSidebar">
-            <app-sidebar
+            <app-sidebar [pipeline] = "pipeline"
             ></app-sidebar>
         </div>
     </main>

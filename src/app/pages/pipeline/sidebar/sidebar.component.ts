@@ -6,31 +6,39 @@ import { PipelineService } from "../../../services/pipeline.service";
 import { GraphService } from "../../../services/graph.service";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogDeleteNodeDialog } from "./dialog-delete-node/dialog-delete-node-dialog.component";
+import { Pipeline } from "src/app/models/pipeline";
 
 @Component({
-  selector: "app-sidebar",
-  templateUrl: "./sidebar.component.html",
-  styleUrls: ["./sidebar.component.scss"],
+    selector: "app-sidebar",
+    templateUrl: "./sidebar.component.html",
+    styleUrls: ["./sidebar.component.scss"],
 })
 export class SidebarComponent implements OnInit {
-  @Output() openChooseProcessorDialog = new EventEmitter<void>();
+    @Input() pipeline!: Pipeline;
+    @Output() openChooseProcessorDialog = new EventEmitter<void>();
 
-  constructor(
-    public pipelineService: PipelineService,
-    public graphService: GraphService,
-    public dialog: MatDialog
-  ) {}
+    constructor(
+        public pipelineService: PipelineService,
+        public graphService: GraphService,
+        public dialog: MatDialog
+    ) {}
 
-  ngOnInit(): void {}
+    ngOnInit(): void {}
 
-  openDialog() {
-    const dialogRef = this.dialog.open(DialogDeleteNodeDialog);
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res) this.graphService.removeNode(this.pipelineService.selectedNode);
-    });
-  }
+    openDialog() {
+        const dialogRef = this.dialog.open(DialogDeleteNodeDialog);
+        dialogRef.afterClosed().subscribe((res) => {
+            if (res) {
+                let node = this.pipelineService.selectedNode;
+                this.pipelineService.deleteNode(
+                    this.pipeline.Id,
+                    this.graphService.getNodeIndex(node)
+                ).toPromise().then(() => this.graphService.removeNode(node));
+            }
+        });
+    }
 
-  get NodeType() {
-    return NodeType;
-  }
+    get NodeType() {
+        return NodeType;
+    }
 }

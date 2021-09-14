@@ -77,8 +77,12 @@ export class GraphService {
     return this.ogmaService.runLayout();
   }
 
-  getInsertedNodeIndex(edge: Edge){
+  getPlacingIndex(edge: Edge){
     return this.path.indexOf(edge.src)
+  }
+
+  getNodeIndex(node: ProcessorNode){
+    return this.path.indexOf(node) - 1;
   }
   
   handleEvents(event) {
@@ -117,6 +121,7 @@ export class GraphService {
     this.path = this.path.filter((el) => el !== node);
     this.ogmaService.removeNode(node);
     this.attachAdjacentNodes(node);
+    this.pipelineService.selectedNode = undefined!;
     return this.runLayout();
   }
 
