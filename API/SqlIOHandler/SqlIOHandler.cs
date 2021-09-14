@@ -51,7 +51,7 @@ namespace API.SqlIOHandler
         {
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
-            var selectQuery = $"SELECT TOP {count} FROM {tableName}";
+            var selectQuery = $"SELECT TOP {count} * FROM {tableName}";
             var cmd = new SqlCommand(selectQuery, _sqlHandler.Connection);
             var samples = cmd.ExecuteReader();
             _sqlHandler.Close();
