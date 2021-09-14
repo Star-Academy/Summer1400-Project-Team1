@@ -2,11 +2,15 @@ import { Node, NodeType } from "../node";
 import { ProcessorNode } from "./processor-node";
 
 export class AggregateNode extends ProcessorNode {
-  aggregateType!: string;
+  aggregateType!: AggregateType;
   column!: string;
   outputColumnName!: string;
 
   constructor(name: string) {
     super(name, NodeType.AGGREGATE);
   }
+}
+
+export enum AggregateType {
+  COUNT, SUM, AVREAGE, MIN, MAX, NONE
 }

@@ -2,10 +2,10 @@ import { Component, Input, OnInit } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
-import { AggregateNode } from "../../../../models/graph/processor-nodes/aggregate-node";
+import { AggregateNode , AggregateType} from "../../../../models/graph/processor-nodes/aggregate-node";
 
-interface AggregateType {
-  value: string;
+interface AggregateOption {
+  value: AggregateType;
   viewValue: string;
 }
 
@@ -17,12 +17,12 @@ interface AggregateType {
 export class AggregateProcessorComponent implements OnInit {
   @Input() aggregateNode!: AggregateNode;
   aggregateTypeControl = new FormControl("", Validators.required);
-  aggregateTypes: AggregateType[] = [
-    { value: "COUNT", viewValue: "تعداد" },
-    { value: "SUM", viewValue: "مجموع" },
-    { value: "AVERAGE", viewValue: "میانگین" },
-    { value: "MIN", viewValue: "کمترین" },
-    { value: "MAX", viewValue: "بیشترین" },
+  aggregateOptions: AggregateOption[] = [
+    { value: AggregateType.COUNT, viewValue: "تعداد" },
+    { value: AggregateType.SUM, viewValue: "مجموع" },
+    { value: AggregateType.AVREAGE, viewValue: "میانگین" },
+    { value: AggregateType.MIN, viewValue: "کمترین" },
+    { value: AggregateType.MAX, viewValue: "بیشترین" },
   ];
   myControl = new FormControl();
   filteredColumns!: Observable<string[]>;

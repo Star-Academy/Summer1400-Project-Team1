@@ -16,6 +16,7 @@ import { PipelineService } from "./pipeline.service";
 import { Subject, Subscription } from "rxjs";
 import { Pipeline } from "../models/pipeline";
 import { switchMap } from "rxjs/operators";
+import { ProcessorNode } from "../models/graph/processor-nodes/processor-node";
 
 @Injectable({
   providedIn: "root",
@@ -56,8 +57,8 @@ export class GraphService {
     return this.ogmaService.runLayout();
   }
 
-  getNodeIndex(node: Node){
-    return this.path.indexOf(node)
+  getInsertedNodeIndex(edge: Edge){
+    return this.path.indexOf(edge.src)
   }
   
   handleEvents(event) {
@@ -85,7 +86,7 @@ export class GraphService {
 
   insertNode(node: Node, edge: Edge) {
     this.removeEdge(edge);
-    this.addNode(node, this.getNodeIndex(edge.src) + 1);
+    this.addNode(node, this.path.indexOf(edge.src) + 1);
     this.addEdge(new Edge(edge.src, node));
     this.addEdge(new Edge(node, edge.dest));
     this.pipelineService.selectedNode = node;

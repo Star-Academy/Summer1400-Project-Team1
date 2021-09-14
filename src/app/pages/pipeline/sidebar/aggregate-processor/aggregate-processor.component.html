@@ -20,8 +20,8 @@
                 <mat-form-field>
                     <mat-label>نوع تجمیع</mat-label>
                     <mat-select [formControl]="aggregateTypeControl" required [(ngModel)]="aggregateNode.aggregateType">
-                        <mat-option *ngFor="let aggregateType of aggregateTypes" [value]="aggregateType.value">
-                            {{aggregateType.viewValue}}
+                        <mat-option *ngFor="let aggregateOption of aggregateOptions" [value]="aggregateOption.value">
+                            {{aggregateOption.viewValue}}
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="aggregateTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
