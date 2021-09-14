@@ -25,7 +25,7 @@ export class PipelineService {"../models/graph/processor-nodes/aggregate-node"
 
   pipelineRowsChanged = new Subject<PipelineRow[]>();
 
-  constructor(private http: HttpClient,private graphService: GraphService) {
+  constructor(private http: HttpClient) {
     this.fetchPipelines();
   }
 
@@ -108,9 +108,9 @@ export class PipelineService {"../models/graph/processor-nodes/aggregate-node"
       ],
       "GroupItem":[]
     };
-    this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=aggregate"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
-      () => this.graphService.insertNode(node!, edge) ,
-    );
+    // this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=aggregate"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
+    //   () => this.graphService.insertNode(node!, edge) ,
+    // );
 
         //
   }
@@ -123,16 +123,16 @@ export class PipelineService {"../models/graph/processor-nodes/aggregate-node"
       SecondTablePk:""
       }
       
-    this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=join"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
-      () => this.graphService.insertNode(node!, edge) ,
-    );
+    // this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=join"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
+    //   () => this.graphService.insertNode(node!, edge) ,
+    // );
   }
 
   postFilterNode(pipelineId: number, node: FilterNode,edge:Edge,index: number) {
     let body={ 
     };
-    this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=filter"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
-      () => this.graphService.insertNode(node!, edge) ,
-    );
+    // this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=filter"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
+    //   () => this.graphService.insertNode(node!, edge) ,
+    // );
   }
 }

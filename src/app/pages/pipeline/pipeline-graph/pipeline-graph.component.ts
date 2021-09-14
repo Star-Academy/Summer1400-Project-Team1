@@ -58,18 +58,21 @@ export class PipelineGraphComponent implements AfterContentInit {
   }
 
   addProcessor(nodeType: NodeType, edge: Edge) {
+    let newNode: Node;
     switch (nodeType) {
       case NodeType.FILTER:
-         new FilterNode("filter");
+         newNode = new FilterNode("filter");
         break;
       case NodeType.JOIN:
-         new JoinNode("join");
+         newNode = new JoinNode("join");
         break;
       case NodeType.AGGREGATE:
         //TODO pass index
-       this.pipelineService.postAggregateNode(this.pipeline.Id,new AggregateNode("aggregate"),edge,0);
+        newNode = new AggregateNode("aggregate")
+      //  this.pipelineService.postAggregateNode(this.pipeline.Id,new AggregateNode("aggregate"),edge,0);
         break;
     }
+    this.graphService.insertNode(newNode!, edge)
     // this.pipelineService.postNode(newNode);
   }
 

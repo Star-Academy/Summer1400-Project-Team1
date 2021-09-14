@@ -21,7 +21,7 @@ import { switchMap } from "rxjs/operators";
   providedIn: "root",
 })
 export class GraphService {
-  nodes: Node[] = [];
+  path: Node[] = [];
   edges: Edge[] = [];
 
   clickedNode = new Subject<Node>();
@@ -40,15 +40,14 @@ export class GraphService {
   }
 
   initGraph(pipeline: Pipeline) {
+    const srcNode = new SourceNode(pipeline.Source?.Name, pipeline.Source);
     const destNode = new DestinationNode(
       pipeline.Destination?.Name,
       pipeline.Destination,
-      undefined
     );
-    const srcNode = new SourceNode(pipeline.Source?.Name, pipeline.Source, destNode);
     const initialEdge = new Edge(srcNode, destNode);
-    this.addNode(srcNode);
-    this.addNode(destNode);
+    this.addNode(srcNode, 0);
+    this.addNode(destNode, 1);
     this.addEdge(initialEdge);
     return this.runLayout();
   }
@@ -57,23 +56,17 @@ export class GraphService {
     return this.ogmaService.runLayout();
   }
 
-  getNodeIndex(srcNode: SourceNode, nodeToSearch: Node){
-    let index = 0;
-    let currentNode: Node = srcNode;
-    while(currentNode !== nodeToSearch) {
-      index++;
-      currentNode = nodeToSearch.next
-    }
-    return index;
+  getNodeIndex(node: Node){
+    return this.path.indexOf(node)
   }
-  //😢
+  
   handleEvents(event) {
     if (!event.target) return;
     if (event.target.isNode) {
-      const index = this.nodes.findIndex(
+      const index = this.path.findIndex(
         (node) => node.id == event.target.getId()
       );
-      this.onNodeClicked(this.nodes[index]);
+      this.onNodeClicked(this.path[index]);
     } else {
       const index = this.edges.findIndex(
         (edge) => edge.id == event.target.getId()
@@ -92,7 +85,7 @@ export class GraphService {
 
   insertNode(node: Node, edge: Edge) {
     this.removeEdge(edge);
-    this.addNode(node);
+    this.addNode(node, this.getNodeIndex(edge.src) + 1);
     this.addEdge(new Edge(edge.src, node));
     this.addEdge(new Edge(node, edge.dest));
     this.pipelineService.selectedNode = node;
@@ -100,7 +93,7 @@ export class GraphService {
   }
 
   removeNode(node: Node) {
-    this.nodes = this.nodes.filter((el) => el !== node);
+    this.path = this.path.filter((el) => el !== node);
     this.ogmaService.removeNode(node);
     this.attachAdjacentNodes(node);
     return this.runLayout();
@@ -119,8 +112,8 @@ export class GraphService {
     this.ogmaService.removeEdge(edge);
   }
 
-  addNode(node: Node) {
-    this.nodes.push(node);
+  addNode(node: Node, index: number) {
+    this.path.splice(index, 0, node);
     this.ogmaService.addNode(node);
   }
 
