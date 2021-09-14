@@ -28,6 +28,9 @@ namespace API
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DatasetModel>()
+                .HasIndex(d => d.Name)
+                .IsUnique();
             modelBuilder.Entity<PipelineModel>()
                 .HasIndex(p => p.Name)
                 .IsUnique();

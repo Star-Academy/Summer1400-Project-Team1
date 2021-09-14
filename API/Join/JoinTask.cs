@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace API.Join
 {
@@ -42,20 +44,86 @@ namespace API.Join
 
         public string Execute(string sourceDataset)
         {
-            string tempTableName = GetTempTableNameFromSourceDataset(sourceDataset);
-            string sqlString = GetSqlString(sourceDataset, tempTableName);
+            var tempTableName = GetTempTableNameFromSourceDataset(sourceDataset);
+            PutTableMappings(sourceDataset);
+            var sqlString = GetSqlString(sourceDataset, tempTableName);
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
-            SqlCommand command = new SqlCommand(sqlString, _sqlHandler.Connection);
+            var command = new SqlCommand(sqlString, _sqlHandler.Connection);
             Console.WriteLine(sqlString);
             command.ExecuteNonQuery();
-            return "##"+tempTableName;
+            return "##" + tempTableName;
+        }
+
+        private void PutTableMappings(string sourceDataset)
+        {
+            var sourceColumns = _sqlHandler.Connection.GetSchema("Columns", new[] {null, null, sourceDataset});
+            foreach (DataRow rowColumn in sourceColumns.Rows)
+            {
+                var columnName = rowColumn[3].ToString();
+                if (columnName != null) _firstTableMapping[columnName] = columnName;
+            }
+
+            var secondTableColumns =
+                _sqlHandler.Connection.GetSchema("Columns", new[] {null, null, _secondTableName});
+            foreach (DataRow rowColumn in secondTableColumns.Rows)
+            {
+                var columnName = rowColumn[3].ToString();
+                if (columnName != null) _secondTableMapping[columnName] = columnName;
+            }
+
+            RemoveIntersection(sourceDataset);
+        }
+
+        private void RemoveIntersection(string sourceDataset)
+        {
+            var hadIntersect = false;
+            foreach (var firstKey in _firstTableMapping.Keys)
+            {
+                foreach (var secondKey in _secondTableMapping.Keys)
+                {
+                    if (_firstTableMapping[firstKey] != _secondTableMapping[secondKey]) continue;
+                    hadIntersect = true;
+                    _firstTableMapping[firstKey] = sourceDataset.ToLower() + "_" + _firstTableMapping[firstKey];
+                    _secondTableMapping[secondKey] = _secondTableName.ToLower() + "_" + _secondTableMapping[secondKey];
+                }
+            }
+
+            hadIntersect = hadIntersect || RemoveSelfIntersect(sourceDataset, _firstTableMapping, sourceDataset);
+            hadIntersect = hadIntersect || RemoveSelfIntersect(sourceDataset, _secondTableMapping, _secondTableName);
+            if (!hadIntersect) return;
+            RemoveIntersection(sourceDataset);
+        }
+
+        private bool RemoveSelfIntersect(string sourceDataset, IDictionary<string, string> mapping, string tableName)
+        {
+            bool hadIntersect = false;
+            foreach (var firstKey in mapping.Keys)
+            {
+                foreach (var secondKey in mapping.Keys)
+                {
+                    if (firstKey == secondKey || mapping[firstKey] != mapping[secondKey])
+                        continue;
+                    hadIntersect = true;
+                    if (mapping[firstKey].Length - firstKey.Length <=
+                        mapping[secondKey].Length - secondKey.Length)
+                    {
+                        mapping[firstKey] = tableName.ToLower() + "_" + mapping[firstKey];
+                    }
+                    else
+                    {
+                        mapping[secondKey] = tableName.ToLower() + "_" + mapping[secondKey];
+                    }
+                }
+            }
+
+            return hadIntersect;
         }
 
         private static string GetTempTableNameFromSourceDataset(string sourceDataset)
         {
-            string tempTableName = sourceDataset;
-            Match match = Regex.Match(tempTableName, "(\\w+)_temp(\\d+)");
+            var tempTableName = sourceDataset;
+            var match = Regex.Match(tempTableName, "(\\w+)_temp(\\d+)");
             if (match.Success)
             {
                 tempTableName = match.Groups[1].Value + "_temp" + (int.Parse(match.Groups[2].Value) + 1);
@@ -70,7 +138,7 @@ namespace API.Join
 
         private string GetSqlString(string sourceDataset, string tempTableName)
         {
-            string sqlString = "SELECT ";
+            var sqlString = "SELECT ";
             sqlString = AddMappingToSqlString(sqlString, sourceDataset, _firstTableMapping) + ", ";
             sqlString = AddMappingToSqlString(sqlString, _secondTableName, _secondTableMapping);
             sqlString += " INTO ##" + tempTableName + " FROM " + sourceDataset + " ";
@@ -84,8 +152,8 @@ namespace API.Join
         {
             if (tableMapping != null)
             {
-                bool first = true;
-                foreach (KeyValuePair<string, string> mapping in tableMapping)
+                var first = true;
+                foreach (var (key, value) in tableMapping)
                 {
                     if (!first)
                     {
@@ -96,7 +164,7 @@ namespace API.Join
                         first = false;
                     }
 
-                    sqlString += tableName + "." + mapping.Key + " AS " + mapping.Value;
+                    sqlString += tableName + "." + key + " AS " + value;
                 }
             }
             else

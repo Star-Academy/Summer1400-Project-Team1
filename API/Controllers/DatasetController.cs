@@ -47,8 +47,15 @@ namespace API.Controllers
                 {
                     file.CopyTo(stream);
                 }
-                    
-                _databaseHandler.AddCsvDataset(fullPath,name,header);
+
+                try
+                {
+                    _databaseHandler.AddCsvDataset(fullPath,name,header);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
                 return Ok(new {dbPath});
 
             }
