@@ -63,21 +63,11 @@ namespace API.SqlIOHandler
             var selectQuery = $"SELECT TOP {count} * FROM {tableName}";
             var cmd = new SqlCommand(selectQuery, _sqlHandler.Connection);
             var samples = cmd.ExecuteReader();
+            var tableInJSON = SqlDataToJson(samples);
             _sqlHandler.Close();
-            return SqlDataToJson(samples);
+            return tableInJSON;
         }
-        
-        public int GetNumberOfRows(string tableName)
-        {
-            if (!_sqlHandler.IsOpen())
-                _sqlHandler.Open();
-            const string countQuery = "COUNT *";
-            var cmd = new SqlCommand(countQuery, _sqlHandler.Connection);
-            var numberOfRows = (int)cmd.ExecuteScalar();
-            _sqlHandler.Close();
-            return numberOfRows;
-        }
-        
+
         private string SqlDataToJson(IDataReader dataReader)
         {
             var dataTable = new DataTable();
