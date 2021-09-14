@@ -1,5 +1,6 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using API.Models;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
@@ -11,11 +12,12 @@ namespace API
     public class PipelineYamlTypeConvertor : IYamlTypeConverter
     {
         private readonly IDatabaseHandler _databaseHandler;
-        public IValueDeserializer ValueDeserializer { get; set; }
+        private readonly ApiContext _context;
 
-        public PipelineYamlTypeConvertor(IDatabaseHandler databaseHandler)
+        public PipelineYamlTypeConvertor(IDatabaseHandler databaseHandler,ApiContext apiContext)
         {
             _databaseHandler = databaseHandler;
+            _context = apiContext;
         }
         
         public bool Accepts(Type type)
@@ -26,67 +28,79 @@ namespace API
         public object? ReadYaml(IParser parser, Type type)
         {
             var pipeline = new PipelineModel();
-
-            if (parser.Current is MappingStart)
+            pipeline.DateCreated = DateTime.Now;
+            parser.MoveNext();
+            parser.MoveNext();
+            var name = parser.Current as Scalar;
+            pipeline.Name = name.Value;
+            parser.MoveNext();
+            parser.MoveNext();
+            var source = parser.Current as Scalar;
+            pipeline.Source = _context.Dataset.SingleOrDefault(d => d.Name == source.Value);
+            parser.MoveNext();
+            parser.MoveNext();
+            var destiantion = parser.Current as Scalar;
+            pipeline.Destination = _context.Dataset.SingleOrDefault(d => d.Name == destiantion.Value);
+            parser.MoveNext();
+            parser.MoveNext();
+            parser.MoveNext();
+            var deserializer = new DeserializerBuilder().BuildValueDeserializer();
+            pipeline.Components = new List<ComponentModel>();
+            var orderId = 0;
+            while (parser.MoveNext())
             {
+                if (parser.Current is MappingEnd) break;
+                var nameOfComponent = parser.Current as Scalar;
+                parser.MoveNext();
+                parser.MoveNext(); 
+                var typeOfComponent = parser.Current as Scalar;
                 parser.MoveNext();
                 parser.MoveNext();
-                var name = parser.Current as Scalar;
-                pipeline.Name = name.Value;
-                parser.MoveNext();
-                parser.MoveNext();
-                var source = parser.Current as Scalar;
-                pipeline.Source = new DatasetModel()
+                switch (typeOfComponent.Value)
                 {
-                    Name = source.Value
-                };
-                parser.MoveNext();
-                parser.MoveNext();
-                var destiantion = parser.Current as Scalar;
-                pipeline.Destination = new DatasetModel()
-                {
-                    Name = destiantion.Value
-                };
-                parser.MoveNext();
-                parser.MoveNext();
-                parser.MoveNext();
-                var deserializer = new DeserializerBuilder().BuildValueDeserializer();
-                while (parser.MoveNext())
-                {
-                    var nameOfComponent = parser.Current as Scalar;
-                    parser.MoveNext();
-                    parser.MoveNext();
-                    var typeOfComponent = parser.Current as Scalar;
-                    parser.MoveNext();
-                    parser.MoveNext();
-                    switch (typeOfComponent.Value)
+                    case "Aggregation":
+                    { 
+                        var aggregate = deserializer.DeserializeValue(parser, typeof(AggregationModel), 
+                            new SerializerState(), deserializer) as AggregationModel;
+                        _context.AggregateComponent.Add(aggregate);
+                        _context.SaveChanges();
+                        pipeline.Components.Add(new ComponentModel()
+                        {
+                            Name = nameOfComponent.Value,OrderId = orderId,RelatedComponentId = aggregate.Id,Type = ComponentType.Aggregation
+                        });
+                        break;
+                    }
+                    case "Filter":
                     {
-                        case "Aggregation":
+                        var filter = deserializer.DeserializeValue(parser, typeof(FilterModel),
+                            new SerializerState(), deserializer) as FilterModel; 
+                        _context.FilterComponent.Add(filter);
+                        _context.SaveChanges();
+                        pipeline.Components.Add(new ComponentModel()
                         {
-                            var aggregate = deserializer.DeserializeValue(parser, typeof(AggregationModel),
-                                new SerializerState(), deserializer);
-                            Console.WriteLine("");
-                            break;
-                        }
-                        case "Filter":
+                            Name = nameOfComponent.Value,OrderId = orderId,RelatedComponentId = filter.Id,Type = ComponentType.Filter
+                        });
+                        break;
+                    }
+                    case "Join":
+                    {
+                        var join = deserializer.DeserializeValue(parser, typeof(JoinModel),
+                            new SerializerState(), deserializer) as JoinModel;
+                        _context.JoinComponent.Add(join);
+                        _context.SaveChanges();
+                        pipeline.Components.Add(new ComponentModel()
                         {
-                            var filter = deserializer.DeserializeValue(parser, typeof(FilterModel),
-                                new SerializerState(), deserializer);
-                            Console.WriteLine("");
-                            break;
-                        }
-                        case "Join":
-                        {
-                            var join = deserializer.DeserializeValue(parser, typeof(JoinModel),
-                                new SerializerState(), deserializer);
-                            Console.WriteLine("");
-                            break;
-                        }
+                            Name = nameOfComponent.Value,OrderId = orderId,RelatedComponentId = join.Id,Type = ComponentType.Join
+                        });
+                        break;
                     }
                 }
-            }
-            else throw new InvalidDataException();
 
+                _context.SaveChanges();
+                orderId++;
+            }
+
+            parser.MoveNext();
             return pipeline;
         }
         
@@ -138,10 +152,12 @@ namespace API
             emitter.Emit(new Scalar(null,pipeline.Name));
             
             emitter.Emit(new Scalar(null,"Source"));
-            emitter.Emit(new Scalar(null,pipeline.Source.Name));
-            
+            if(pipeline.Source != null)emitter.Emit(new Scalar(null,pipeline.Source.Name));
+            else emitter.Emit(new Scalar(null,""));
+
             emitter.Emit(new Scalar(null,"Destination"));
-            emitter.Emit(new Scalar(null,pipeline.Destination.Name));
+            if(pipeline.Destination != null)emitter.Emit(new Scalar(null,pipeline.Destination.Name));
+            else emitter.Emit(new Scalar(null,""));
             
             emitter.Emit(new Scalar(null,"Components"));
             
