@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -24,8 +23,20 @@ namespace API.Aggregation
 
         public string Execute(string sourceDataset)
         {
+            var destinationName = "##Aggregation" + new Random().Next();
+            var sqlString = GetSqlString(sourceDataset, destinationName);
+            Console.WriteLine(sqlString);
+            if (!_sqlHandler.IsOpen())
+                _sqlHandler.Open();
+            var command = new SqlCommand(sqlString, _sqlHandler.Connection);
+            command.ExecuteNonQuery();
+            return destinationName;
+        }
+
+        private string GetSqlString(string sourceDataset, string destinationName)
+        {
             var sqlString = "SELECT ";
-            bool first = true;
+            var first = true;
             foreach (var function in _aggregateFunctions)
             {
                 if (!first)
@@ -34,35 +45,35 @@ namespace API.Aggregation
                     first = false;
                 sqlString += function;
             }
-            
-            var destinationName = "##Aggregation" + new Random().Next();
+
             sqlString += "INTO " + destinationName + " ";
-
             sqlString += "FROM " + sourceDataset + " ";
-            if (_groupByItems.Any())
+            if (!_groupByItems.Any()) return sqlString;
+            sqlString += "GROUP BY ";
+            first = true;
+            foreach (var groupBy in _groupByItems)
             {
-                sqlString += "GROUP BY ";
-
-                first = true;
-                foreach (var groupBy in _groupByItems)
-                {
-                    if (!first)
-                        sqlString += ",";
-                    else
-                        first = false;
-                    sqlString += groupBy.ColumnName + " ";
-                }
+                if (!first)
+                    sqlString += ",";
+                else
+                    first = false;
+                sqlString += groupBy.ColumnName + " ";
             }
 
+            return sqlString;
+        }
 
+        public string ExecuteTemplate(string sourceDataset)
+        {
+            var destinationName = "##Aggregation" + new Random().Next();
+            var sqlString = GetSqlString(sourceDataset, destinationName)
+                .Replace("INTO " + destinationName + " FROM " + sourceDataset + " ",
+                    "INTO " + destinationName + " FROM " + sourceDataset + " WHERE 0 ");
             Console.WriteLine(sqlString);
-            if(!_sqlHandler.IsOpen())
+            if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
-            SqlCommand command = new SqlCommand(sqlString, _sqlHandler.Connection);
-            var stream = command.ExecuteReader();
-            DataTable table = new DataTable();
-            table.Load(stream);
-
+            var command = new SqlCommand(sqlString, _sqlHandler.Connection);
+            command.ExecuteNonQuery();
             return destinationName;
         }
     }

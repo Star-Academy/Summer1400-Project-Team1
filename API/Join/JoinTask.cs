@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace API.Join
 {
@@ -28,20 +27,6 @@ namespace API.Join
             _secondTableMapping = new Dictionary<string, string>();
         }
 
-        public JoinTask(ISqlHandler sqlHandler, string secondTableName, JoinType joinType,
-            string firstTablePk,
-            string secondTablePk, IDictionary<string, string> firstTableMapping,
-            IDictionary<string, string> secondTableMapping)
-        {
-            _sqlHandler = sqlHandler;
-            _secondTableName = secondTableName;
-            _joinType = joinType;
-            _firstTablePk = firstTablePk;
-            _secondTablePk = secondTablePk;
-            _firstTableMapping = firstTableMapping;
-            _secondTableMapping = secondTableMapping;
-        }
-
         public int OrderId { get; set; }
 
         public string Execute(string sourceDataset)
@@ -57,9 +42,22 @@ namespace API.Join
             return "##" + tempTableName;
         }
 
+        public string ExecuteTemplate(string sourceDataset)
+        {
+            var tempTableName = GetTempTableNameFromSourceDataset(sourceDataset);
+            PutTableMappings(sourceDataset);
+            var sqlString = GetSqlString(sourceDataset, tempTableName) + "WHERE 0";
+            if (!_sqlHandler.IsOpen())
+                _sqlHandler.Open();
+            var command = new SqlCommand(sqlString, _sqlHandler.Connection);
+            Console.WriteLine(sqlString);
+            command.ExecuteNonQuery();
+            return "##" + tempTableName;
+        }
+
         private void PutTableMappings(string sourceDataset)
         {
-            if(!_sqlHandler.IsOpen())_sqlHandler.Open();
+            if (!_sqlHandler.IsOpen()) _sqlHandler.Open();
             var sourceColumns = _sqlHandler.Connection.GetSchema("Columns", new[] {null, null, sourceDataset});
             foreach (DataRow rowColumn in sourceColumns.Rows)
             {
@@ -80,27 +78,30 @@ namespace API.Join
 
         private void RemoveIntersection(string sourceDataset)
         {
-            var hadIntersect = false;
-            foreach (var firstKey in _firstTableMapping.Keys)
+            while (true)
             {
-                foreach (var secondKey in _secondTableMapping.Keys)
+                var hadIntersect = false;
+                foreach (var firstKey in _firstTableMapping.Keys)
                 {
-                    if (_firstTableMapping[firstKey] != _secondTableMapping[secondKey]) continue;
-                    hadIntersect = true;
-                    _firstTableMapping[firstKey] = sourceDataset.ToLower() + "_" + _firstTableMapping[firstKey];
-                    _secondTableMapping[secondKey] = _secondTableName.ToLower() + "_" + _secondTableMapping[secondKey];
+                    foreach (var secondKey in _secondTableMapping.Keys)
+                    {
+                        if (_firstTableMapping[firstKey] != _secondTableMapping[secondKey]) continue;
+                        hadIntersect = true;
+                        _firstTableMapping[firstKey] = sourceDataset.ToLower() + "_" + _firstTableMapping[firstKey];
+                        _secondTableMapping[secondKey] =
+                            _secondTableName.ToLower() + "_" + _secondTableMapping[secondKey];
+                    }
                 }
-            }
 
-            hadIntersect = hadIntersect || RemoveSelfIntersect(sourceDataset, _firstTableMapping, sourceDataset);
-            hadIntersect = hadIntersect || RemoveSelfIntersect(sourceDataset, _secondTableMapping, _secondTableName);
-            if (!hadIntersect) return;
-            RemoveIntersection(sourceDataset);
+                hadIntersect = hadIntersect || RemoveSelfIntersect(_firstTableMapping, sourceDataset);
+                hadIntersect = hadIntersect || RemoveSelfIntersect(_secondTableMapping, _secondTableName);
+                if (!hadIntersect) return;
+            }
         }
 
-        private bool RemoveSelfIntersect(string sourceDataset, IDictionary<string, string> mapping, string tableName)
+        private bool RemoveSelfIntersect(IDictionary<string, string> mapping, string tableName)
         {
-            bool hadIntersect = false;
+            var hadIntersect = false;
             foreach (var firstKey in mapping.Keys)
             {
                 foreach (var secondKey in mapping.Keys)
@@ -153,26 +154,19 @@ namespace API.Join
         private string AddMappingToSqlString(string sqlString, string tableName,
             IDictionary<string, string> tableMapping)
         {
-            if (tableMapping != null)
+            var first = true;
+            foreach (var (key, value) in tableMapping)
             {
-                var first = true;
-                foreach (var (key, value) in tableMapping)
+                if (!first)
                 {
-                    if (!first)
-                    {
-                        sqlString += ", ";
-                    }
-                    else
-                    {
-                        first = false;
-                    }
-
-                    sqlString += tableName + "." + key + " AS " + value;
+                    sqlString += ", ";
                 }
-            }
-            else
-            {
-                sqlString += tableName + ".*";
+                else
+                {
+                    first = false;
+                }
+
+                sqlString += tableName + "." + key + " AS " + value;
             }
 
             return sqlString;
