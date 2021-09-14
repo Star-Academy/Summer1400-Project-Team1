@@ -17,6 +17,7 @@ import { Subject, Subscription } from "rxjs";
 import { Pipeline } from "../models/pipeline";
 import { switchMap } from "rxjs/operators";
 import { ProcessorNode } from "../models/graph/processor-nodes/processor-node";
+import { Component } from "../models/Component";
 
 @Injectable({
   providedIn: "root",
@@ -41,16 +42,35 @@ export class GraphService {
   }
 
   initGraph(pipeline: Pipeline) {
+    this.path = [];
+    this.edges = [];
     const srcNode = new SourceNode(pipeline.Source?.Name, pipeline.Source);
     const destNode = new DestinationNode(
       pipeline.Destination?.Name,
       pipeline.Destination,
     );
-    const initialEdge = new Edge(srcNode, destNode);
-    this.addNode(srcNode, 0);
-    this.addNode(destNode, 1);
-    this.addEdge(initialEdge);
+    this.addNode(srcNode, 0)
+    let lastNode: ProcessorNode = srcNode;
+    pipeline.Components.sort((component) => component.OrderId).forEach((component, index) => {
+      let currentNode = this.createNode(component)!;
+      this.addNode(currentNode, index + 1);
+      this.addEdge(new Edge(lastNode, currentNode))
+      lastNode = currentNode;
+    })
+    this.addNode(destNode, pipeline.Components.length + 1);
+    this.addEdge(new Edge(lastNode, destNode));
     return this.runLayout();
+  }
+
+  createNode(component: Component) {
+    switch (component.Type) {
+      case 0:
+        return new AggregateNode(component.Name)  
+        case 1:
+          return new FilterNode(component.Name)  
+      default :
+        return new JoinNode(component.Name);
+    }
   }
 
   runLayout(): Promise<void> {
