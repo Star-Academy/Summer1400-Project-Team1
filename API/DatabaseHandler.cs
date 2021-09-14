@@ -101,14 +101,6 @@ namespace API
             return _context.Dataset.ToList();
         }
 
-        public int GetDatasetStatistics(int id)
-        {
-            var tableName = _context.Dataset.Find(id).Name;
-            if (tableName == null)
-                throw new Exception("dataset not found");
-            return _sqlIoHandler.GetNumberOfRows(tableName);
-        }
-
         public IEnumerable<PipelineModel> GetDatasetPipelines(int id, int count)
         {
             return _context.Pipeline.Where(model => model.Source.Id == id).Take(count);
