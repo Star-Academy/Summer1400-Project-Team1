@@ -65,7 +65,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("duplicate connection name");
+                return BadRequest(e);
             }
         }
 
@@ -79,7 +79,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("connection not found");
+                return BadRequest(e);
             }
         }
 
@@ -99,7 +99,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("connection not found");
+                return BadRequest(e);
             }
         }
     }

@@ -119,7 +119,7 @@ namespace API.Controllers
                     }
                     catch (Exception e)
                     {
-                        return BadRequest("invalid id");
+                        return BadRequest(e);
                     }
                 default: 
                     return BadRequest("invalid inputs");
@@ -151,7 +151,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("dataset not found");
+                return BadRequest(e);
             }
             
         }
