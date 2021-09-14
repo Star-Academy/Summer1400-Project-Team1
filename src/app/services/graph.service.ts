@@ -40,11 +40,12 @@ export class GraphService {
   }
 
   initGraph(pipeline: Pipeline) {
-    const srcNode = new SourceNode(pipeline.Source?.Name, pipeline.Source);
     const destNode = new DestinationNode(
       pipeline.Destination?.Name,
-      pipeline.Destination
+      pipeline.Destination,
+      undefined
     );
+    const srcNode = new SourceNode(pipeline.Source?.Name, pipeline.Source, destNode);
     const initialEdge = new Edge(srcNode, destNode);
     this.addNode(srcNode);
     this.addNode(destNode);
@@ -56,6 +57,16 @@ export class GraphService {
     return this.ogmaService.runLayout();
   }
 
+  getNodeIndex(srcNode: SourceNode, nodeToSearch: Node){
+    let index = 0;
+    let currentNode: Node = srcNode;
+    while(currentNode !== nodeToSearch) {
+      index++;
+      currentNode = nodeToSearch.next
+    }
+    return index;
+  }
+  //😢
   handleEvents(event) {
     if (!event.target) return;
     if (event.target.isNode) {

@@ -34,21 +34,22 @@
                             {{join.name}}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="joinTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
+                    <mat-error *ngIf="joinTypeControl.hasError('required')">لطفا نوع جوین را انتخاب کنید</mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>مقدار</mat-label>
                     <input matInput>
                 </mat-form-field>
+                <div class='actions-wrapper'>
+                    <div class='validate-wrapper'>
+                        <button type="submit" mat-raised-button color='primary'>اعمال</button>
+                    </div>
+                    <button mat-raised-button  (click)='onClose()'>لغو</button>
+                </div>
             </form>
 
         </div>
     </main>
 
-    <div class='actions-wrapper'>
-        <div class='validate-wrapper'>
-            <button type="submit" mat-raised-button color='primary'>اعمال</button>
-        </div>
-        <button mat-raised-button  (click)='onClose()'>لغو</button>
-    </div>
+  
 </div>

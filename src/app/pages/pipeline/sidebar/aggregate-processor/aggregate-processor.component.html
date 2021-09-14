@@ -1,7 +1,7 @@
 <div class="main-wrapper">
     <main>
         <div class='panel-body'>
-            <form  #form="ngForm" >
+            <form  #form="ngForm" (ngSubmit)="onSubmit(form)" >
                 <mat-form-field class="example-full-width">
                     <mat-label>نام ستون</mat-label>
                     <input type="text"
@@ -27,18 +27,19 @@
                     <mat-error *ngIf="aggregateTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>مقدار</mat-label>
-                    <input matInput>
+                    <mat-label>نام ستون خروجی</mat-label>
+                    <input matInput required [(ngModel)]="aggregateNode.outputColumnName">
                 </mat-form-field>
+                <div class='actions-wrapper'>
+                    <div class='validate-wrapper'>
+                        <button type="submit" mat-raised-button color='primary'>اعمال</button>
+                    </div>
+                    <button mat-raised-button  (click)='onClose()'>لغو</button>
+                </div>
             </form>
 
         </div>
     </main>
 
-    <div class='actions-wrapper'>
-        <div class='validate-wrapper'>
-            <button type="submit" mat-raised-button color='primary'>اعمال</button>
-        </div>
-        <button mat-raised-button  (click)='onClose()'>لغو</button>
-    </div>
+  
 </div>

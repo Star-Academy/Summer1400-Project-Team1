@@ -6,11 +6,16 @@ import { Node } from "../models/graph/node";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { map, switchMap, tap } from "rxjs/operators";
 import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
+import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
+import {JoinNode} from"../models/graph/processor-nodes/join-node"
+import { FilterNode } from "../models/graph/processor-nodes/filter-node";
+import { GraphService } from "./graph.service";
+import { Edge } from "../models/graph/edge";
 
 @Injectable({
   providedIn: "root",
 })
-export class PipelineService {
+export class PipelineService {"../models/graph/processor-nodes/aggregate-node"
   private readonly BASE_URL = "https://localhost:5001/api/v1/pipeline/";
 
   private _selectedNode?: Node;
@@ -20,7 +25,7 @@ export class PipelineService {
 
   pipelineRowsChanged = new Subject<PipelineRow[]>();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private graphService: GraphService) {
     this.fetchPipelines();
   }
 
@@ -89,5 +94,45 @@ export class PipelineService {
       DestinationId: destId,
       Name : pipeline.Name
     });
+  }
+
+
+  postAggregateNode(pipelineId: number, node:AggregateNode,edge:Edge,index: number){
+    let body={ 
+      "Function":[
+          { 
+            "type":node.aggregateType,
+            "Column":node.column,
+            "OutputColumnName":node.outputColumnName
+          }
+      ],
+      "GroupItem":[]
+    };
+    this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=aggregate"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
+      () => this.graphService.insertNode(node!, edge) ,
+    );
+
+        //
+  }
+
+  postJoinNodenode(pipelineId: number, node: JoinNode,edge:Edge,index: number) {
+    let body={
+      SecondTableName:"",
+      JoinType:node.joinType,
+      FirstTablePk:"",
+      SecondTablePk:""
+      }
+      
+    this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=join"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
+      () => this.graphService.insertNode(node!, edge) ,
+    );
+  }
+
+  postFilterNode(pipelineId: number, node: FilterNode,edge:Edge,index: number) {
+    let body={ 
+    };
+    this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=filter"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
+      () => this.graphService.insertNode(node!, edge) ,
+    );
   }
 }

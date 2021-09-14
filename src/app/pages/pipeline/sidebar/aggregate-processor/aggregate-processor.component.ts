@@ -41,6 +41,10 @@ export class AggregateProcessorComponent implements OnInit {
       column.toLowerCase().includes(value.toLowerCase())
     );
   }
+  onSubmit(form:any){
+    console.log(form);
+    
+  }
 
   onClose() {}
 

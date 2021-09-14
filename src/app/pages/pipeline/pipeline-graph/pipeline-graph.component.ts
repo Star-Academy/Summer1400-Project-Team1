@@ -42,8 +42,8 @@ export class PipelineGraphComponent implements AfterContentInit {
       else this.pipelineService.selectedNode = node;
     });
     this.clickedEdgeSub = this.graphService.clickedEdge.subscribe((edge) => {
-      this.promptProcessorSelectDialog(edge)
-    })
+      this.promptProcessorSelectDialog(edge);
+    });
   }
 
   promptProcessorSelectDialog(edge: Edge) {
@@ -58,19 +58,19 @@ export class PipelineGraphComponent implements AfterContentInit {
   }
 
   addProcessor(nodeType: NodeType, edge: Edge) {
-    let newNode: Node;
     switch (nodeType) {
       case NodeType.FILTER:
-        newNode = new FilterNode("filter");
+         new FilterNode("filter");
         break;
       case NodeType.JOIN:
-        newNode = new JoinNode("join");
+         new JoinNode("join");
         break;
       case NodeType.AGGREGATE:
-        newNode = new AggregateNode("aggregate");
+        //TODO pass index
+       this.pipelineService.postAggregateNode(this.pipeline.Id,new AggregateNode("aggregate"),edge,0);
         break;
     }
-    this.graphService.insertNode(newNode!, edge);
+    // this.pipelineService.postNode(newNode);
   }
 
   promptDatasetSelectDialog(terminalNode: TerminalNode) {
@@ -95,10 +95,9 @@ export class PipelineGraphComponent implements AfterContentInit {
     });
   }
 
-
   ngAfterContentInit(): void {
     this.graphService.constructGraph(this.container.nativeElement);
-    this.graphService.initGraph(this.pipeline)
+    this.graphService.initGraph(this.pipeline);
   }
 
   zoomIn() {

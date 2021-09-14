@@ -12,7 +12,7 @@ export abstract class Node {
   static nodeCounter = 0;
   private readonly _id: number;
   private _inputData?: TableClass;
-  protected constructor(public name: string, public nodeType: NodeType) {
+  protected constructor(public name: string, public nodeType: NodeType,  public next: Node) {
     this._id = Node.nodeCounter;
     this._inputData = new TableClass();
     Node.nodeCounter++;
