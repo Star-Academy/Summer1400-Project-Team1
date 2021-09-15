@@ -11,9 +11,11 @@ import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/a
 
 import { AddLocalDatasetComponent } from "./pages/dashboard/datasets/add-local-dataset/add-local-dataset.component";
 import { DatasetInfoComponent } from "./pages/dashboard/datasets/dataset-info/dataset-info.component";
+import { HomeComponent } from "./pages/home/home.component";
 //TODO change route animation
 const routes: Routes = [
-  { path: "", redirectTo: "dashboard", pathMatch: "full" },
+  { path: "", redirectTo: "home", pathMatch: "full" },
+  { path: "home", component: HomeComponent },
   {
     path: "dashboard",
     component: DashboardComponent,
@@ -21,9 +23,9 @@ const routes: Routes = [
       { path: "", redirectTo: "datasets", pathMatch: "full" },
       { path: "datasets", component: DatasetsComponent },
       { path: "connection", component: ConnectionsComponent },
-       { path: "connection/add", component: AddNewConnectionComponent },
+      { path: "connection/add", component: AddNewConnectionComponent },
       { path: "pipelines", component: PipelinesComponent },
-      { path: "pipelines/add", component: AddPipelineComponent}
+      { path: "pipelines/add", component: AddPipelineComponent },
     ],
   },
   { path: "datasets/addlocal", component: AddLocalDatasetComponent },
