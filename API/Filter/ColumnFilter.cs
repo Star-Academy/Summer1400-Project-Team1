@@ -5,14 +5,14 @@ using System.Text;
 
 namespace API.Filter
 {
-    public class ColumnFilter:IPipelineComponent
+    public class ColumnFilter : IPipelineComponent
     {
         private ISqlHandler _sqlHandler;
         public StringBuilder StringBuilder = new StringBuilder();
         private Node _root;
         private string _temporaryTableName;
-        
-        public ColumnFilter(ISqlHandler sqlHandler,Node root)
+
+        public ColumnFilter(ISqlHandler sqlHandler, Node root)
         {
             _sqlHandler = sqlHandler;
             _root = root;
@@ -32,32 +32,34 @@ namespace API.Filter
                 _sqlHandler.Open();
             }
 
-            string query = CreateSelectQuery(_root,tableName);
-            DataTable dataTable = new DataTable();
-            SqlDataAdapter adapter = new SqlDataAdapter(query, _sqlHandler.Connection);
-            
+            var query = CreateSelectQuery(_root, tableName);
+            var dataTable = new DataTable();
+            var adapter = new SqlDataAdapter(query, _sqlHandler.Connection);
+
             adapter.Fill(dataTable);
             _sqlHandler.Close();
             return dataTable;
         }
-        
-        private void Traverse(Node node){
+
+        private void Traverse(Node node)
+        {
             if (node.IsLeaf())
             {
                 StringBuilder.Append("(" + node.GetKey() + node.GetOperator() + node.GetValue() + ")");
             }
             else
             {
-                StringBuilder.Append("(");
-                for (int i = 0; i < node.GetChildes().Count; i++)
+                StringBuilder.Append('(');
+                for (var i = 0; i < node.GetChildes().Count; i++)
                 {
                     Traverse(node.GetChildes()[i]);
-                    if (i<node.GetChildes().Count-1)
+                    if (i < node.GetChildes().Count - 1)
                     {
                         StringBuilder.Append(node.GetConditionType());
                     }
                 }
-                StringBuilder.Append(")");
+
+                StringBuilder.Append(')');
             }
         }
 
@@ -67,9 +69,10 @@ namespace API.Filter
             {
                 Traverse(root);
             }
-            return "select * into "+_temporaryTableName+" from "+sourceDataset+" where "+ StringBuilder;
+
+            return "SELECT * INTO " + _temporaryTableName + " FROM " + sourceDataset + " WHERE " + StringBuilder;
         }
-        
+
         //for test
         private string CreateSelectQuery(Node root, string tableName)
         {
@@ -77,7 +80,8 @@ namespace API.Filter
             {
                 Traverse(root);
             }
-            return "select * from "+tableName+" where "+ StringBuilder;
+
+            return "SELECT * FROM " + tableName + " WHERE " + StringBuilder;
         }
 
         public int OrderId { get; set; }
@@ -89,11 +93,22 @@ namespace API.Filter
                 _sqlHandler.Open();
             }
 
-            string query = CreateSelectIntoTemporaryTableQuery(_root,sourceDataset);
-            
-            SqlCommand command = new SqlCommand(query, _sqlHandler.Connection);
+            var query = CreateSelectIntoTemporaryTableQuery(_root, sourceDataset);
+            var command = new SqlCommand(query, _sqlHandler.Connection);
             command.ExecuteNonQuery();
+            return _temporaryTableName;
+        }
 
+        public string ExecuteTemplate(string sourceDataset)
+        {
+            if (!_sqlHandler.IsOpen())
+            {
+                _sqlHandler.Open();
+            }
+
+            var query = "SELECT * INTO " + _temporaryTableName + " FROM " + sourceDataset + " WHERE 0";
+            var command = new SqlCommand(query, _sqlHandler.Connection);
+            command.ExecuteNonQuery();
             return _temporaryTableName;
         }
     }

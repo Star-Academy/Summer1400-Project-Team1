@@ -47,5 +47,7 @@ namespace API
         void DeleteAggregateComponent(int id);
         void DeleteFilterComponent(int id);
         void DeleteJoinComponent(int id);
+        List<string> GetColumn(string dataset);
+        List<string> GetTempColumn(string dataset);
     }
 }

@@ -4,5 +4,6 @@ namespace API
     {
         int OrderId { get; set; }
         string Execute(string sourceDataset);
+        string ExecuteTemplate(string sourceDataset);
     }
 }

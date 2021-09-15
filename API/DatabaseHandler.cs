@@ -24,12 +24,14 @@ namespace API
         private readonly ApiContext _context;
         private readonly ICsvHandler _csvHandler;
         private readonly ISqlIOHandler _sqlIoHandler;
+        private readonly ISqlHandler _sqlHandler;
 
-        public DatabaseHandler(ApiContext apiContext, ISqlIOHandler sqlIoHandler, ICsvHandler csvHandler)
+        public DatabaseHandler(ApiContext apiContext, ISqlIOHandler sqlIoHandler, ICsvHandler csvHandler,ISqlHandler sqlHandler)
         {
             _context = apiContext;
             _csvHandler = csvHandler;
             _sqlIoHandler = sqlIoHandler;
+            _sqlHandler = sqlHandler;
         }
 
         public List<ConnectionModel> GetConnections()
@@ -466,6 +468,24 @@ namespace API
                 throw new Exception("join not found");
             _context.JoinComponent.Remove(join);
             _context.SaveChanges();
+        }
+
+        public List<string> GetColumn(string dataset)
+        {
+            if (!_sqlHandler.IsOpen()) _sqlHandler.Open();
+            var columns = _sqlHandler.Connection.GetSchema("Columns", new[] {null, null, dataset});
+            return (from DataRow r in columns.Rows select r[3].ToString()).ToList();
+        }
+
+        public List<string> GetTempColumn(string dataset)
+        {
+            var result = new List<string>();
+            if (!_sqlHandler.IsOpen()) _sqlHandler.Open();
+            var command = new SqlCommand($"Select name From  Tempdb.Sys.Columns Where Object_ID = Object_ID('tempdb..{dataset}')",_sqlHandler.Connection);
+            using var reader = command.ExecuteReader();
+            result.AddRange(from IDataRecord r in reader select r.GetValue(0).ToString());
+
+            return result;
         }
     }
 }

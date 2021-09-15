@@ -129,6 +129,26 @@ namespace API
             return "";
         }
 
+        public List<string> GetColumn(int index)
+        {
+            if (SourceDataset == "") return new List<string>();
+            if (index == -1) return _databaseHandler.GetColumn(SourceDataset);
+            var source = SourceDataset;
+            var destination = "";
+            var count = 0;
+            foreach (var c in Components)
+            {
+                destination = c.Execute(source);
+                if(source != SourceDataset) DeleteTable(source);
+                if (count == index) return _databaseHandler.GetTempColumn(destination);
+                source = destination;
+                count++;
+            }
+
+            return new List<string>();
+            
+        }
+
         private void DeleteTable(string tableName)
         {
             if(!_sqlHandler.IsOpen())_sqlHandler.Open();
