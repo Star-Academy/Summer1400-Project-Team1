@@ -7,6 +7,7 @@ import { GraphService } from "../../../services/graph.service";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogDeleteNodeDialog } from "./dialog-delete-node/dialog-delete-node-dialog.component";
 import { Pipeline } from "src/app/models/pipeline";
+import { FilterNode } from "src/app/models/graph/processor-nodes/filter-node";
 
 @Component({
     selector: "app-sidebar",
@@ -30,12 +31,31 @@ export class SidebarComponent implements OnInit {
         dialogRef.afterClosed().subscribe((res) => {
             if (res) {
                 let node = this.pipelineService.selectedNode;
-                this.pipelineService.deleteNode(
-                    this.pipeline.Id,
-                    this.graphService.getNodeIndex(node)
-                ).toPromise().then(() => this.graphService.removeNode(node));
+                this.pipelineService
+                    .deleteNode(
+                        this.pipeline.Id,
+                        this.graphService.getNodeIndex(node)
+                    )
+                    .toPromise()
+                    .then(() => this.graphService.removeNode(node));
             }
         });
+    }
+
+    updateNode() {
+        const node = this.pipelineService.selectedNode;
+        switch (node.nodeType) {
+            case NodeType.FILTER:
+                this.pipelineService.updateFilterNode(
+                    this.pipeline.Id,
+                    node as FilterNode,
+                    this.graphService.getNodeIndex(node)
+                );
+                break;
+
+            default:
+                break;
+        }
     }
 
     get NodeType() {

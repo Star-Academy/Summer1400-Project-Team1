@@ -67,7 +67,7 @@ export class GraphService {
     switch (component.Type) {
       case 0:
         return new AggregateNode(component.Name)  
-        case 1:
+        case 2:
           return new FilterNode(component.Name)  
       default :
         return new JoinNode(component.Name);

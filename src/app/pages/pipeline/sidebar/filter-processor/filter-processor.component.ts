@@ -18,6 +18,8 @@ import {
   FilterOperator,
 } from "../../../../models/graph/processor-nodes/filter-node";
 import { FilterService } from "../../../../services/filter.service";
+import { Pipeline } from "src/app/models/pipeline";
+import { PipelineService } from "src/app/services/pipeline.service";
 
 @Component({
   selector: "app-filter-processor",
@@ -31,8 +33,7 @@ export class FilterProcessorComponent implements OnDestroy, OnChanges {
   filterSubscription!: Subscription;
   constructor(
     public dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private filterService: FilterService
+    private filterService: FilterService,
   ) {}
 
   hasChild = (_: number, filter: Filter) => {

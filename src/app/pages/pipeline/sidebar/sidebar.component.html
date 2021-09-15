@@ -1,19 +1,25 @@
-<ng-container *ngIf="pipelineService.selectedNode as selectedNode else noNodeSelected">
-    <div [ngSwitch]="selectedNode.nodeType" class="sidebar-wrapper">
+<ng-container *ngIf="pipelineService.selectedNode else noNodeSelected">
+    <div [ngSwitch]="pipelineService.selectedNode.nodeType" class="sidebar-wrapper">
         <header>
-            <p>{{selectedNode.name}}</p>
+            <p>{{pipelineService.selectedNode.name}}</p>
             <button mat-icon-button (click) = "openDialog()">
                 <img src="assets/images/delete.svg" alt="">
             </button>
         </header>
         <div *ngSwitchCase="NodeType.FILTER">
-            <app-filter-processor [filterNode]="$any(selectedNode)"></app-filter-processor>
+            <app-filter-processor [filterNode]="$any(pipelineService.selectedNode)"></app-filter-processor>
         </div>
         <div *ngSwitchCase="NodeType.JOIN">
-            <app-join-processor [joinNode]="$any(selectedNode)"></app-join-processor>
+            <app-join-processor [joinNode]="$any(pipelineService.selectedNode)"></app-join-processor>
         </div>
         <div *ngSwitchCase="NodeType.AGGREGATE">
-            <app-aggregate-processor [aggregateNode]="$any(selectedNode)"></app-aggregate-processor>
+            <app-aggregate-processor [aggregateNode]="$any(pipelineService.selectedNode)"></app-aggregate-processor>
+        </div>
+        <div class='actions-wrapper'>
+            <div class='validate-wrapper'>
+                <button type="submit" mat-raised-button color='primary'>اعمال</button>
+            </div>
+            <button mat-stroked-button color='primary' (click) = "updateNode()">لغو</button>
         </div>
     </div >
 </ng-container>

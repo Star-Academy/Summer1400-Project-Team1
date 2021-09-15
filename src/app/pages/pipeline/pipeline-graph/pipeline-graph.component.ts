@@ -41,6 +41,7 @@ export class PipelineGraphComponent implements AfterContentInit {
     console.log("pipeline",this.pipeline);
     this.pipelineService.getComponentById(1,2)
     this.clickedNodeSub = this.graphService.clickedNode.subscribe((node) => {
+      console.log(node);
       if (node instanceof TerminalNode) this.promptDatasetSelectDialog(node);
       else{ this.pipelineService.selectedNode = node;
     }

@@ -152,7 +152,7 @@ export class PipelineService {
             )
     }
 
-    updateJoinNode(pipelineId: number, node: JoinNode) {  
+    updateJoinNode(pipelineId: number, node: JoinNode, orderId: number) {  
         console.log(node);
               
         let body = {
@@ -202,5 +202,13 @@ export class PipelineService {
         // );
     }
 
+    updateFilterNode(pipelineId: number, filterNode: FilterNode, orderId: number) {
+        const body = {
+            
+        }
+        return this.http.patch(this.BASE_URL + pipelineId + "component/" + orderId, {
+
+        })
+    }
 
 }
