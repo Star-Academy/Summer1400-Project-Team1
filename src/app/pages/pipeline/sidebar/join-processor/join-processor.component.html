@@ -2,7 +2,7 @@
     <main>
 
         <div class='panel-body'>
-            <form  #form="ngForm" >
+            <form  #form="ngForm"  (ngSubmit)="onSubmit()" >
                 <mat-form-field>
                     <mat-label>دیتاست</mat-label>
                     <mat-select required [(ngModel)]="joinNode.dataset" name="dataset">

@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { FormControl, NgForm, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
-import { map, startWith } from "rxjs/operators";
+import { map, startWith, switchMap } from "rxjs/operators";
+import { PipelineService } from "src/app/services/pipeline.service";
 import { AggregateNode , AggregateType} from "../../../../models/graph/processor-nodes/aggregate-node";
 
 interface AggregateOption {
@@ -16,6 +18,10 @@ interface AggregateOption {
 })
 export class AggregateProcessorComponent implements OnInit {
   @Input() aggregateNode!: AggregateNode;
+  @ViewChild("form", { static: false }) form!: NgForm;
+  pipelineId!: number
+  
+
   aggregateTypeControl = new FormControl("", Validators.required);
   aggregateOptions: AggregateOption[] = [
     { value: AggregateType.COUNT, viewValue: "تعداد" },
@@ -27,9 +33,14 @@ export class AggregateProcessorComponent implements OnInit {
   myControl = new FormControl();
   filteredColumns!: Observable<string[]>;
 
-  constructor() {}
+  constructor(    public router: Router,
+    public pipelineService: PipelineService,
+    public route: ActivatedRoute) {}
 
   ngOnInit(): void {
+      
+   this.pipelineId= +this.route.snapshot.paramMap.get('id')!
+      
     this.filteredColumns = this.myControl.valueChanges.pipe(
       startWith(""),
       map((value) => this._filter(value))
@@ -41,9 +52,10 @@ export class AggregateProcessorComponent implements OnInit {
       column.toLowerCase().includes(value.toLowerCase())
     );
   }
-  onSubmit(form:any){
-    console.log(form);
-    
+  onSubmit(){
+  if(!this.form.valid)return;
+  this.pipelineService.updateAggregateNode(this.pipelineId,this.aggregateNode)
+  
   }
 
   onClose() {}

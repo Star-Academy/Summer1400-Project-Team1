@@ -1,7 +1,7 @@
 <div class="main-wrapper">
     <main>
         <div class='panel-body'>
-            <form  #form="ngForm" (ngSubmit)="onSubmit(form)" >
+            <form  #form="ngForm" (ngSubmit)="onSubmit()" >
                 <mat-form-field class="example-full-width">
                     <mat-label>نام ستون</mat-label>
                     <input type="text"
@@ -34,7 +34,7 @@
                     <div class='validate-wrapper'>
                         <button type="submit" mat-raised-button color='primary'>اعمال</button>
                     </div>
-                    <button mat-raised-button  (click)='onClose()'>لغو</button>
+                    <button type="button" mat-raised-button  (click)='onClose()'>لغو</button>
                 </div>
             </form>
 

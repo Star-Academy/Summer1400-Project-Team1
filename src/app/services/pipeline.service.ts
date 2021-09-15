@@ -131,7 +131,39 @@ export class PipelineService {
                 body
             )
     }
+    updateAggregateNode(pipelineId: number, node: AggregateNode) {        
+        let body = {
+            Function: [
+                {
+                    type: node.aggregateType,
+                    Column: node.column,
+                    OutputColumnName: node.outputColumnName,
+                },
+            ],
+            GroupItem: [],
+        };
+        return this.http
+            .patch(
+                this.BASE_URL +
+                    pipelineId +
+                    "/component" +
+                    4,
+                body
+            )
+    }
 
+    updateJoinNode(pipelineId: number, node: JoinNode) {  
+        console.log(node);
+              
+        let body = {
+            SecondTableName: "",
+            JoinType: node.joinType,
+            FirstTablePk: "",
+            SecondTablePk: "",
+        };
+        return this.http.patch(this.BASE_URL + pipelineId + "/component" + node.id,body)
+    
+    }
     postJoinNode(
         pipelineId: number,
         node: JoinNode,
@@ -169,4 +201,6 @@ export class PipelineService {
         //   () => this.graphService.insertNode(node!, edge) ,
         // );
     }
+
+
 }

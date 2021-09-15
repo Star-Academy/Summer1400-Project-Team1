@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { FormControl, NgForm, Validators } from "@angular/forms";
 import { Observable, Subscription } from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { JoinNode } from "../../../../models/graph/processor-nodes/join-node";
@@ -15,6 +15,8 @@ interface JoinType {
 })
 export class JoinProcessorComponent implements OnInit {
   @Input() joinNode!: JoinNode;
+  @ViewChild("form", { static: false }) form!: NgForm;
+
 
   panelOpenState: boolean = true;
   joinTypeControl = new FormControl("", Validators.required);
@@ -41,6 +43,12 @@ export class JoinProcessorComponent implements OnInit {
     return this.joinNode.inputData.columns.filter((option) =>
       option.toLowerCase().includes(filterValue)
     );
+  }
+
+  onSubmit(){
+    if(!this.form.valid) return
+    console.log(this.joinNode);
+    
   }
 
   onClose() {}

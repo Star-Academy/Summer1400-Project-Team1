@@ -38,7 +38,8 @@ export class PipelineGraphComponent implements AfterContentInit {
   ) {}
 
   ngOnInit() {
-        console.log(this.pipeline);
+    console.log("pipeline",this.pipeline);
+    this.pipelineService.getComponentById(1,2)
     this.clickedNodeSub = this.graphService.clickedNode.subscribe((node) => {
       if (node instanceof TerminalNode) this.promptDatasetSelectDialog(node);
       else{ this.pipelineService.selectedNode = node;
@@ -130,7 +131,7 @@ export class PipelineGraphComponent implements AfterContentInit {
   ngAfterContentInit(): void {
     this.graphService.constructGraph(this.container.nativeElement);
     this.graphService.initGraph(this.pipeline);
-    console.log(this.graphService.path);
+    console.log("path",this.graphService.path);
     
   }
 
