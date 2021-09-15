@@ -353,12 +353,13 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{pid}/run/{id}")]
-        public IActionResult RunByIndex(int pid, int id)
+        public IActionResult RunByIndex(int pid, int id,bool columnOnly)
         {
             var pipeline = new Pipeline(_sqlHandler, _databaseHandler);
             pipeline.LoadFromModel(_databaseHandler.GetPipeline(pid));
             try
             {
+                if (columnOnly) return Ok(pipeline.GetColumn(id));
                 return Ok(pipeline.RunByIndex(id));
             }
             catch (Exception e)

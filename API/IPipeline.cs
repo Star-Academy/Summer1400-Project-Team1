@@ -10,6 +10,7 @@ namespace API
         string DestinationDataset { get; set; }
         void LoadFromModel(PipelineModel pipelineModel);
         string RunByIndex(int index);
+        List<string> GetColumn(int index);
         void Run();
     }
 }
