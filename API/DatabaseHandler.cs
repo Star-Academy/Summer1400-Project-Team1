@@ -416,9 +416,9 @@ namespace API
             if (oldModel == null)
                 throw new Exception("not found");
             oldModel.JoinType = newModel.JoinType;
-            oldModel.SecondTableName ??= newModel.SecondTableName;
-            oldModel.FirstTablePk ??= newModel.FirstTablePk;
-            oldModel.SecondTablePk ??= newModel.SecondTablePk;
+            if(newModel.SecondTableName != null)oldModel.SecondTableName = newModel.SecondTableName;
+            if(newModel.FirstTablePk != null)oldModel.FirstTablePk = newModel.FirstTablePk;
+            if(newModel.SecondTablePk != null)oldModel.SecondTablePk = newModel.SecondTablePk;
             _context.SaveChanges();
         }
 

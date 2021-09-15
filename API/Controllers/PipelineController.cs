@@ -211,6 +211,7 @@ namespace API.Controllers
 
         private IActionResult PatchJoin(int id, string json)
         {
+            Console.WriteLine("----------");
             JoinModel model = JsonSerializer.Deserialize<JoinModel>(json);
             if (model == null)
             {

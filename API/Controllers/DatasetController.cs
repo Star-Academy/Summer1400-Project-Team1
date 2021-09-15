@@ -140,7 +140,7 @@ namespace API.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("duplicate dataset name");
+                return BadRequest(e);
             }
         }
 
