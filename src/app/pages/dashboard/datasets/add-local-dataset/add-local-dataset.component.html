@@ -22,11 +22,21 @@
 
   <mat-accordion>
     <div class="panel-body">
-      <button class="btn-drop" (click)="file.click()" *ngIf="!hasName">
+      <button
+        type="button"
+        class="btn-drop"
+        (click)="file.click()"
+        *ngIf="!hasName"
+      >
         <img src="assets/images/upload.svg" alt="" />
         انتخاب <span>فایل</span>
       </button>
-      <button class="btn-drop" (click)="file.click()" *ngIf="hasName">
+      <button
+        type="button"
+        class="btn-drop"
+        (click)="file.click()"
+        *ngIf="hasName"
+      >
         <img src="assets/images/upload.svg" alt="" />
         {{ initDatasetName }}
       </button>

@@ -20,7 +20,7 @@ export class DialogSelectDatasetDialog implements OnInit, OnDestroy {
 
   displayedColumns: string[] = [
     "شماره",
-    "نام پایگاه",
+    "نام دیتاست",
     "نام اتصال",
     "تاریخ ساخت",
   ];

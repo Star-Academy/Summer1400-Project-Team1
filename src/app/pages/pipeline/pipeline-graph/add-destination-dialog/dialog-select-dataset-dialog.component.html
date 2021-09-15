@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>مجموعه داده ها</h1>
+<h1 mat-dialog-title>داده ها</h1>
 <div class="select-dataset-container" mat-dialog-content>
   <table mat-table [dataSource]="datasetsRows" class="mat-elevation-z8">
     <ng-container matColumnDef="شماره">
@@ -6,7 +6,7 @@
       <td mat-cell *matCellDef="let element">{{ element.position }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="نام پایگاه">
+    <ng-container matColumnDef="نام دیتاست">
       <th mat-header-cell *matHeaderCellDef>نام پایگاه</th>
       <td mat-cell *matCellDef="let element">{{ element.dataset.Name }}</td>
     </ng-container>
@@ -14,14 +14,14 @@
     <ng-container matColumnDef="نام اتصال">
       <th mat-header-cell *matHeaderCellDef>نام اتصال</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.dataset.Connection ?? "بدون اتصال"}}
+        {{ element.dataset.Connection ?? "بدون اتصال" }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="تاریخ ساخت">
       <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.dataset.DateCreated  | date: "YYYY/MM/dd"}}
+        {{ element.dataset.DateCreated | date: "YYYY/MM/dd" }}
       </td>
     </ng-container>
 
@@ -34,7 +34,5 @@
   </table>
 </div>
 <div class="actions">
-  <button mat-dialog-close mat-stroked-button color="primary">
-    لغو
-  </button>
+  <button mat-dialog-close mat-stroked-button color="primary">لغو</button>
 </div>
