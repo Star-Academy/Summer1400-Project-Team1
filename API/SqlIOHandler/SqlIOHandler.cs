@@ -58,16 +58,33 @@ namespace API.SqlIOHandler
         
         public void ExportIntoNewTable(ConnectionModel connectionModel,string datasetName, string databaseName, string tableName)
         {
-            _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
-            _linkedServerHandler.ExportToNewTable(connectionModel.Server, databaseName, tableName, datasetName);
-            _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+            try
+            {
+                _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
+                _linkedServerHandler.ExportToNewTable(connectionModel.Server, databaseName, tableName, datasetName);
+                _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+            }
+            catch (Exception e)
+            {
+                _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+                throw;
+            }
         }
         
         public void ExportIntoSelectedTable(ConnectionModel connectionModel,string datasetName, string databaseName, string tableName)
         {
-            _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
-            _linkedServerHandler.ExportDataToSelectedTable(connectionModel.Server, databaseName, tableName,datasetName);
-            _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+            try
+            {
+                _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
+                _linkedServerHandler.ExportDataToSelectedTable(connectionModel.Server, databaseName, tableName,datasetName);
+                _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+            }
+            catch (Exception e)
+            {
+                _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+                throw;
+            }
+            
         }
 
         public string GetTableSample(string tableName, int count)

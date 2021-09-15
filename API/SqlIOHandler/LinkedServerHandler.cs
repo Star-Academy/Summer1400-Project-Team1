@@ -46,7 +46,7 @@
             if (!_sqlHandler.IsOpen())
                 _sqlHandler.Open();
             var selectQuery =
-                $"SELECT * INTO {serverLinkedWith}.{desDataBaseName}.dbo.{desTableName} FROM {sourceTableName}";
+                $"SELECT * INTO {desDataBaseName}.dbo.{desTableName} FROM {sourceTableName}";
             _sqlHandler.ExecuteSQLQuery(selectQuery);
             _sqlHandler.Close();
         }
