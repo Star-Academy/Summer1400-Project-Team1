@@ -102,6 +102,13 @@ export class PipelineService {
       return this.http.delete(this.BASE_URL +  pipelineId + "/component/" + OrderId)
     }
 
+    getComponentById(componentId: number,pipelineId:number) {        
+        this.http.get(this.BASE_URL + pipelineId + "/component/" + componentId ).subscribe(responseData=>{
+            console.log("data",responseData);
+            
+        })
+    }
+
     postAggregateNode(pipelineId: number, node: AggregateNode, index: number) {
         let body = {
             Function: [
@@ -125,10 +132,9 @@ export class PipelineService {
             )
     }
 
-    postJoinNodenode(
+    postJoinNode(
         pipelineId: number,
         node: JoinNode,
-        edge: Edge,
         index: number
     ) {
         let body = {
@@ -137,19 +143,28 @@ export class PipelineService {
             FirstTablePk: "",
             SecondTablePk: "",
         };
-
-        // this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=join"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
-        //   () => this.graphService.insertNode(node!, edge) ,
-        // );
+        return this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=join"+`&index=${index}`+`&name=${node.name}`,body)
+         
+    
     }
 
     postFilterNode(
         pipelineId: number,
         node: FilterNode,
-        edge: Edge,
         index: number
     ) {
         let body = {};
+
+        return this.http
+            .post(
+                this.BASE_URL +
+                    pipelineId +
+                    "/component" +
+                    "/?type=join" +
+                    `&index=${index}` +
+                    `&name=${node.name}`,
+                body
+            )
         // this.http.post(this.BASE_URL + pipelineId + "/component" + "/?type=filter"+`&index=${index}`+`&name=${node.name}`,body).subscribe(
         //   () => this.graphService.insertNode(node!, edge) ,
         // );

@@ -18,122 +18,132 @@ import { AggregateNode } from "src/app/models/graph/processor-nodes/aggregate-no
 import { ProcessorNode } from "src/app/models/graph/processor-nodes/processor-node";
 
 @Component({
-    selector: "app-pipeline-graph",
-    templateUrl: "./pipeline-graph.component.html",
-    styleUrls: ["./pipeline-graph.component.scss"],
+  selector: "app-pipeline-graph",
+  templateUrl: "./pipeline-graph.component.html",
+  styleUrls: ["./pipeline-graph.component.scss"],
 })
 export class PipelineGraphComponent implements AfterContentInit {
-    @Input() pipeline!: Pipeline;
-    @ViewChild("graphContainer", { static: true })
-    private container;
+  @Input() pipeline!: Pipeline;
+  @ViewChild("graphContainer", { static: true })
+  private container;
 
-    private clickedNodeSub!: Subscription;
-    private clickedEdgeSub!: Subscription;
+  private clickedNodeSub!: Subscription;
+  private clickedEdgeSub!: Subscription;
 
-    constructor(
-        private ogmaService: OgmaService,
-        private graphService: GraphService,
-        private dialog: MatDialog,
-        private pipelineService: PipelineService
-    ) {}
+  constructor(
+    private ogmaService: OgmaService,
+    private graphService: GraphService,
+    private dialog: MatDialog,
+    private pipelineService: PipelineService
+  ) {}
 
-    ngOnInit() {
-        this.clickedNodeSub = this.graphService.clickedNode.subscribe(
-            (node) => {
-                if (node instanceof TerminalNode)
-                    this.promptDatasetSelectDialog(node);
-                else this.pipelineService.selectedNode = node;
-            }
+  ngOnInit() {
+        console.log(this.pipeline);
+    this.clickedNodeSub = this.graphService.clickedNode.subscribe((node) => {
+      if (node instanceof TerminalNode) this.promptDatasetSelectDialog(node);
+      else{ this.pipelineService.selectedNode = node;
+    }
+    });
+    this.clickedEdgeSub = this.graphService.clickedEdge.subscribe((edge) => {
+      this.promptProcessorSelectDialog(edge);
+    });
+  }
+
+  promptProcessorSelectDialog(edge: Edge) {
+    const dialogRef = this.dialog.open(DialogProcessorSelectDialog, {
+      autoFocus: false,
+      width: "67.5rem",
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      if (res) this.createNode(res, edge);
+      this.ogmaService.unSelectEdge(edge);
+    });
+  }
+
+  createNode(nodeType: NodeType, edge: Edge) {
+    let newNode: ProcessorNode;
+    switch (nodeType) {
+      case NodeType.FILTER:
+        newNode = new FilterNode("filter");
+        break;
+      case NodeType.JOIN:
+        newNode = new JoinNode("join");
+        break;
+      case NodeType.AGGREGATE:
+        //TODO pass index
+        newNode = new AggregateNode("aggregate");
+        break;
+    }
+    this.postNode(newNode!, edge);
+  }
+
+  postNode(node: ProcessorNode, edge: Edge) {
+    let obs: Observable<any>;
+    switch (node.nodeType) {
+      case NodeType.AGGREGATE:
+        obs = this.pipelineService.postAggregateNode(
+          this.pipeline.Id,
+          node as AggregateNode,
+          this.graphService.getPlacingIndex(edge)
         );
-        this.clickedEdgeSub = this.graphService.clickedEdge.subscribe(
-            (edge) => {
-                this.promptProcessorSelectDialog(edge);
-            }
+        break;
+      case NodeType.JOIN:
+        obs = this.pipelineService.postJoinNode(
+          this.pipeline.Id,
+          node as JoinNode,
+          this.graphService.getPlacingIndex(edge)
         );
+        break;
+         case NodeType.FILTER:
+        obs = this.pipelineService.postFilterNode(
+          this.pipeline.Id,
+          node as FilterNode,
+          this.graphService.getPlacingIndex(edge)
+        );
+        break;
     }
+    obs!.toPromise().then(() => this.graphService.insertNode(node, edge));
+  }
 
-    promptProcessorSelectDialog(edge: Edge) {
-        const dialogRef = this.dialog.open(DialogProcessorSelectDialog, {
-            autoFocus: false,
-            width: "67.5rem",
-        });
-        dialogRef.afterClosed().subscribe((res) => {
-            if (res) this.createNode(res, edge);
-            this.ogmaService.unSelectEdge(edge);
-        });
-    }
+  promptDatasetSelectDialog(terminalNode: TerminalNode) {
+    const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
+      width: "50vw",
+    });
+    dialogRef.afterClosed().subscribe((dataset: Dataset) => {
+      if (dataset) {
+        this.setDataset(terminalNode, dataset);
+      }
+    });
+  }
 
-    createNode(nodeType: NodeType, edge: Edge) {
-        let newNode: ProcessorNode;
-        switch (nodeType) {
-            case NodeType.FILTER:
-                newNode = new FilterNode("filter");
-                break;
-            case NodeType.JOIN:
-                newNode = new JoinNode("join");
-                break;
-            case NodeType.AGGREGATE:
-                //TODO pass index
-                newNode = new AggregateNode("aggregate");
-                break;
-        }
-        this.postNode(newNode!, edge);
-    }
+  setDataset(terminalNode: TerminalNode, dataset: Dataset) {
+    let obs =
+      terminalNode.nodeType === NodeType.SOURCE
+        ? this.pipelineService.setSrcDataset(this.pipeline, dataset.Id)
+        : this.pipelineService.setDestDataset(this.pipeline, dataset.Id);
+    obs.toPromise().then(() => {
+      terminalNode.dataset = dataset;
+      this.ogmaService.fillTerminalNode(terminalNode);
+    });
+  }
 
-    postNode(node: ProcessorNode, edge:Edge) {
-        let obs: Observable<any>;
-        switch (node.nodeType) {
-            case NodeType.AGGREGATE:
-                obs = this.pipelineService.postAggregateNode(
-                    this.pipeline.Id,
-                    node as AggregateNode,
-                    this.graphService.getPlacingIndex(edge)
-                );
-                break;
-        }
-        obs!.toPromise().then(() => this.graphService.insertNode(node, edge))
-    }
+  ngAfterContentInit(): void {
+    this.graphService.constructGraph(this.container.nativeElement);
+    this.graphService.initGraph(this.pipeline);
+    console.log(this.graphService.path);
+    
+  }
 
-    promptDatasetSelectDialog(terminalNode: TerminalNode) {
-        const dialogRef = this.dialog.open(DialogSelectDatasetDialog, {
-            width: "50vw",
-        });
-        dialogRef.afterClosed().subscribe((dataset: Dataset) => {
-            if (dataset) {
-                this.setDataset(terminalNode, dataset);
-            }
-        });
-    }
+  zoomIn() {
+    this.ogmaService.zoomIn();
+  }
 
-    setDataset(terminalNode: TerminalNode, dataset: Dataset) {
-        let obs =
-            terminalNode.nodeType === NodeType.SOURCE
-                ? this.pipelineService.setSrcDataset(this.pipeline, dataset.Id)
-                : this.pipelineService.setDestDataset(
-                      this.pipeline,
-                      dataset.Id
-                  );
-        obs.toPromise().then(() => {
-            terminalNode.dataset = dataset;
-            this.ogmaService.fillTerminalNode(terminalNode);
-        });
-    }
+  zoomOut() {
+    this.ogmaService.zoomOut();
+  }
 
-    ngAfterContentInit(): void {
-        this.graphService.constructGraph(this.container.nativeElement);
-        this.graphService.initGraph(this.pipeline);
-    }
-
-    zoomIn() {
-        this.ogmaService.zoomIn();
-    }
-
-    zoomOut() {
-        this.ogmaService.zoomOut();
-    }
-
-    ngOnDestroy() {
-        this.clickedNodeSub.unsubscribe();
-        this.clickedEdgeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.clickedNodeSub.unsubscribe();
+    this.clickedEdgeSub.unsubscribe();
+  }
 }

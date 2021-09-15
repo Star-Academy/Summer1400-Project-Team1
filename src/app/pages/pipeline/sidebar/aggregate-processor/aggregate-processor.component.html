@@ -28,7 +28,7 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>نام ستون خروجی</mat-label>
-                    <input matInput required [(ngModel)]="aggregateNode.outputColumnName">
+                    <input matInput required [(ngModel)]="aggregateNode.outputColumnName" [ngModelOptions]="{standalone: true}" >
                 </mat-form-field>
                 <div class='actions-wrapper'>
                     <div class='validate-wrapper'>

@@ -51,7 +51,8 @@ export class GraphService {
     );
     this.addNode(srcNode, 0)
     let lastNode: ProcessorNode = srcNode;
-    pipeline.Components.sort((component) => component.OrderId).forEach((component, index) => {
+    let sortedPipeLine=pipeline.Components.sort(function(a, b){return a.OrderId-b.OrderId});    
+    sortedPipeLine.forEach((component, index) => {
       let currentNode = this.createNode(component)!;
       this.addNode(currentNode, index + 1);
       this.addEdge(new Edge(lastNode, currentNode))
@@ -114,6 +115,7 @@ export class GraphService {
     this.addEdge(new Edge(edge.src, node));
     this.addEdge(new Edge(node, edge.dest));
     this.pipelineService.selectedNode = node;
+
     return this.runLayout();
   }
 
