@@ -203,7 +203,7 @@ export class PipelineService {
                 this.BASE_URL +
                     pipelineId +
                     "/component" +
-                    "/?type=join" +
+                    "/?type=filter" +
                     `&index=${index}` +
                     `&name=${node.name}`,
                 body
@@ -214,12 +214,7 @@ export class PipelineService {
     }
 
     updateFilterNode(pipelineId: number, filterNode: FilterNode, orderId: number) {
-        const body = {
-            
-        }
-        return this.http.patch(this.BASE_URL + pipelineId + "component/" + orderId, {
-
-        })
+        this.http.patch(this.BASE_URL + pipelineId + "component/" + orderId, filterNode.tree).toPromise();
     }
 
 }

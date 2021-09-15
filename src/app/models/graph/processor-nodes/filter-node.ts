@@ -6,8 +6,8 @@ export class FilterNode extends ProcessorNode {
   constructor(name: string) {
     super(name, NodeType.FILTER);
   }
-  jsonTree() {
-
+  get tree() {
+    return this.root.tree;
   }
 }
 
@@ -19,12 +19,15 @@ export abstract class Filter {
 }
 
 export class FilterOperator extends Filter {
-  get tree() {
-    throw new Error("Method not implemented.");
-  }
   constructor(parent: FilterOperator | null, public operator: "AND" | "OR") {
     super(parent);
     this.children = [];
+  }
+
+  get tree() {
+    let obj = {}
+    obj[this.operator] = this.children?.map((child) => child.tree)
+    return obj
   }
 }
 
@@ -34,8 +37,8 @@ export class FilterOperand extends Filter {
   operator: Operator = Operator.EQUAL_TO;
   value: string = "";
 
-  get tree(): any {
-    return this;
+  get tree() {
+    return {key: this.key, operator: this.operator, value: this.value};
   }
 }
 
