@@ -1,3 +1,4 @@
+import { HttpEventType } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import {Pipeline, PipelineRow} from "src/app/models/pipeline";
@@ -23,6 +24,20 @@ export class PipelinesComponent implements OnInit {
         this.pipelineRows = pipelineRows;
       }
     );
+  }
+
+  onUpload(event: any){
+    if (event.target === null) return;
+    console.log(event.target.files[0]);
+  this.pipelineService.uploadPipelineYml(event.target.files[0]).subscribe(
+    (event) => {
+      if (event.type === HttpEventType.Response) {
+        this.pipelineService.fetchPipelines();
+      }
+    },
+    (error) => {
+    }
+  );
   }
 
   deletePipeline(pipeline: Pipeline, event: Event) {

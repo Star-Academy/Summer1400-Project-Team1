@@ -3,7 +3,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { Dataset } from "../models/dataset";
 import { Pipeline, PipelineRow } from "../models/pipeline";
 import { Node } from "../models/graph/node";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import { map, switchMap, tap } from "rxjs/operators";
 import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
 import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
@@ -111,6 +111,18 @@ export class PipelineService {
 
     deleteNode(pipelineId: number, OrderId: number) {
       return this.http.delete(this.BASE_URL +  pipelineId + "/component/" + OrderId)
+    }
+
+    uploadPipelineYml(file:File){
+        const url = `localhost:5001/api/v1/pipeline/yml`;
+    
+        let fileToUpload = <File>file;
+        const formData = new FormData();
+        formData.append("file", fileToUpload, fileToUpload.name);
+       return this.http
+          .post(url, formData, { reportProgress: true, observe: "events" })
+          
+
     }
 
     getComponentById(componentId: number,pipelineId:number) {        
