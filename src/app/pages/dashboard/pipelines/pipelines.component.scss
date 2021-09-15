@@ -1,5 +1,4 @@
 $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
-
 .btn-container {
   display: flex;
   align-items: center;
@@ -7,9 +6,8 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
   margin-right: 1rem;
   gap: 1rem;
 
-  .btn-add {
-    color: #fff;
-    background: var(--color-primary);
+  button,
+  input {
     font-size: 1.5rem;
     padding: 0.5rem 1rem;
     border-radius: 0.7rem;
@@ -18,9 +16,35 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
     gap: 1rem;
     cursor: pointer;
     user-select: none;
+  }
+
+  .btn-add {
+    color: #fff;
+    background: var(--color-primary);
+
     img {
       height: 2rem;
       width: 2rem;
+    }
+  }
+
+  .btn-drop {
+    background: #fff;
+    border-style: dashed;
+    height: 100%;
+    padding: 0.8rem 1rem;
+
+    img {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+    span {
+      color: hsla(204, 94%, 39%, 1);
+      font-weight: bold;
+    }
+
+    &:hover {
+      background: hsla(204, 94%, 59%, 0.22);
     }
   }
 }
