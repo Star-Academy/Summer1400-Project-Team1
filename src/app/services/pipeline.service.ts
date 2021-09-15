@@ -128,13 +128,9 @@ export class PipelineService {
     });
   }
 
-  getComponentById(componentId: number, pipelineId: number) {
-    this.http
-      .get(this.BASE_URL + pipelineId + "/component/" + componentId)
-      .subscribe((responseData) => {
-        console.log("data", responseData);
-      });
-  }
+  getComponentById(componentId: number,pipelineId:number) {        
+    return this.http.get(this.BASE_URL + pipelineId + "/component/" + componentId ).toPromise()
+}
 
   postAggregateNode(pipelineId: number, node: AggregateNode, index: number) {
     let body = {
