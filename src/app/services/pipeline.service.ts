@@ -26,6 +26,7 @@ export class PipelineService {
   openSidebar = new Subject<void>();
   output = new BehaviorSubject<any>([]);
   running = new BehaviorSubject<boolean>(false);
+  runFinishedMessage = new BehaviorSubject<string>("");
   private _pipelines!: Pipeline[];
 
   pipelineRowsChanged = new Subject<PipelineRow[]>();
@@ -256,6 +257,7 @@ export class PipelineService {
         console.log(response);  
         this.running.next(false);      
         this.output.next(response);
+        this.runFinishedMessage.next("FINISHED");
 
       });
   }

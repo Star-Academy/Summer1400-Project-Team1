@@ -28,6 +28,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   running:boolean=false;
   runningSub!: Subscription;
+  runningFinishedSub!: Subscription;
   previewResize = {
     isResizing: false,
     previewHeight: 300,
@@ -62,6 +63,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
       this.runningSub = this.pipelineService.running.subscribe(running => {
         this.running  = running;
+     
+      })
+     this.runningFinishedSub= this.pipelineService.runFinishedMessage.subscribe(message => {
+        if (message==="FINISHED") {
+          this.expandPreview=true;
+        }
       })
   }
 
@@ -96,6 +103,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.pipelineSub.unsubscribe();
     this.outputSourceSub.unsubscribe();
     this.runningSub.unsubscribe();
+    this.runningFinishedSub.unsubscribe();
   }
 
   get NodeType() {
