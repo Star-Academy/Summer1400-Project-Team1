@@ -46,6 +46,20 @@ namespace API.SqlIOHandler
             _linkedServerHandler.ImportToNewTable(connectionModel.Server,datasetName, databaseName, tableName);
             _linkedServerHandler.DropLinkedServer(connectionModel.Server);
         }
+        
+        public void ExportIntoNewTable(ConnectionModel connectionModel,string datasetName, string databaseName, string tableName)
+        {
+            _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
+            _linkedServerHandler.ExportToNewTable(connectionModel.Server, databaseName, tableName, datasetName);
+            _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+        }
+        
+        public void ExportIntoSelectedTable(ConnectionModel connectionModel,string datasetName, string databaseName, string tableName)
+        {
+            _linkedServerHandler.AddLinkedServer(connectionModel.Server, connectionModel.Username, connectionModel.Password);
+            _linkedServerHandler.ExportDataToSelectedTable(connectionModel.Server, databaseName, tableName,datasetName);
+            _linkedServerHandler.DropLinkedServer(connectionModel.Server);
+        }
 
         public string GetTableSample(string tableName, int count)
         {

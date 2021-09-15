@@ -9,6 +9,10 @@ namespace API.SqlIOHandler
         IEnumerable<string> GetDatabases(string sourceConnectionString);
         IEnumerable<string> GetTables(string sourceConnectionString);
         void ImportDataFromSql(ConnectionModel connectionModel,string datasetNAme, string databaseName, string tableName);
+        public void ExportIntoNewTable(ConnectionModel connectionModel, string datasetName, string databaseName,
+            string tableName);
+        public void ExportIntoSelectedTable(ConnectionModel connectionModel, string datasetName, string databaseName,
+            string tableName);
         string GetTableSample(string tableName, int count);
     }
 }

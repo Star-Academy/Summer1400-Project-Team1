@@ -22,6 +22,8 @@ namespace API
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
         void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
         string GetCsvDataset(int datasetId);
+        void ExportToNewSqlTable(int connectionId, int datasetId, string databaseName, string tableName);
+        void ExportToSelectedSqlTable(int connectionId, int datasetId, string databaseName, string tableName);
         List<PipelineModel> GetPipelines();
         PipelineModel GetPipeline(int pipelineId);
         void AddYmlPipeline(string pathToYml);

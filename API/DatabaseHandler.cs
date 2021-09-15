@@ -166,6 +166,24 @@ namespace API
             return path;
         }
 
+        public void ExportToNewSqlTable(int connectionId, int datasetId, string databaseName, string tableName)
+        {
+            var connectionModel = _context.Connection.Find(connectionId);
+            var datasetModel = _context.Dataset.Find(datasetId);
+            if (datasetModel == null || connectionModel == null)
+                throw new Exception("invalid id");
+            _sqlIoHandler.ExportIntoNewTable(connectionModel,datasetModel.Name,databaseName,tableName);
+        }
+        
+        public void ExportToSelectedSqlTable(int connectionId, int datasetId, string databaseName, string tableName)
+        {
+            var connectionModel = _context.Connection.Find(connectionId);
+            var datasetModel = _context.Dataset.Find(datasetId);
+            if (datasetModel == null || connectionModel == null)
+                throw new Exception("invalid id");
+            _sqlIoHandler.ExportIntoSelectedTable(connectionModel,datasetModel.Name,databaseName,tableName);
+        }
+
         public List<PipelineModel> GetPipelines()
         {
             return _context.Pipeline
