@@ -14,8 +14,7 @@ import Tabulator from "tabulator-tables";
   styleUrls: ["./table-input-output.component.scss"],
 })
 export class TableInputOutputComponent implements OnInit, OnChanges {
-    @Input() tableData: any[] = [      
-  ];
+    @Input() tableData: any[] = [];
   tab = document.createElement("div");
 
   constructor() {}
@@ -38,11 +37,10 @@ export class TableInputOutputComponent implements OnInit, OnChanges {
       addRowPos:"top",          //when adding a new row, add it to the top of the table
       history:true,             //allow undo and redo actions on the table
       pagination:"local",       //paginate the data
-      paginationSize:50,         //allow 7 rows per page of data
+      paginationSize:20,         //allow 7 rows per page of data
       movableColumns:true,      //allow column order to be changed
       resizableRows:true, 
        height: "fit-content",
-      maxHeight:"90vh"
     });
     const temp = document.querySelector("div.holder");
     if (temp) {

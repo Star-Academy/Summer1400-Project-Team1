@@ -17,6 +17,7 @@ import { Pipeline } from "../../models/pipeline";
 export class PipelineComponent implements OnInit, OnDestroy {
   // pipeline$!: Observable<Pipeline>;
   outputSource = [];
+  outputSourceSub!:Subscription;
   pipeline!: Pipeline;
   isEditingPipelineTitle = false;
   expandSidebar = false;
@@ -52,6 +53,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
       .subscribe((pipeline) => {
         this.pipeline = pipeline;
       });
+      this.outputSourceSub= this.pipelineService.output.subscribe(output => {
+        this.outputSource = output;
+      })
+
+
   }
 
   editPipelineName(pipeline: Pipeline, ngForm: NgForm) {
@@ -84,13 +90,15 @@ export class PipelineComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.expandSidebarSub.unsubscribe();
     this.pipelineSub.unsubscribe();
+    this.outputSourceSub.unsubscribe();
   }
 
   get NodeType() {
     return NodeType;
   }
 
-  runPipeline(){
-    this.pipelineService.runPipeline(this.pipeline.Id)
+  runPipeline() {
+    //TODO show error if didnt choose destination dataset
+    this.pipelineService.runPipeline(this.pipeline.Id,this.pipeline.Destination.Id);
   }
 }

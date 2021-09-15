@@ -30,12 +30,11 @@
                     <mat-label>نام ستون خروجی</mat-label>
                     <input matInput required [(ngModel)]="aggregateNode.outputColumnName" [ngModelOptions]="{standalone: true}" >
                 </mat-form-field>
-                <div class='actions-wrapper'>
-                    <div class='validate-wrapper'>
-                        <button type="submit" mat-raised-button color='primary'>اعمال</button>
-                    </div>
-                    <button type="button" mat-raised-button  (click)='onClose()'>لغو</button>
-                </div>
+                <mat-form-field>
+                    <mat-label>نام ستون خروجی</mat-label>
+                    <input matInput required [(ngModel)]="aggregateNode.outputColumnName" [ngModelOptions]="{standalone: true}" >
+                </mat-form-field>
+            
             </form>
 
         </div>

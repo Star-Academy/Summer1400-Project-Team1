@@ -12,7 +12,6 @@ import { Observable, Subscription } from "rxjs";
 import { Edge } from "src/app/models/graph/edge";
 import { DialogProcessorSelectDialog } from "./processor-dialog/dialog-processor-select-dialog.component";
 import { FilterNode } from "src/app/models/graph/processor-nodes/filter-node";
-import { Node } from "../../../models/graph/node";
 import { JoinNode } from "src/app/models/graph/processor-nodes/join-node";
 import { AggregateNode } from "src/app/models/graph/processor-nodes/aggregate-node";
 import { ProcessorNode } from "src/app/models/graph/processor-nodes/processor-node";
@@ -38,14 +37,15 @@ export class PipelineGraphComponent implements AfterContentInit {
   ) {}
 
   ngOnInit() {
-    console.log("pipeline",this.pipeline);
+    
     this.pipelineService.getComponentById(1,2)
     this.clickedNodeSub = this.graphService.clickedNode.subscribe((node) => {
-      console.log(node);
+      
       if (node instanceof TerminalNode) this.promptDatasetSelectDialog(node);
-      else{ this.pipelineService.selectedNode = node;
+      else{ this.pipelineService.selectedNode = node;   
     }
     });
+    //TODO check has source
     this.clickedEdgeSub = this.graphService.clickedEdge.subscribe((edge) => {
       this.promptProcessorSelectDialog(edge);
     });
@@ -132,7 +132,6 @@ export class PipelineGraphComponent implements AfterContentInit {
   ngAfterContentInit(): void {
     this.graphService.constructGraph(this.container.nativeElement);
     this.graphService.initGraph(this.pipeline);
-    console.log("path",this.graphService.path);
     
   }
 

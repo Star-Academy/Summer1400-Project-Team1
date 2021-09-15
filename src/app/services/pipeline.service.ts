@@ -13,6 +13,7 @@ import { GraphService } from "./graph.service";
 import { Edge } from "../models/graph/edge";
 import { ProcessorNode } from "../models/graph/processor-nodes/processor-node";
 import { SendRequestService } from "./send-request.service";
+import { DatasetService } from "./dataset.service";
 
 @Injectable({
     providedIn: "root",
@@ -113,8 +114,9 @@ export class PipelineService {
       return this.http.delete(this.BASE_URL +  pipelineId + "/component/" + OrderId)
     }
 
+
     uploadPipelineYml(file:File){
-        const url = `localhost:5001/api/v1/pipeline/yml`;
+        const url = `https://localhost:5001/api/v1/pipeline/yml`;
     
         let fileToUpload = <File>file;
         const formData = new FormData();
@@ -122,7 +124,6 @@ export class PipelineService {
        return this.http
           .post(url, formData, { reportProgress: true, observe: "events" })
           
-
     }
 
     getComponentById(componentId: number,pipelineId:number) {        
@@ -226,12 +227,31 @@ export class PipelineService {
     }
 
     updateFilterNode(pipelineId: number, filterNode: FilterNode, orderId: number) {
-        console.log(JSON.stringify(JSON.stringify(filterNode.tree)));
-        this.http.patch(this.BASE_URL + pipelineId + "component/" + orderId, filterNode.tree).toPromise();
+        // console.log(JSON.stringify(JSON.stringify(filterNode.tree)));
+        let value = JSON.stringify(filterNode.tree);
+        let body={
+            Query:value
+        }
+        console.log(value);
+
+        
+        this.http.patch(this.BASE_URL + pipelineId + "/component/" + orderId, body).toPromise();
     }
 
-    runPipeline(pipelineId: number) {
-        this.http.post(this.BASE_URL + pipelineId + "/run", {}).toPromise();
+    runPipeline(pipelineId: number,sourceId: number) {
+         this.http.post(this.BASE_URL + pipelineId + "/run", null).toPromise()
+         .then(response =>
+          this.getOutputDataset(sourceId)).then(response=>{
+            console.log(response)
+            this.output.next(response);}
+            );
+         
     }
+
+    async getOutputDataset(datasetId: number){
+        const url = `dataset/${datasetId}/?type=sample&count=50`;
+        return await SendRequestService.sendRequest(url,"GET", true);
+      }
+    
 
 }
