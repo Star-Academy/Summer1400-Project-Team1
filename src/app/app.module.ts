@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-
+import {CdkTableModule} from '@angular/cdk/table';
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
@@ -102,7 +102,8 @@ import { DatasetInfoComponent } from './pages/dashboard/datasets/dataset-info/da
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatStepperModule,
-    MatListModule
+    MatListModule,
+    CdkTableModule
   ],
 
   providers: [],

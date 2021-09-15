@@ -12,6 +12,7 @@ import { FilterNode } from "../models/graph/processor-nodes/filter-node";
 import { GraphService } from "./graph.service";
 import { Edge } from "../models/graph/edge";
 import { ProcessorNode } from "../models/graph/processor-nodes/processor-node";
+import { SendRequestService } from "./send-request.service";
 
 @Injectable({
     providedIn: "root",
@@ -60,6 +61,16 @@ export class PipelineService {
             .get<Pipeline[]>(this.BASE_URL)
             .subscribe((pipelines) => (this.pipelines = pipelines));
     }
+
+    fetchDatasetSamples(datasetId: number,count: number){
+        let url = "dataset/"+datasetId+"/?type=sample&count="+count;
+        return SendRequestService.sendRequest(url,"GET",true);
+    }
+    fetchPipelinesByDatasetId(datasetId: number){
+        let url = "dataset/"+datasetId+"/?type=pipeline";
+        return SendRequestService.sendRequest(url,"GET",true);
+    }
+
 
     addPipeline(name: string) {
         this.http

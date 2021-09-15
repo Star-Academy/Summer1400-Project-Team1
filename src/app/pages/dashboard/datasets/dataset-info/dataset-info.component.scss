@@ -27,4 +27,15 @@ table {
       }
     }
   }
+  .example-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+  }
+  
+  .sampels-table {
+    overflow: auto;
+    max-width: 90vw;
+    max-height: 500px;
+  }
   

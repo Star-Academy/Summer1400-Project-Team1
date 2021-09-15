@@ -4,6 +4,7 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from "@angular/core";
 import Tabulator from "tabulator-tables";
 
@@ -13,33 +14,8 @@ import Tabulator from "tabulator-tables";
   styleUrls: ["./table-input-output.component.scss"],
 })
 export class TableInputOutputComponent implements OnInit, OnChanges {
-    @Input() tableData: any[] = [
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-      {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-         {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1,family:'gh','some other info':'test','my name':'is eminem',song:'slim shady'},
-   
-      
+    @Input() tableData: any[] = [      
   ];
-  // @Input() tableData: any[] = [];
-
-    // @Input() columnNames: any[] = [
-    //   { title: "Name", field: "name" },
-    //   { title: "Task Progress", field: "progress" },
-    //   { title: "Gender", field: "gender" },
-    //   { title: "Rating", field: "rating" },
-    //   { title: "Color", field: "col" },
-    //   { title: "Date Of Birth", field: "dob" },
-    //   { title: "Driver", field: "car" },
-    // ];
-
   tab = document.createElement("div");
 
   constructor() {}
@@ -57,8 +33,16 @@ export class TableInputOutputComponent implements OnInit, OnChanges {
       data: this.tableData,
       autoColumns: true,
       // reactiveData:true,
-      layout: 'fitColumns',
-      height: "200px"
+      responsiveLayout:"hide",  //hide columns that dont fit on the table
+      tooltips:true,            //show tool tips on cells
+      addRowPos:"top",          //when adding a new row, add it to the top of the table
+      history:true,             //allow undo and redo actions on the table
+      pagination:"local",       //paginate the data
+      paginationSize:50,         //allow 7 rows per page of data
+      movableColumns:true,      //allow column order to be changed
+      resizableRows:true, 
+       height: "fit-content",
+      maxHeight:"90vh"
     });
     const temp = document.querySelector("div.holder");
     if (temp) {
