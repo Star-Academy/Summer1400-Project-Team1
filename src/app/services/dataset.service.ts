@@ -11,12 +11,6 @@ import { ResponseMessages } from "../utils/response-messages";
 export class DatasetService {
 
 
-  datasetsTemp: Dataset[] = [
-    new Dataset(1, " دیتاست ۱", "کانکشن ۱", "۸/۱۲"),
-    new Dataset(2, " دیتاست ۲", "کانکشن ۲", "۶/۱۴"),
-    new Dataset(3, " دیتاست ۳", "کانکشن ۳", "۳/۱۹"),
-  ];
-
   private _datasets!: Dataset[];
   private _datasetsRows!: DatasetRow[];
 

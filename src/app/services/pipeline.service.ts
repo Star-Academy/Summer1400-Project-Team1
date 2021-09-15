@@ -161,43 +161,41 @@ export class PipelineService {
     node: AggregateNode,
     orderId: number
   ) {
-    let groupByColumns:{}[] = [];
-    node.groupByColumns.forEach(column=>{
-        groupByColumns.push({
-            ColumnName:column.name
-        });
-    })
+    let groupByColumns: {}[] = [];
+    node.groupByColumns.forEach((column) => {
+      groupByColumns.push({
+        ColumnName: column.name,
+      });
+    });
 
     let body = {
       AggregateFunctions: [
         {
-            AggregationType: node.aggregateType,
-            ColumnName: node.column,
+          AggregationType: node.aggregateType,
+          ColumnName: node.column,
           OutputColumnName: node.outputColumnName,
         },
       ],
-      GroupByItems:groupByColumns
+      GroupByItems: groupByColumns,
     };
     console.log(body);
-    
+
     this.http
-    .patch(this.BASE_URL + pipelineId + "/component/" + orderId, body)
-    .toPromise();
+      .patch(this.BASE_URL + pipelineId + "/component/" + orderId, body)
+      .toPromise();
   }
 
   updateJoinNode(pipelineId: number, node: JoinNode, orderId: number) {
-    console.log(node);
 
     let body = {
-      SecondTableName: "",
+      SecondTableName: node.secondDataset.Name,
       JoinType: node.joinType,
-      FirstTablePk: "",
-      SecondTablePk: "",
+      FirstTablePk: node.firstDatasetPK,
+      SecondTablePk: node.secondDatasetPK,
     };
-    return this.http.patch(
-      this.BASE_URL + pipelineId + "/component" + node.id,
-      body
-    );
+    console.log(body);
+    
+    this.http.patch(this.BASE_URL + pipelineId + "/component/" + orderId, body).toPromise();
   }
   postJoinNode(pipelineId: number, node: JoinNode, index: number) {
     let body = {

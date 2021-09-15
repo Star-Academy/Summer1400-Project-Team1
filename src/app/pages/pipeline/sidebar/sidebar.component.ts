@@ -9,6 +9,7 @@ import { DialogDeleteNodeDialog } from "./dialog-delete-node/dialog-delete-node-
 import { Pipeline } from "src/app/models/pipeline";
 import { FilterNode } from "src/app/models/graph/processor-nodes/filter-node";
 import { AggregateNode } from "src/app/models/graph/processor-nodes/aggregate-node";
+import { JoinNode } from "src/app/models/graph/processor-nodes/join-node";
 
 @Component({
     selector: "app-sidebar",
@@ -60,6 +61,14 @@ export class SidebarComponent implements OnInit {
                     this.pipelineService.updateAggregateNode(
                         this.pipeline.Id,
                         node as AggregateNode,
+                        this.graphService.getNodeIndex(node)
+                    );
+                    break;
+                case NodeType.JOIN:
+                
+                    this.pipelineService.updateJoinNode(
+                        this.pipeline.Id,
+                        node as JoinNode,
                         this.graphService.getNodeIndex(node)
                     );
                     break;

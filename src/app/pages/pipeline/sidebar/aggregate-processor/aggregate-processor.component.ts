@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { FormControl, NgForm, Validators } from "@angular/forms";
 import { MatChipInputEvent} from "@angular/material/chips";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 import { map, startWith, switchMap } from "rxjs/operators";

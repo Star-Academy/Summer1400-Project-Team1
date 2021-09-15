@@ -3,10 +3,10 @@ import { ProcessorNode } from "./processor-node";
 import { Dataset } from "../../dataset";
 
 export class JoinNode extends ProcessorNode {
-  dataset!: Dataset;
+  secondDataset!: Dataset;
   joinType!: string;
-  tableColumn!: string;
-  datasetColumn!: string;
+  firstDatasetPK!: string;
+  secondDatasetPK!: string;
   constructor(name: string) {
     super(name, NodeType.JOIN);
   }
