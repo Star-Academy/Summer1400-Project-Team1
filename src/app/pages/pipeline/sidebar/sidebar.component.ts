@@ -8,6 +8,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { DialogDeleteNodeDialog } from "./dialog-delete-node/dialog-delete-node-dialog.component";
 import { Pipeline } from "src/app/models/pipeline";
 import { FilterNode } from "src/app/models/graph/processor-nodes/filter-node";
+import { AggregateNode } from "src/app/models/graph/processor-nodes/aggregate-node";
 
 @Component({
     selector: "app-sidebar",
@@ -44,6 +45,8 @@ export class SidebarComponent implements OnInit {
 
     updateNode() {
         const node = this.pipelineService.selectedNode;
+        console.log(node);
+        
         switch (node.nodeType) {
             case NodeType.FILTER:
                 this.pipelineService.updateFilterNode(
@@ -52,6 +55,14 @@ export class SidebarComponent implements OnInit {
                     this.graphService.getNodeIndex(node)
                 );
                 break;
+                case NodeType.AGGREGATE:
+                    
+                    this.pipelineService.updateAggregateNode(
+                        this.pipeline.Id,
+                        node as AggregateNode,
+                        this.graphService.getNodeIndex(node)
+                    );
+                    break;
 
             default:
                 break;

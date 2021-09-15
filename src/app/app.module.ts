@@ -49,6 +49,7 @@ import { AddPipelineComponent } from "./pages/dashboard/pipelines/add-pipeline/a
 import {MatListModule} from '@angular/material/list';
 import { DatasetInfoComponent } from './pages/dashboard/datasets/dataset-info/dataset-info.component';
 import { HomeComponent } from './pages/home/home.component';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { HomeComponent } from './pages/home/home.component';
     MatProgressSpinnerModule,
     MatStepperModule,
     MatListModule,
-    CdkTableModule
+    CdkTableModule,
+    MatChipsModule
   ],
 
   providers: [],

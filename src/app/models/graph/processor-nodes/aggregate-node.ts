@@ -5,6 +5,7 @@ export class AggregateNode extends ProcessorNode {
   aggregateType!: AggregateType;
   column!: string;
   outputColumnName!: string;
+  groupByColumns: {name: string}[]=[];
 
   constructor(name: string) {
     super(name, NodeType.AGGREGATE);

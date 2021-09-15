@@ -30,10 +30,28 @@
                     <mat-label>نام ستون خروجی</mat-label>
                     <input matInput required [(ngModel)]="aggregateNode.outputColumnName" [ngModelOptions]="{standalone: true}" >
                 </mat-form-field>
-                <mat-form-field>
-                    <mat-label>نام ستون خروجی</mat-label>
-                    <input matInput required [(ngModel)]="aggregateNode.outputColumnName" [ngModelOptions]="{standalone: true}" >
-                </mat-form-field>
+                <mat-form-field  appearance="fill">
+                    <mat-label>ستون‌های تجمیع</mat-label>
+                    <mat-chip-list #chipList >
+                      <mat-chip *ngFor="let column of aggregateNode.groupByColumns" [selectable]="selectable"
+                               [removable]="removable" (removed)="remove(column)">
+                        {{column.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input placeholder="ستون جدید .."
+                             [matChipInputFor]="chipList"
+                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                             [matChipInputAddOnBlur]="addOnBlur"
+                             (matChipInputTokenEnd)="add($event)"
+                              [matAutocomplete]="auto"
+                             >
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let filteredColumn of filteredColumns | async" [value]="filteredColumn">
+                            {{filteredColumn}}
+                        </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
             
             </form>
 
