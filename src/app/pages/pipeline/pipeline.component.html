@@ -48,15 +48,15 @@
                 </mat-form-field>
             </form>
         </div>
+        <div class="run-wrapper">
+            <button class="run-btn" mat-icon-button (click) = "runPipeline()">
+                <img src="assets/images/run.svg" alt="run">
+            </button>
+                <span>اجرا</span>
+        </div>
         <div class="header-actions">
             <button mat-icon-button>
                 <mat-icon>settings</mat-icon>
-            </button>
-            <button mat-icon-button>
-                <mat-icon class="mat-icon-rtl-mirror">undo</mat-icon>
-            </button>
-            <button mat-icon-button>
-                <mat-icon class="mat-icon-rtl-mirror">redo</mat-icon>
             </button>
             <div class="view-actions">
                 <button
@@ -127,10 +127,7 @@
                 </div>
                 <header class="preview-header">Lorem ipsum.</header>
                 <main>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium
-                    aliquam aliquid dolores esse est explicabo fugiat laborum molestiae nam
-                    natus neque nulla, quisquam repellendus voluptate? Doloremque esse fuga
-                    laudantium.
+                    <app-table-input-output [tableData]= "outputSource"></app-table-input-output>
                 </main>
             </div>
         </div>

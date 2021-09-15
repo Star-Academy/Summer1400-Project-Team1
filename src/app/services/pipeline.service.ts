@@ -23,7 +23,7 @@ export class PipelineService {
 
     private _selectedNode?: Node;
     openSidebar = new Subject<void>();
-
+    output = new BehaviorSubject<any>([]);
     private _pipelines!: Pipeline[];
 
     pipelineRowsChanged = new Subject<PipelineRow[]>();
@@ -214,7 +214,12 @@ export class PipelineService {
     }
 
     updateFilterNode(pipelineId: number, filterNode: FilterNode, orderId: number) {
+        console.log(JSON.stringify(JSON.stringify(filterNode.tree)));
         this.http.patch(this.BASE_URL + pipelineId + "component/" + orderId, filterNode.tree).toPromise();
+    }
+
+    runPipeline(pipelineId: number) {
+        this.http.post(this.BASE_URL + pipelineId + "/run", {}).toPromise();
     }
 
 }

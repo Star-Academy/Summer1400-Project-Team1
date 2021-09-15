@@ -16,6 +16,7 @@ import { Pipeline } from "../../models/pipeline";
 })
 export class PipelineComponent implements OnInit, OnDestroy {
   // pipeline$!: Observable<Pipeline>;
+  outputSource = [];
   pipeline!: Pipeline;
   isEditingPipelineTitle = false;
   expandSidebar = false;
@@ -87,5 +88,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   get NodeType() {
     return NodeType;
+  }
+
+  runPipeline(){
+    this.pipelineService.runPipeline(this.pipeline.Id)
   }
 }
