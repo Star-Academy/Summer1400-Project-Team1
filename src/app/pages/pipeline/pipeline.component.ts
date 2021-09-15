@@ -25,6 +25,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
   pipelineSub!: Subscription;
   expandPreview = false;
   isModalOpen = false;
+
+  running:boolean=false;
+  runningSub!: Subscription;
   previewResize = {
     isResizing: false,
     previewHeight: 300,
@@ -55,9 +58,11 @@ export class PipelineComponent implements OnInit, OnDestroy {
       });
       this.outputSourceSub= this.pipelineService.output.subscribe(output => {
         this.outputSource = output;
+      });
+
+      this.runningSub = this.pipelineService.running.subscribe(running => {
+        this.running  = running;
       })
-
-
   }
 
   editPipelineName(pipeline: Pipeline, ngForm: NgForm) {
@@ -84,13 +89,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   toggleSidebar() {
     this.expandSidebar = !this.expandSidebar;
-    //TODO empty side bar
   }
 
   ngOnDestroy(): void {
     this.expandSidebarSub.unsubscribe();
     this.pipelineSub.unsubscribe();
     this.outputSourceSub.unsubscribe();
+    this.runningSub.unsubscribe();
   }
 
   get NodeType() {

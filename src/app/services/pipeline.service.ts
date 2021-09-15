@@ -25,6 +25,7 @@ export class PipelineService {
   private _selectedNode?: Node;
   openSidebar = new Subject<void>();
   output = new BehaviorSubject<any>([]);
+  running = new BehaviorSubject<boolean>(false);
   private _pipelines!: Pipeline[];
 
   pipelineRowsChanged = new Subject<PipelineRow[]>();
@@ -250,13 +251,16 @@ export class PipelineService {
   }
 
   runPipeline(pipelineId: number, sourceId: number) {
+    this.running.next(true);
     this.http
       .post(this.BASE_URL + pipelineId + "/run", null)
       .toPromise()
       .then((response) => this.getOutputDataset(sourceId))
       .then((response) => {
-        console.log(response);
+        console.log(response);  
+        this.running.next(false);      
         this.output.next(response);
+
       });
   }
 

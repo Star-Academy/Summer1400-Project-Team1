@@ -82,7 +82,10 @@
                 </button>
             </div>
         </div>
+        
     </header>
+    <mat-progress-bar *ngIf="running"  mode="indeterminate"></mat-progress-bar>
+
     
     <main (mousemove)="handleResize($event)">
     
@@ -103,12 +106,9 @@
                         ></path>
                     </svg>
                 </div>
-                <header class="preview-header">Lorem ipsum.</header>
+                <header class="preview-header">خروجی</header>
                 <main>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium
-                    aliquam aliquid dolores esse est explicabo fugiat laborum molestiae nam
-                    natus neque nulla, quisquam repellendus voluptate? Doloremque esse fuga
-                    laudantium.
+              
                 </main>
             </div>
         </div>
@@ -125,7 +125,7 @@
                         ></path>
                     </svg>
                 </div>
-                <header class="preview-header">Lorem ipsum.</header>
+                <header class="preview-header">خروجی</header>
                 <main>
                     <app-table-input-output [tableData]= "outputSource"></app-table-input-output>
                 </main>
@@ -143,3 +143,4 @@
         </div>
     </main>
 </ng-container>
+
