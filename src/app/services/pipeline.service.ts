@@ -25,6 +25,7 @@ export class PipelineService {
   private _selectedNode?: Node;
   openSidebar = new Subject<void>();
   output = new BehaviorSubject<any>([]);
+  input = new BehaviorSubject<any>([]);
   running = new BehaviorSubject<boolean>(false);
   runFinishedMessage = new BehaviorSubject<string>("");
   private _pipelines!: Pipeline[];
@@ -129,9 +130,11 @@ export class PipelineService {
     });
   }
 
-  getComponentById(componentId: number,pipelineId:number) {        
-    return this.http.get(this.BASE_URL + pipelineId + "/component/" + componentId ).toPromise()
-}
+  getComponentById(componentId: number, pipelineId: number) {
+    return this.http
+      .get(this.BASE_URL + pipelineId + "/component/" + componentId)
+      .toPromise();
+  }
 
   postAggregateNode(pipelineId: number, node: AggregateNode, index: number) {
     let body = {
@@ -184,15 +187,16 @@ export class PipelineService {
   }
 
   updateJoinNode(pipelineId: number, node: JoinNode, orderId: number) {
-
     let body = {
       SecondTableName: node.secondDataset.Name,
       JoinType: node.joinType,
       FirstTablePk: node.firstDatasetPK,
       SecondTablePk: node.secondDatasetPK,
     };
-    
-    this.http.patch(this.BASE_URL + pipelineId + "/component/" + orderId, body).toPromise();
+
+    this.http
+      .patch(this.BASE_URL + pipelineId + "/component/" + orderId, body)
+      .toPromise();
   }
   postJoinNode(pipelineId: number, node: JoinNode, index: number) {
     let body = {
@@ -253,16 +257,25 @@ export class PipelineService {
       .toPromise()
       .then((response) => this.getOutputDataset(sourceId))
       .then((response) => {
-        console.log(response);  
-        this.running.next(false);      
+        console.log(response);
+        this.running.next(false);
         this.output.next(response);
         this.runFinishedMessage.next("FINISHED");
-
       });
   }
 
   async getOutputDataset(datasetId: number) {
     const url = `dataset/${datasetId}/?type=sample&count=50`;
     return await SendRequestService.sendRequest(url, "GET", true);
+  }
+
+  async downloadCsv(limmiter: string, haveHeader: boolean,datasetId: number) {
+    const url = `dataset/${datasetId}/csv/?delimiter=${limmiter}&header=${haveHeader}`;
+    return await SendRequestService.sendRequest(url, "GET", true);
+  }
+
+  async downloadYml(pipelineId: number) {
+    const url = `pipeline/${pipelineId}/yml`;
+    return await SendRequestService.sendRequest(url, "GET", false);
   }
 }

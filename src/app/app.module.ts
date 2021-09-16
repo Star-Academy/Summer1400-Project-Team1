@@ -51,6 +51,7 @@ import { DatasetInfoComponent } from './pages/dashboard/datasets/dataset-info/da
 import { HomeComponent } from './pages/home/home.component';
 import {MatChipsModule} from '@angular/material/chips';
 import { AddOutputComponent } from './pages/dashboard/datasets/add-output/add-output.component';
+import { DownloadCsvDialogComponent } from './pages/pipeline/download-csv-dialog/download-csv-dialog.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { AddOutputComponent } from './pages/dashboard/datasets/add-output/add-ou
     DatasetInfoComponent,
     HomeComponent,
     AddOutputComponent,
+    DownloadCsvDialogComponent,
    ],
   imports: [
     BrowserModule,

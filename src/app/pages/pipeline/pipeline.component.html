@@ -48,11 +48,31 @@
                 </mat-form-field>
             </form>
         </div>
-        <div class="run-wrapper">
-            <button class="run-btn" mat-icon-button (click) = "runPipeline()">
+
+        <div class="download-wrapper">
+        <button
+        matTooltip="بارگیری"
+
+        mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+<img src="assets/images/download-fill.svg" alt="">
+        </button>
+        </div>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="downloadCsv()">
+              دیتاست خروجی <span class="blue-color" >csv</span>
+            </button>
+            <button mat-menu-item (click)="downloadYml()">
+            پایپلاین  <span class="blue-color" >yml</span> 
+            </button>
+          </mat-menu>
+        <div class="run-wrapper" [ngClass]="{'running': running}"
+        > 
+            <button 
+            matTooltip="اجرا"
+            class="run-btn" mat-icon-button (click) = "runPipeline()" [disabled]="running"
+            >
                 <img src="assets/images/run.svg" alt="run">
             </button>
-                <span>اجرا</span>
         </div>
         <div class="header-actions">
           
@@ -104,7 +124,7 @@
                         ></path>
                     </svg>
                 </div>
-                <header class="preview-header">خروجی</header>
+                <header class="preview-header">نتیجه</header>
                 <main>
               
                 </main>

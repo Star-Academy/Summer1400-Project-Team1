@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PipelineService } from "src/app/services/pipeline.service";
@@ -7,16 +7,20 @@ import { Subscription } from "rxjs";
 import { NodeType } from "../../models/graph/node";
 import { switchMap } from "rxjs/operators";
 import { Pipeline } from "../../models/pipeline";
+import { MatDialog } from "@angular/material/dialog";
+import { DownloadCsvDialogComponent } from "./download-csv-dialog/download-csv-dialog.component";
 
 @Component({
   selector: "app-pipeline",
   templateUrl: "./pipeline.component.html",
   styleUrls: ["./pipeline.component.scss"],
 })
-export class PipelineComponent implements OnInit, OnDestroy {
+export class PipelineComponent implements OnInit, OnDestroy,AfterViewInit {
   // pipeline$!: Observable<Pipeline>;
   outputSource = [];
+  inputSource = [];
   outputSourceSub!:Subscription;
+  inputSourceSub!:Subscription;
   pipeline!: Pipeline;
   isEditingPipelineTitle = false;
   expandSidebar = false;
@@ -24,6 +28,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   pipelineSub!: Subscription;
   expandPreview = false;
   isModalOpen = false;
+  pipelineId!:number;
 
   running:boolean=false;
   runningSub!: Subscription;
@@ -37,10 +42,15 @@ export class PipelineComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router,
     public pipelineService: PipelineService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    public dialog: MatDialog
   ) {}
+  ngAfterViewInit(): void {
+    this.initialInputSource();
+  }
 
   ngOnInit(): void {
+     
     document.onmouseup = () => {
       this.previewResize.isResizing = false;
     };
@@ -55,9 +65,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
       )
       .subscribe((pipeline) => {
         this.pipeline = pipeline;
+        this.initialInputSource();
+
       });
       this.outputSourceSub= this.pipelineService.output.subscribe(output => {
         this.outputSource = output;
+      });
+      this.inputSourceSub= this.pipelineService.input.subscribe(input => {
+        this.inputSource = input;
+        console.log(this.inputSource);
+        
       });
 
       this.runningSub = this.pipelineService.running.subscribe(running => {
@@ -68,7 +85,19 @@ export class PipelineComponent implements OnInit, OnDestroy {
         if (message==="FINISHED") {
           this.expandPreview=true;
         }
-      })
+      });
+
+  }
+  async initialInputSource(){
+    if (this.pipeline!==undefined && this.pipeline.Source !==undefined) {
+      this.pipelineId=this.pipeline.Id;
+      
+await this.pipelineService.getOutputDataset(this.pipeline.Source.Id)
+    .then(res=>{
+      this.pipelineService.input.next(res);
+    })      
+    }
+    
   }
 
   editPipelineName(pipeline: Pipeline, ngForm: NgForm) {
@@ -103,6 +132,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.outputSourceSub.unsubscribe();
     this.runningSub.unsubscribe();
     this.runningFinishedSub.unsubscribe();
+    this.inputSourceSub.unsubscribe();
   }
 
   get NodeType() {
@@ -112,5 +142,21 @@ export class PipelineComponent implements OnInit, OnDestroy {
   runPipeline() {
     //TODO show error if didnt choose destination dataset
     this.pipelineService.runPipeline(this.pipeline.Id,this.pipeline.Destination.Id);
+  }
+
+  downloadCsv(){
+    const dialogRef = this.dialog.open(DownloadCsvDialogComponent,{
+      width: '30vw',
+      height: '30vh'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.pipelineService.downloadCsv(result.limmiter,result.haveHeader,this.pipeline.Destination.Id)
+    });
+  
+  }
+  async downloadYml(){
+   await this.pipelineService.downloadYml(this.pipelineId);
+
   }
 }

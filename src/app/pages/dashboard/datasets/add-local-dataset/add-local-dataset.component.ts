@@ -78,11 +78,13 @@ export class AddLocalDatasetComponent implements OnInit, OnDestroy {
   //TODO post seprator??
   onSubmit() {
     if (!this.form.valid) return;
+    
     if (this.storedDataService.datasetFile) {
       this.datasetService.uploadFile(
         this.form.value.datasetName,
         this.haveHeader,
-        this.storedDataService.datasetFile
+        this.storedDataService.datasetFile,
+        this.form.value.datasetSeparator
       );
     } else {
       //TODO

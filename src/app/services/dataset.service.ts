@@ -70,6 +70,8 @@ export class DatasetService {
     console.log(body);
     return await SendRequestService.sendRequest(url,"POST", true, body);
   }
+
+  
   async addDatasetOutPut(body:any,datasetId:number,type:string){
     const url = "dataset/"+datasetId+"/sql/?type="+type;
     console.log(body);
@@ -85,9 +87,9 @@ export class DatasetService {
 
 
 
-  async uploadFile(name: string, haveHeader: boolean, file: File) {
+  async uploadFile(name: string, haveHeader: boolean, file: File,delimiter:string) {
     this.inProgress.next(true);
-    const url = `https://localhost:5001/api/v1/dataset/csv/?name=${name}&header=${haveHeader}`;
+    const url = `https://localhost:5001/api/v1/dataset/csv/?name=${name}&delimiter=${delimiter}&header=${haveHeader}`;
 
     let fileToUpload = <File>file;
     const formData = new FormData();
