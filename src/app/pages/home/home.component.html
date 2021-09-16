@@ -1,4 +1,33 @@
-<nav></nav>
-<div class="container">
-  <img src="assets/images/home-background.jpg" alt="" class="bg" />
-</div>
+<nav>
+  <img src="../../../assets/images/icon.png" alt="logo" />
+  <button class="nav__link nav__link--active">خانه</button>
+  <button (click)="onClickDashboard()" class="nav__link">داشبورد</button>
+</nav>
+
+<main class="main">
+  <div class="wallpaper">
+    <div class="box">
+      <h1>با ما داده های خود را دوست داشتنی کنید.</h1>
+      <h2>پردازش بدون دردسر با دودوتا.</h2>
+    </div>
+  </div>
+  <div class="static__holder">
+    <div class="static">
+      <img src="../../../assets/images/people.svg" alt="icon people" />
+      <div><span #users>6,990,324</span> عضو خانواده دودوتا هستند</div>
+    </div>
+    <div class="static">
+      <img
+        src="../../../assets/images/measuring-tape.svg"
+        alt="icon measuring tape"
+      />
+      <div>
+        <span #total_operation>6,990,324</span> عملیات انجام شده در دودوتا
+      </div>
+    </div>
+    <div class="static">
+      <img src="../../../assets/images/glasses.svg" alt="icon glasses" />
+      <div><span #daily_watch>6,990,324</span> بازدید روز</div>
+    </div>
+  </div>
+</main>
