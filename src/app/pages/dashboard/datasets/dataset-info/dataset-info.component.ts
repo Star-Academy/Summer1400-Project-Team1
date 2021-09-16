@@ -24,7 +24,7 @@ export class DatasetInfoComponent implements OnInit, OnDestroy {
     "تاریخ ساخت",
     "delete",
   ];
- 
+
   dataSource = [];
 
   constructor(
@@ -38,13 +38,9 @@ export class DatasetInfoComponent implements OnInit, OnDestroy {
       id: this.route.snapshot.params["id"],
     };
     this.datasetService.getDatasetSample(this.dataset.id);
-    this.paramsSubscription = this.route.params.subscribe((params: Params) => {
-      this.dataset.id = params["id"];
-    });
 
-    this.showSamples()
-    this.getDatasetPipelines()
-     this.pipelineService.fetchPipelines();
+    this.showSamples();
+    this.getDatasetPipelines();
     // this.pipelineRowsSub = this.pipelineService.pipelineRowsChanged.subscribe(
     //   (pipelineRows: PipelineRow[]) => {
     //     this.pipelineRows = pipelineRows;
@@ -62,21 +58,18 @@ export class DatasetInfoComponent implements OnInit, OnDestroy {
       this.sampelCount
     );
     this.dataSource = res;
-   }
+  }
   async getDatasetPipelines() {
     let res = await this.pipelineService.fetchPipelinesByDatasetId(
       this.dataset.id
     );
-    console.log(res);
-    
-   }
+    // this.pipelineRows=res;
+  }
 
   deletePipeline(pipeline: Pipeline, event: Event) {
     //this.pipelineService.deletePipeline(pipeline.Id)
     event.stopPropagation();
   }
   ngOnDestroy() {
-    this.paramsSubscription.unsubscribe();
-    this.pipelineRowsSub.unsubscribe();
-  }
+   }
 }

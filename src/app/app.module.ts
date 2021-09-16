@@ -50,6 +50,7 @@ import {MatListModule} from '@angular/material/list';
 import { DatasetInfoComponent } from './pages/dashboard/datasets/dataset-info/dataset-info.component';
 import { HomeComponent } from './pages/home/home.component';
 import {MatChipsModule} from '@angular/material/chips';
+import { AddOutputComponent } from './pages/dashboard/datasets/add-output/add-output.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import {MatChipsModule} from '@angular/material/chips';
     AddPipelineComponent,
     DatasetInfoComponent,
     HomeComponent,
+    AddOutputComponent,
    ],
   imports: [
     BrowserModule,

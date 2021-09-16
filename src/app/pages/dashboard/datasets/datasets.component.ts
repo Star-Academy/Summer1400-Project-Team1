@@ -61,8 +61,9 @@ export class DatasetsComponent implements OnInit, OnDestroy {
 
   }
 
-  async deleteDataset(dataset: Dataset, event: any) {
-    await this.datasetService.deleteDataset(dataset.Id);
+  async deleteDataset(dataset: DatasetRow, event: any) {
+    
+    await this.datasetService.deleteDataset(dataset.dataset.Id);
     this.datasetService.getDatasets();
     event.stopPropagation();
   }
