@@ -24,7 +24,7 @@ export class FilterItemComponent implements OnInit {
 
   myControl = new FormControl();
   myControl1 = new FormControl();
-  options: string[] = ["One", "Two", "Three"];
+  options: string[] = [];
 
   filteredOptions!: Observable<string[]>;
   operators: Operator[] = [
@@ -45,6 +45,10 @@ export class FilterItemComponent implements OnInit {
     return this.options.filter((option) =>
       option.toLowerCase().includes(filterValue)
     );
+  }
+
+  schema(){
+    return this.filter.value + " " + this.filter.operator + " " + this.filter.key;
   }
 
   onDelete(event: Event) {

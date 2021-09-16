@@ -49,8 +49,7 @@ export class JoinProcessorComponent implements OnInit, OnDestroy {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.joinNode.inputData.columns.filter((option) =>
-      option.toLowerCase().includes(filterValue)
+    return this.joinNode.inputData.columns.filter((option) => {}
     );
   }
 
