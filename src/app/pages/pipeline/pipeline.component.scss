@@ -2,6 +2,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   .pipeline-header {
     height: 8vh;
     background-color: var(--color-gray-90);

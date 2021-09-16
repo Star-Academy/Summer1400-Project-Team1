@@ -51,6 +51,8 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
       }
     }
   }
+ .table-wrapper {
+   height: 100vh;
   table {
     width: 98%;
     margin: 1rem;
@@ -76,4 +78,5 @@ $--item-bg-color--hovered: hsla(0, 6%, 87%, 0.29);
     }
   }
   
+ }
 }
