@@ -143,9 +143,12 @@
                         ></path>
                     </svg>
                 </div>
-                <header class="preview-header">خروجی</header>
-                <main>
+                <header class="preview-header">نتیجه</header>
+                <main class="main-preview-result">
+                    <app-table-input-output [tableData]= "inputSource"></app-table-input-output>
+
                     <app-table-input-output [tableData]= "outputSource"></app-table-input-output>
+
                 </main>
             </div>
         </div>
