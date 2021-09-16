@@ -1,5 +1,9 @@
 $orange-color: #c73e08;
 
+body,
+html {
+  overflow: auto;
+}
 nav {
   background-color: #fafafa;
   height: auto;
