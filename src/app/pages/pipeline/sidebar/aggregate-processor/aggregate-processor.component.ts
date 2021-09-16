@@ -79,8 +79,7 @@ export class AggregateProcessorComponent implements OnInit {
   }
 
   private _filter(value: string): string[] {
-    return this.aggregateNode.inputData.columns.filter((column) =>
-      column.toLowerCase().includes(value.toLowerCase())
+    return this.aggregateNode.inputData.columns.filter((column) => {}
     );
   }
   onSubmit(){
