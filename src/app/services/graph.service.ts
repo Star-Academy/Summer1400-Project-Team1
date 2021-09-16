@@ -90,8 +90,7 @@ export class GraphService {
     let node:AggregateNode= new AggregateNode(component.Name);
 
     await this.pipelineService.getComponentById(component.OrderId,pipeline.Id).then((res:any) => {
-        console.log(res);
-        node.aggregateType = res.component.aggregateFunctions[0].aggregationType;
+         node.aggregateType = res.component.aggregateFunctions[0].aggregationType;
         node.column = res.component.aggregateFunctions[0].columnName;
         node.outputColumnName= res.component.aggregateFunctions[0].outputColumnName;
         res.component.groupByItems.forEach(element => {
@@ -99,14 +98,23 @@ export class GraphService {
         });
 
      })
-     console.log(node);
-     
+      
       return node;
     }
 
     async createJoinNode(pipeline: Pipeline, component: Component) {
-      return new JoinNode(component.Name);
+        let node:JoinNode= new JoinNode(component.Name);
 
+        await this.pipelineService.getComponentById(component.OrderId,pipeline.Id).then((res:any) => {
+             console.log(res);
+             node.joinType = res.component.joinType;
+             node.firstDatasetPK=res.component.firstTablePk;
+             node.secondDatasetPK=res.component.secondTablePk;
+             node.secondDataset= new Dataset(-1,res.component.secondTableName,"","")
+             
+         })
+          
+          return node;
     }
 
     async createFilterNode(pipeline: Pipeline, component: Component) {
