@@ -26,6 +26,7 @@ export class PipelineComponent implements OnInit, OnDestroy,AfterViewInit {
   expandSidebar = false;
   expandSidebarSub!: Subscription;
   pipelineSub!: Subscription;
+  openPreviewSub!: Subscription;
   expandPreview = false;
   isModalOpen = false;
   pipelineId!:number;
@@ -86,6 +87,7 @@ export class PipelineComponent implements OnInit, OnDestroy,AfterViewInit {
           this.expandPreview=true;
         }
       });
+      this.openPreviewSub = this.pipelineService.openPreview.subscribe(() => this.expandPreview = true)
 
   }
   async initialInputSource(){
@@ -133,6 +135,7 @@ await this.pipelineService.getOutputDataset(this.pipeline.Source.Id)
     this.runningSub.unsubscribe();
     this.runningFinishedSub.unsubscribe();
     this.inputSourceSub.unsubscribe();
+    this.openPreviewSub.unsubscribe();
   }
 
   get NodeType() {

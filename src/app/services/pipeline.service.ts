@@ -24,6 +24,7 @@ export class PipelineService {
 
   private _selectedNode?: Node;
   openSidebar = new Subject<void>();
+  openPreview = new Subject<void>();
   output = new BehaviorSubject<any>([]);
   input = new BehaviorSubject<any>([]);
   running = new BehaviorSubject<boolean>(false);
@@ -277,5 +278,9 @@ export class PipelineService {
   async downloadYml(pipelineId: number) {
     const url = `pipeline/${pipelineId}/yml`;
     return await SendRequestService.sendRequest(url, "GET", false);
+  }
+
+  runSelectedNode(pipelineId: number, orderId: number) {
+    return this.http.get(this.BASE_URL + pipelineId + "/run/" + orderId)
   }
 }
