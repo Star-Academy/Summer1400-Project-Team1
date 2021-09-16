@@ -8,9 +8,10 @@ import { TerminalNode } from "../models/graph/terminal-nodes/terminal-node";
 import { DialogProcessorSelectDialog } from "../pages/pipeline/pipeline-graph/processor-dialog/dialog-processor-select-dialog.component";
 import { DialogSelectDatasetDialog } from "../pages/pipeline/pipeline-graph/add-destination-dialog/dialog-select-dataset-dialog.component";
 import {
-  Filter,
-  FilterNode,
-  FilterOperator,
+    Filter,
+    FilterNode,
+    FilterOperator,
+    FilterOperand,
 } from "../models/graph/processor-nodes/filter-node";
 import { JoinNode } from "../models/graph/processor-nodes/join-node";
 import { AggregateNode } from "../models/graph/processor-nodes/aggregate-node";
@@ -22,6 +23,7 @@ import { Pipeline } from "../models/pipeline";
 import { switchMap } from "rxjs/operators";
 import { ProcessorNode } from "../models/graph/processor-nodes/processor-node";
 import { Component } from "../models/Component";
+import { L } from "@angular/cdk/keycodes";
 
 @Injectable({
   providedIn: "root",
@@ -130,11 +132,28 @@ export class GraphService {
 
   async createFilterNode(pipeline: Pipeline, component: Component) {
     const filterTree = await this.pipelineService
-      .getComponentById(component.OrderId, pipeline.Id)
-      .then((res: any) => JSON.parse(res.component.query));
-    console.log(filterTree);
-    return new FilterNode(component.Name);
-  }
+        .getComponentById(component.OrderId, pipeline.Id)
+        .then((res: any) => JSON.parse(res.component.query));
+    let filterNode = new FilterNode(component.Name);
+    filterNode.root = this.constructTree(filterTree, null);
+    return filterNode;
+}
+
+constructTree(obj: any, parent: FilterOperator | null):any {
+    if (Object.keys(obj).length !== 1) {
+        let operand = new FilterOperand(parent);
+        operand.key = obj.key;
+        operand.operator = obj.operator;
+        operand.value = obj.value;
+        return operand;
+    }
+    let key: any = Object.keys(obj)[0];
+    let operator = new FilterOperator(parent, key);
+    obj[key].forEach((el) => {
+        operator.children?.push(this.constructTree(el, operator));
+    });
+    return operator;
+}
 
   runLayout(): Promise<void> {
     return this.ogmaService.runLayout();
