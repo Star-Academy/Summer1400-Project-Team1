@@ -41,7 +41,6 @@ export class DatasetInfoComponent implements OnInit, OnDestroy {
 
     this.showSamples();
     this.getDatasetPipelines();
-    this.pipelineService.fetchPipelines();
     // this.pipelineRowsSub = this.pipelineService.pipelineRowsChanged.subscribe(
     //   (pipelineRows: PipelineRow[]) => {
     //     this.pipelineRows = pipelineRows;
@@ -64,7 +63,7 @@ export class DatasetInfoComponent implements OnInit, OnDestroy {
     let res = await this.pipelineService.fetchPipelinesByDatasetId(
       this.dataset.id
     );
-    console.log(res);
+    // this.pipelineRows=res;
   }
 
   deletePipeline(pipeline: Pipeline, event: Event) {
