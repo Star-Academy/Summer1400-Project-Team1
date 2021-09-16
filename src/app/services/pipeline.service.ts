@@ -191,7 +191,6 @@ export class PipelineService {
       FirstTablePk: node.firstDatasetPK,
       SecondTablePk: node.secondDatasetPK,
     };
-    console.log(body);
     
     this.http.patch(this.BASE_URL + pipelineId + "/component/" + orderId, body).toPromise();
   }

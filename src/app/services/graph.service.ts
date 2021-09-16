@@ -72,8 +72,7 @@ export class GraphService {
     }
 
     async createNode(pipeline: Pipeline, component: Component) {
-        this.createFilterNode(pipeline, component);
-        let node: ProcessorNode;
+         let node: ProcessorNode;
         switch (component.Type) {
             case 0:
               node = await this.createAggregateNode(pipeline, component);
@@ -88,8 +87,21 @@ export class GraphService {
     }
 
     async createAggregateNode(pipeline: Pipeline, component: Component) {
-      return new AggregateNode(component.Name);
+    let node:AggregateNode= new AggregateNode(component.Name);
 
+    await this.pipelineService.getComponentById(component.OrderId,pipeline.Id).then((res:any) => {
+        console.log(res);
+        node.aggregateType = res.component.aggregateFunctions[0].aggregationType;
+        node.column = res.component.aggregateFunctions[0].columnName;
+        node.outputColumnName= res.component.aggregateFunctions[0].outputColumnName;
+        res.component.groupByItems.forEach(element => {
+           node.groupByColumns.push({name: element.columnName})
+        });
+
+     })
+     console.log(node);
+     
+      return node;
     }
 
     async createJoinNode(pipeline: Pipeline, component: Component) {
@@ -98,6 +110,7 @@ export class GraphService {
     }
 
     async createFilterNode(pipeline: Pipeline, component: Component) {
+ 
         const filterTree = await this.pipelineService
             .getComponentById(component.OrderId, pipeline.Id)
             .then((res: any) => JSON.parse(res.component.query));

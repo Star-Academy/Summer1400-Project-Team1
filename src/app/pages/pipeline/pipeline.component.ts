@@ -2,9 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PipelineService } from "src/app/services/pipeline.service";
-import { Observable, Subscription } from "rxjs";
-import { PipelineGraphComponent } from "./pipeline-graph/pipeline-graph.component";
-import { GraphService } from "../../services/graph.service";
+import { Subscription } from "rxjs";
+
 import { NodeType } from "../../models/graph/node";
 import { switchMap } from "rxjs/operators";
 import { Pipeline } from "../../models/pipeline";
