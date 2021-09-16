@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace API
 {
@@ -20,12 +21,12 @@ namespace API
             _sqlHandler = sqlHandler;
         }
         
-        public void LoadCsv(string pathToCsv,bool isHeaderIncluded)
+        public void LoadCsv(string pathToCsv,string delimiter,bool isHeaderIncluded)
         {
             var file = File.OpenText(pathToCsv);
             var config = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.CurrentCulture)
             {
-                MissingFieldFound              = null
+                MissingFieldFound              = null,Delimiter = delimiter
             };
             using var csvReader = new CsvReader(file, config);
             using var dataReader = new CsvDataReader(csvReader);
@@ -176,20 +177,26 @@ namespace API
             _sqlHandler.Close();
         }
 
-        public void SqlToCsv(string tableName, string pathToCsv)
+        public void SqlToCsv(string tableName, string pathToCsv, string delimiter,bool header)
         {
             if (!_sqlHandler.IsOpen()) _sqlHandler.Open();
             var adaptor = new SqlDataAdapter($"SELECT * FROM {tableName}", _sqlHandler.Connection);
             _dataTable = new DataTable();
             adaptor.Fill(_dataTable);
-            using var writer = new StreamWriter(pathToCsv);
-            using var csvWriter = new CsvWriter(writer, CultureInfo.CurrentCulture);
-            foreach (DataColumn dc in _dataTable.Columns)
+            var config = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
-                csvWriter.WriteField(dc.ColumnName);
+                Delimiter = delimiter,HasHeaderRecord = header
+            };
+            using var writer = new StreamWriter(pathToCsv);
+            using var csvWriter = new CsvWriter(writer, config);
+            if (header)
+            {
+                foreach (DataColumn dc in _dataTable.Columns)
+                {
+                    csvWriter.WriteField(dc.ColumnName);
+                }
+                csvWriter.NextRecord();
             }
-
-            csvWriter.NextRecord();
 
             foreach (DataRow dr in _dataTable.Rows)
             {
@@ -197,7 +204,6 @@ namespace API
                 {
                     csvWriter.WriteField(dr[dc]);
                 }
-
                 csvWriter.NextRecord();
             }
         }

@@ -31,7 +31,7 @@ namespace API.Controllers
 
         [HttpPost, DisableRequestSizeLimit]
         [Route("csv")]
-        public IActionResult UploadCsv(string name, bool header)
+        public IActionResult UploadCsv(string name, string delimiter, bool header)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace API.Controllers
 
                 try
                 {
-                    _databaseHandler.AddCsvDataset(fullPath, name, header);
+                    _databaseHandler.AddCsvDataset(fullPath, name, delimiter,header);
                 }
                 catch (Exception e)
                 {
@@ -67,10 +67,10 @@ namespace API.Controllers
         }
 
         [HttpGet, DisableRequestSizeLimit]
-        [Route("csv/{id}")]
-        public async Task<IActionResult> DownloadCsv(int id)
+        [Route("{id}/csv")]
+        public async Task<IActionResult> DownloadCsv(int id,string delimiter,bool header)
         {
-            var filePath = _databaseHandler.GetCsvDataset(id);
+            var filePath = _databaseHandler.GetCsvDataset(id,delimiter,header);
             if (!System.IO.File.Exists(filePath))
                 return NotFound();
 

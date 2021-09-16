@@ -120,7 +120,7 @@ namespace API
             foreach (var c in Components)
             {
                 destination = c.Execute(source);
-                if(source != SourceDataset) DeleteTable(source);
+                if(source != SourceDataset) _databaseHandler.DeleteTable(source);
                 if (count == index) return GetSampleResult(destination);
                 source = destination;
                 count++;
@@ -139,7 +139,7 @@ namespace API
             foreach (var c in Components)
             {
                 destination = c.Execute(source);
-                if(source != SourceDataset) DeleteTable(source);
+                if(source != SourceDataset) _databaseHandler.DeleteTable(source);
                 if (count == index) return _databaseHandler.GetTempColumn(destination);
                 source = destination;
                 count++;
@@ -147,13 +147,6 @@ namespace API
 
             return new List<string>();
             
-        }
-
-        private void DeleteTable(string tableName)
-        {
-            if(!_sqlHandler.IsOpen())_sqlHandler.Open();
-            var command = new SqlCommand($"DROP TABLE {tableName}", _sqlHandler.Connection);
-            command.ExecuteNonQuery();
         }
 
         private void CopyToDestination(string tableName)
@@ -164,7 +157,7 @@ namespace API
                     $"DROP TABLE IF EXISTS {DestinationDataset};SELECT * INTO {DestinationDataset} FROM {tableName};",
                     _sqlHandler.Connection);
             command.ExecuteNonQuery();
-            DeleteTable(tableName);
+            _databaseHandler.DeleteTable(tableName);
         }
         
         public void Run()
@@ -176,7 +169,7 @@ namespace API
             foreach (var c in Components)
             {
                 destination = c.Execute(source);
-                if(source != SourceDataset) DeleteTable(source);
+                if(source != SourceDataset)_databaseHandler.DeleteTable(source);
                 if (c != Components.Last.Value) source = destination;
                 else CopyToDestination(destination);
             }

@@ -121,6 +121,7 @@ namespace API
             var dataset = _context.Dataset.Find(id);
             if (dataset == null)
                 throw new Exception("dataset not found");
+            DeleteTable(dataset.Name);
             _context.Dataset.Remove(dataset);
             _context.SaveChanges();
         }
@@ -147,9 +148,9 @@ namespace API
             _context.SaveChanges();
         }
 
-        public void AddCsvDataset(string pathToCsv, string name, bool isHeaderIncluded)
+        public void AddCsvDataset(string pathToCsv, string name, string delimiter, bool isHeaderIncluded)
         {
-            _csvHandler.LoadCsv(pathToCsv, isHeaderIncluded);
+            _csvHandler.LoadCsv(pathToCsv, delimiter,isHeaderIncluded);
             _csvHandler.CsvToSql(name);
             _context.Dataset.Add(new DatasetModel()
             {
@@ -158,13 +159,13 @@ namespace API
             _context.SaveChanges();
         }
 
-        public string GetCsvDataset(int datasetId)
+        public string GetCsvDataset(int datasetId,string delimiter,bool header)
         {
             var dataset = _context.Dataset.Find(datasetId);
             var folderName = Path.Combine("Resources", "CSVs");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             var path = Path.Combine(pathToSave, $"{dataset.Name}.csv");
-            _csvHandler.SqlToCsv(dataset.Name, path);
+            _csvHandler.SqlToCsv(dataset.Name, path,delimiter,header);
             return path;
         }
 
@@ -486,6 +487,13 @@ namespace API
             result.AddRange(from IDataRecord r in reader select r.GetValue(0).ToString());
 
             return result;
+        }
+
+        public void DeleteTable(string tableName)
+        {
+            if(!_sqlHandler.IsOpen())_sqlHandler.Open();
+            var command = new SqlCommand($"DROP TABLE IF EXISTS {tableName}", _sqlHandler.Connection);
+            command.ExecuteNonQuery();
         }
     }
 }

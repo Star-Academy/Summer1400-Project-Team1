@@ -20,8 +20,8 @@ namespace API
         void DeleteDataset(int id);
         int AddDataset(string name);
         void AddSqlDataset(string datasetName, int connectionId, string databaseName, string tableNames);
-        void AddCsvDataset(string pathToCsv,string name,bool isHeaderIncluded);
-        string GetCsvDataset(int datasetId);
+        void AddCsvDataset(string pathToCsv,string name,string delimiter,bool isHeaderIncluded);
+        string GetCsvDataset(int datasetId,string delimiter,bool header);
         void ExportToNewSqlTable(int connectionId, int datasetId, string databaseName, string tableName);
         void ExportToSelectedSqlTable(int connectionId, int datasetId, string databaseName, string tableName);
         List<PipelineModel> GetPipelines();
@@ -49,5 +49,6 @@ namespace API
         void DeleteJoinComponent(int id);
         List<string> GetColumn(string dataset);
         List<string> GetTempColumn(string dataset);
+        void DeleteTable(string tableName);
     }
 }
