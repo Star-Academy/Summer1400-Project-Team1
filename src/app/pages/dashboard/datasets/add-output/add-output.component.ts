@@ -1,25 +1,27 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Location } from "@angular/common";
 import { NgForm } from "@angular/forms";
-import { StoredDataService } from "src/app/services/stored-data.service";
-import { Router } from "@angular/router";
-import { ConnectionRow } from "../../../../models/connection";
-import { DatasetService } from "src/app/services/dataset.service";
-import { Subscription } from "rxjs";
-import { Alert, AlertType } from "src/app/utils/alert";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ResponseMessages } from "src/app/utils/response-messages";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { ConnectionRow } from "src/app/models/connection";
 import { ConnectionService } from "src/app/services/connection.service";
+import { DatasetService } from "src/app/services/dataset.service";
+import { StoredDataService } from "src/app/services/stored-data.service";
+import { ResponseMessages } from "src/app/utils/response-messages";
+import { Alert, AlertType } from "src/app/utils/alert";
 
 @Component({
-  selector: "app-add-new-dataset",
-  templateUrl: "./add-new-dataset.component.html",
-  styleUrls: ["./add-new-dataset.component.scss"],
+  selector: "app-add-output",
+  templateUrl: "./add-output.component.html",
+  styleUrls: ["./add-output.component.scss"],
 })
-export class AddNewDatasetComponent implements OnInit, OnDestroy {
+export class AddOutputComponent implements OnInit ,OnDestroy {
+  datasetId!: number;
+
   @ViewChild("form", { static: false }) form!: NgForm; 
   panelOpenState: boolean = false;
-  isLocalHost: boolean = false;
+  isLocalHost: boolean = false; 
   hasName: boolean = false;
   initDatasetName = "";
   chooseConnectionLable: string = "انتخاب اتصال";
@@ -34,6 +36,21 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
   datasetList = [];
   selectedDatasetName!: string;
 
+
+  isNewDataet:boolean =true;
+  isexistDataet:boolean =false;
+
+  isNewDataetClick(){
+    this.isNewDataet=true;
+    this.isexistDataet=false;
+    console.log(this.isNewDataet);
+    
+  }
+  isexistDataetClick(){
+    this.isNewDataet=false;
+    this.isexistDataet=true;
+  }
+
   public isLoadingData!: boolean;
   public inProgress!: boolean;
   public progressSub!: Subscription;
@@ -43,64 +60,68 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
   haveHeader: boolean = true;
 
   constructor(
+    private route: ActivatedRoute,
     private storedDataService: StoredDataService,
     private connectionService: ConnectionService,
     private datasetService: DatasetService,
     private location: Location,
     private router: Router,
     private snackBar: MatSnackBar
+
   ) {}
 
-   async onSelectConnection(connectionRow: ConnectionRow, stepper: any) {
-   try {
-    this.selectedConnectionId = connectionRow.connection.Id;
-    this.isLoadingData = true;
-    let res = await this.datasetService.getDatabasesByConnectionId(
-      connectionRow.connection.Id
-    );
-    this.chooseConnectionLable =
-      "انتخاب اتصال : " + connectionRow.connection.Name;
-    this.isLoadingData = false;
-    this.databaseList = res;
-    stepper.next();
-   } catch (error) {
-     console.log(error);
-     this.isLoadingData =false;
-     
+
+  async onSelectConnection(connectionRow: ConnectionRow, stepper: any) {
+    try {
+     this.selectedConnectionId = connectionRow.connection.Id;
+     this.isLoadingData = true;
+     let res = await this.datasetService.getDatabasesByConnectionId(
+       connectionRow.connection.Id
+     );
+     this.chooseConnectionLable =
+       "انتخاب اتصال : " + connectionRow.connection.Name;
+     this.isLoadingData = false;
+     this.databaseList = res;
+     stepper.next();
+    } catch (error) {
+      console.log(error);
+      this.isLoadingData =false;
+      
+    }
    }
-  }
-  async onSelectDatabase(database: string, stepper: any) {
-    this.selectedDatabaseName = database;
-    this.chooseDatabaseLable = "انتخاب پایگاه داده : " + database;
+   async onSelectDatabase(database: string, stepper: any) {
+     this.selectedDatabaseName = database;
+     this.chooseDatabaseLable = "انتخاب پایگاه داده : " + database;
+ 
+     this.isLoadingData = true;
+     let res = await this.datasetService.getDatasetsByDatabaseName(
+       database,
+       this.selectedConnectionId
+     );
+     this.isLoadingData = false;
+     this.datasetList = res;
+     stepper.next();
+   }
+   onSelectDataset(dataset: string, stepper: any) {
+     this.selectedDatasetName = dataset;
+     this.chooseDatasetLable = "انتخاب جدول : " + dataset;
+     stepper.next();
+   }
 
-    this.isLoadingData = true;
-    let res = await this.datasetService.getDatasetsByDatabaseName(
-      database,
-      this.selectedConnectionId
-    );
-    this.isLoadingData = false;
-    this.datasetList = res;
-    stepper.next();
-  }
-  onSelectDataset(dataset: string, stepper: any) {
-    this.selectedDatasetName = dataset;
-    this.chooseDatasetLable = "انتخاب جدول : " + dataset;
-    stepper.next();
-  }
-
-  //TODO errors
-  async onSubmit() {
+   async onSubmit() {
     if (!this.form.valid) return;
     this.isLoadingData = true;
-    await this.datasetService.addDatasets({
-      datasetName: this.form.value.datasetName,
+
+    let type = this.isNewDataet?"new":"exist"
+     let tableName = this.isNewDataet?this.form.value.datasetName:this.selectedDatasetName;
+    
+    await this.datasetService.addDatasetOutPut({
       connectionId: this.selectedConnectionId,
-      databaseName: this.selectedDatabaseName,
-      tableName: this.selectedDatasetName,
-    });
+      DatabaseName: this.selectedDatabaseName,
+      TableName: tableName,
+    },this.datasetId,type);
     this.isLoadingData = false;
   }
-
   onCancle() {
     if (this.isLoadingData) {
       this.isLoadingData = false;
@@ -115,10 +136,10 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
       this.storedDataService.datasetFile = event.target.files[0];
   }
 
-  addNewConnection() {
-    this.router.navigateByUrl("dashboard/connection/add");
-  }
-  ngOnInit() {
+ 
+  ngOnInit(): void {
+
+    this.datasetId = this.route.snapshot.params["id"];
     if (this.storedDataService.datasetFile) {
       this.initDatasetName = this.storedDataService.datasetFile.name;
       this.isLocalHost = true;
@@ -157,7 +178,7 @@ export class AddNewDatasetComponent implements OnInit, OnDestroy {
           // this.onClose();
         }
       }
-    );
+    );    
   }
   ngOnDestroy(): void {
     this.progressSub.unsubscribe;

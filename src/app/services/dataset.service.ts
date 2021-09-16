@@ -70,6 +70,11 @@ export class DatasetService {
     console.log(body);
     return await SendRequestService.sendRequest(url,"POST", true, body);
   }
+  async addDatasetOutPut(body:any,datasetId:number,type:string){
+    const url = "dataset/"+datasetId+"/sql/?type="+type;
+    console.log(body);
+    return await SendRequestService.sendRequest(url,"POST", true, body);
+  }
 
   async deleteDataset(datasetId:number){
     const url = `dataset/${datasetId}`;
