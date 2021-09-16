@@ -151,9 +151,12 @@ await this.pipelineService.getOutputDataset(this.pipeline.Source.Id)
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.pipelineService.downloadCsv(result.limmiter,result.haveHeader,this.pipeline.Destination.Id)
+      this.download(result);
     });
   
+  }
+  async download(result:any){
+  await this.pipelineService.downloadCsv(result.limmiter,result.haveHeader,this.pipeline.Destination.Id)
   }
   async downloadYml(){
    await this.pipelineService.downloadYml(this.pipelineId);

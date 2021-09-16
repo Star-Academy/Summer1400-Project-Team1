@@ -269,7 +269,7 @@ export class PipelineService {
     return await SendRequestService.sendRequest(url, "GET", true);
   }
 
-  async downloadCsv(limmiter: string, haveHeader: boolean,datasetId: number) {
+  async downloadCsv(limmiter: string, haveHeader: boolean,datasetId: number) {    
     const url = `dataset/${datasetId}/csv/?delimiter=${limmiter}&header=${haveHeader}`;
     return await SendRequestService.sendRequest(url, "GET", true);
   }
