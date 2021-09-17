@@ -1,0 +1,38 @@
+Name: p1
+Source: ''
+Destination: ''
+Components:
+  Name: c1
+  Type: Join
+  Component:
+    SecondTableName: jointable
+    FirstTablePk: location
+    SecondTablePk: column2
+    JoinType: InnerJoin
+  Name: c2
+  Type: Filter
+  Component:
+    Query: >-
+      {
+        "AND": [
+          	{
+                "key": "total_cases",
+                "value": 1,
+                "operator": "="
+              },
+              {
+                "key": "new_cases",
+                "value": 0,
+                "operator": "="
+              }
+        ]
+      }
+  Name: c3
+  Type: Aggregation
+  Component:
+    AggregateFunctions:
+    - AggregationType: Sum
+      ColumnName: total_cases
+      OutputColumnName: sum
+    GroupByItems:
+    - ColumnName: location
