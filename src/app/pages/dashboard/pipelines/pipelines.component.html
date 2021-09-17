@@ -1,0 +1,56 @@
+
+<div class="btn-container">
+  <button class="btn-add" mat-raised-button routerLink="add">
+    <img src="assets/images/add.svg" alt="" />
+    افزودن پایپلاین جدید
+  </button>
+
+  <button class="btn-drop" (click)="file.click()">
+    <img src="assets/images/upload.svg" alt="" />
+    انتخاب پایپلاین از  فایل<span>yml</span>
+  </button>
+  <input
+    style="display: none"
+    type="file"
+    accept=".yml"
+    (change)="onUpload($event)"
+    #file
+  />
+</div>
+
+<div class="table-wrapper">
+  <table mat-table [dataSource]="pipelineRows" class="mat-elevation-z8">
+    <ng-container matColumnDef="شماره">
+      <th mat-header-cell *matHeaderCellDef>شماره</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="نام">
+      <th mat-header-cell *matHeaderCellDef>نام</th>
+      <td mat-cell *matCellDef="let element">{{ element.pipeline.Name }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="تاریخ ساخت">
+      <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.pipeline.DateCreated | date: "YYYY/MM/dd"}}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let element" style="text-align: end">
+        <button class="delete-btn" mat-button (click)="deletePipeline(element.pipeline, $event)">
+          <img src="assets/images/delete.svg" alt="delete">
+        </button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      [routerLink]="['/pipeline', row.pipeline.Id]"
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+</div>

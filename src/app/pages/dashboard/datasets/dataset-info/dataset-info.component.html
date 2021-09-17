@@ -1,0 +1,48 @@
+
+<h2>پایپلاین‌ها</h2>
+<table mat-table [dataSource]="pipelineRows" class="mat-elevation-z8">
+    <ng-container matColumnDef="شماره">
+      <th mat-header-cell *matHeaderCellDef>شماره</th>
+      <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="نام">
+      <th mat-header-cell *matHeaderCellDef>نام</th>
+      <td mat-cell *matCellDef="let element">{{ element.pipeline.Name }}</td>
+    </ng-container>
+  
+    <ng-container matColumnDef="تاریخ ساخت">
+      <th mat-header-cell *matHeaderCellDef>تاریخ ساخت</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.pipeline.DateCreated | date: "YYYY/MM/dd"}}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let element" style="text-align: end">
+        <button class="delete-btn" mat-button (click)="deletePipeline(element.pipeline, $event)">
+          <img src="assets/images/delete.svg" alt="delete">
+        </button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsPipelines"></tr>
+    <tr
+      mat-row
+      (click)="onPipelineClick(row)"
+      *matRowDef="let row; columns: displayedColumnsPipelines"
+    ></tr>
+  </table>
+
+<mat-divider></mat-divider>
+ <!-- <mat-table class="sampels-table" #table [dataSource]="dataSource">
+
+  <ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
+    <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
+    <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}</mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table> -->
+<app-table-input-output [tableData]="dataSource"></app-table-input-output>

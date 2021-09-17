@@ -1,0 +1,56 @@
+* {
+  font-family: "iransans", sans-serif !important;
+}
+
+.btn-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  gap: 1rem;
+}
+
+.btn-container .btn-add {
+  color: #fff;
+  background: var(--color-primary);
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.7rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.btn-container .btn-add img {
+  height: 2rem;
+  width: 2rem;
+}
+
+table {
+  width: 98%;
+  margin: 1rem;
+}
+
+table .mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+table .mat-row:hover .mat-cell {
+  background: rgba(224, 220, 220, 0.29);
+}
+/*# sourceMappingURL=pipelines.component.css.map */

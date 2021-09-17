@@ -1,0 +1,104 @@
+:host {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  
+    .header {
+      background: hsla(211, 27%, 45%, 1);
+      height: 7rem;
+      width: 100%;
+      .header-content {
+        width: 65%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+  
+      p {
+        font-size: 2rem;
+        color: #fff;
+      }
+  
+      img {
+        height: 1.5rem;
+        width: 1.5rem;
+      }
+    }
+  
+    form {
+      width: 65%;
+      margin-top: 5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      font-size: 1.5rem;
+  
+      .panel-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        button {
+          width: fit-content;
+        }
+        .btn-add {
+          width: fit-content;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          background: var(--color-primary);
+          img {
+            height: 2rem;
+            width: 2rem;
+          }
+        }
+      }
+      .actions-wrapper {
+        height: 6rem;
+        width: 100%;
+        margin-top: 2rem;
+      
+        .bottons-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 1.5rem;
+        }
+      }
+    }
+  }
+
+
+  .btn-drop {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 0.5rem;
+    border-style: dashed;
+    height: 100%;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    width: 100% !important;
+    & > img {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+    & > span {
+      color: hsla(204, 94%, 39%, 1);
+      font-weight: bold;
+    }
+  
+    &:hover {
+      background: hsla(204, 94%, 59%, 0.22);
+    }
+  }
+  mat-radio-group{
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+  
+  

@@ -1,0 +1,123 @@
+:host .main-wrapper header {
+  height: 5vh;
+  background-color: white;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 2rem;
+}
+
+:host .main-wrapper header p {
+  font-size: 1.5rem;
+}
+
+:host .main-wrapper header img {
+  width: 2rem;
+  height: 2rem;
+}
+
+:host .main-wrapper main {
+  height: 90%;
+  overflow-y: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.5rem;
+}
+
+:host .main-wrapper main mat-accordion form {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+
+:host .main-wrapper main .delete {
+  margin-left: 1.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+:host .main-wrapper main .delete:hover {
+  background-color: rgba(200, 200, 200, 0.6);
+}
+
+:host .main-wrapper main img {
+  height: 2rem;
+  width: 2rem;
+}
+
+:host .main-wrapper main .panel-body {
+  border-radius: 0.5rem;
+  background-color: white;
+  padding: 1.5rem;
+}
+
+:host .main-wrapper main .panel-body form {
+  font-size: 1.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+:host .main-wrapper .actions-wrapper {
+  height: 6rem;
+  width: 100%;
+  margin-top: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+:host .main-wrapper .actions-wrapper .validate-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+}
+/*# sourceMappingURL=join-processor.component.css.map */

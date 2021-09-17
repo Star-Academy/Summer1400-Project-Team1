@@ -1,0 +1,26 @@
+<div class='header'>
+  <div class='header-content'>
+      <p>افزودن پایپلاین جدید</p>
+      <button mat-icon-button aria-label='Example icon button with a home icon' (click) = "onClose()">
+          <img src='assets/images/close.svg' alt='close'>
+      </button>
+  </div>
+
+</div>
+<form #form="ngForm" (ngSubmit)= "onSubmit(form)">
+  <mat-form-field appearance='outline'>
+      <mat-label>نام پایپلاین</mat-label>
+      <input type='text' ngModel name="pipelineName" matInput placeholder='' required>
+  </mat-form-field>
+
+
+
+  <div class='actions-wrapper'>
+      <div class='validate-wrapper'>
+          <button type = "submit" color='primary' mat-raised-button>اضافه کردن پایپلاین</button>
+      </div>
+      <button mat-stroked-button color='primary' (click)= "onClose()">لغو</button>
+
+
+  </div>
+</form>

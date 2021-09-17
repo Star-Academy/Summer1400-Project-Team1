@@ -1,0 +1,156 @@
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  header {
+    font-size: 1.5rem;
+    height: 5vh;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+
+    .title {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+
+      p {
+        font-size: 2rem;
+      }
+    }
+
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
+
+  }
+
+  main {
+    background: white;
+    max-height: 77vh;
+    border-radius: 0.5rem;
+    padding: 1rem 0;
+    overflow: auto;
+    .empty-tree-action {
+      min-height: 15rem;
+      background: white;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 0.5rem;
+      gap: 1rem;
+
+      p {
+        font-size: 1.5rem;
+      }
+
+      button {
+        background: var(--color-border-filter);
+      }
+
+      .actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+    }
+
+    mat-tree {
+      margin-right: 0.5rem;
+
+      mat-tree-node {
+        app-filter-item {
+          width: 25rem;
+          margin: 1rem 0;
+        }
+      }
+    }
+  }
+
+  .state-wrapper {
+    direction: ltr;
+    min-height: 5vh;
+    max-height: 15vh;
+    background-color: white;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    text-align: center;
+    font-size: 1.3rem;
+
+
+  }
+
+  .add-logic-wrapper {
+    min-height: 5vh;
+    max-height: 15vh;
+    background-color: white;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: .5rem;
+
+    p {
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+  }
+}
+
+
+.filter-tree-invisible {
+  display: none;
+}
+
+.filter-tree ul,
+.filter-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+
+}
+
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.filter-tree .mat-nested-tree-node div[role=group] {
+  margin-right: 2rem;
+  border-right: 1px dashed rgba(0, 0, 0, 0.4);
+
+}
+
+/*
+ * Padding for leaf nodes.
+ * Leaf nodes need to have padding so as to align with other non-leaf nodes
+ * under the same parent.
+ */
+.filter-tree div[role=group] > .mat-tree-node {
+  margin-right: 1rem;
+
+}
+
+img {
+  height: 2rem;
+  width: 2rem;
+}
+
+

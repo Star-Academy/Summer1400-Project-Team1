@@ -1,0 +1,62 @@
+<div class="main-wrapper">
+    <main>
+        <div class='panel-body'>
+            <form  #form="ngForm" (ngSubmit)="onSubmit()" >
+                <mat-form-field class="example-full-width">
+                    <mat-label>نام ستون</mat-label>
+                    <input type="text"
+                           aria-label="ستون"
+                           matInput
+                           required
+                           [(ngModel)]="aggregateNode.column"
+                           [formControl]="myControl"
+                           [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let filteredColumn of filteredColumns | async" [value]="filteredColumn">
+                            {{filteredColumn}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>نوع تجمیع</mat-label>
+                    <mat-select [formControl]="aggregateTypeControl" required [(ngModel)]="aggregateNode.aggregateType">
+                        <mat-option *ngFor="let aggregateOption of aggregateOptions" [value]="aggregateOption.value">
+                            {{aggregateOption.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="aggregateTypeControl.hasError('required')">لطفا شرط را انتخاب کنید</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>نام ستون خروجی</mat-label>
+                    <input matInput required [(ngModel)]="aggregateNode.outputColumnName" [ngModelOptions]="{standalone: true}" >
+                </mat-form-field>
+                <mat-form-field  appearance="fill">
+                    <mat-label>ستون‌های تجمیع</mat-label>
+                    <mat-chip-list #chipList >
+                      <mat-chip *ngFor="let column of aggregateNode.groupByColumns" [selectable]="selectable"
+                               [removable]="removable" (removed)="remove(column)">
+                        {{column.name}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input placeholder="ستون جدید .."
+                             [matChipInputFor]="chipList"
+                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                             [matChipInputAddOnBlur]="addOnBlur"
+                             (matChipInputTokenEnd)="add($event)"
+                              [matAutocomplete]="auto"
+                             >
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let filteredColumn of filteredColumns | async" [value]="filteredColumn">
+                            {{filteredColumn}}
+                        </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+            
+            </form>
+
+        </div>
+    </main>
+
+  
+</div>

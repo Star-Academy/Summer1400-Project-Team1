@@ -1,0 +1,85 @@
+<div class="header">
+  <div class="header-content">
+    <p>افزودن اتصال جدید</p>
+    <button mat-icon-button (click)="onClose()">
+      <img src="assets/images/close.svg" alt="close" />
+    </button>
+  </div>
+</div>
+<form (ngSubmit)="onSubmit()" #form="ngForm">
+  <mat-form-field appearance="outline">
+    <mat-label>نام اتصال</mat-label>
+    <input
+      type="text"
+      ngModel
+      name="connectionName"
+      #connectionName="ngModel"
+      matInput
+      required
+    />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>آدرس سرور</mat-label>
+    <input
+      type="text"
+      ngModel
+      name="server"
+      #server="ngModel"
+      matInput
+      required
+    />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>نام کاربری</mat-label>
+    <input
+      type="text"
+      ngModel
+      name="userName"
+      #userName="ngModel"
+      matInput
+      required
+    />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>عبور رمز </mat-label>
+    <input
+      matInput
+      [type]="hidePassword ? 'password' : 'text'"
+      ngModel
+      name="password"
+      #password="ngModel"
+      matInput
+      required
+      autocomplete="false"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="hidePassword = !hidePassword"
+      [attr.aria-label]="'Hide password'"
+    >
+      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div class="actions-wrapper">
+    <mat-progress-bar
+      *ngIf="inProgress"
+      mode="indeterminate"
+    ></mat-progress-bar>
+
+    <div class="bottons-wrapper">
+      <button
+        type="submit"
+        [disabled]="inProgress || !form.valid"
+        mat-raised-button
+        color="primary"
+      >
+        {{ inProgress ? "در حال بارگزاری ..." : "افزودن" }}
+      </button>
+      <button mat-stroked-button color="primary" (click)="onClose()">
+        لغو
+      </button>
+    </div>
+  </div>
+</form>

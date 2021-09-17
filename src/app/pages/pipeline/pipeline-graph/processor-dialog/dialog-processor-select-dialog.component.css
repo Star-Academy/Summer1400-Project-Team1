@@ -1,0 +1,61 @@
+header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.472);
+  padding-bottom: 1rem;
+}
+
+.content {
+  font-size: 1.5rem;
+}
+
+.content > ul > li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  padding: 0.7rem 1rem;
+}
+
+.content > ul > li:hover {
+  background-color: #1031832d;
+  border-radius: 0.2rem;
+}
+
+.content > ul > li > span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.content > ul > li > span > span {
+  margin: 0 1rem;
+}
+
+.content > ul > li > span > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #103183;
+}
+/*# sourceMappingURL=dialog-processor-select-dialog.component.css.map */

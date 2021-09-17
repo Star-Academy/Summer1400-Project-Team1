@@ -1,0 +1,139 @@
+<div class="header">
+  <div class="header-content">
+    <p>افزودن دیتاست جدید</p>
+    <button mat-icon-button (click)="onClose()">
+      <img src="assets/images/close.svg" alt="close" />
+    </button>
+  </div>
+</div>
+
+<div class="state-wrapper">
+{{connections.selectedOptions.selected[0]?.value.connection.name}}
+</div>
+<form (ngSubmit)="onSubmit()" #form="ngForm">
+
+  <mat-stepper orientation="vertical" linear="true" #stepper>
+    <mat-step>
+      <ng-template matStepLabel>{{chooseConnectionLable}}</ng-template>
+
+     
+      <mat-selection-list #connections [multiple]="false">
+        <mat-list-option>
+          <div class="item-wrapper list-header">
+            <h4>نام اتصال</h4>
+            <h4>نوع اتصال</h4>  
+            <h4>کاربر</h4>  
+          </div>
+        </mat-list-option>
+        <mat-divider></mat-divider>
+        
+        <mat-list-option *ngFor="let connectionRow of connectionList" [value]="connectionRow" (click)="onSelectConnection(connectionRow,stepper)">
+          <div class="item-wrapper">
+            <p>{{connectionRow.connection.Name}}</p>
+            <p> {{connectionRow.connection.Server}}</p>  
+            <p> {{connectionRow.connection.Username}}</p>  
+          </div>
+        </mat-list-option>
+        <mat-progress-bar
+        *ngIf="isLoadingData"
+        mode="indeterminate"
+      ></mat-progress-bar>
+      </mat-selection-list>
+      
+     </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>{{chooseDatabaseLable}}</ng-template>
+      <mat-selection-list #databases [multiple]="false">
+        <mat-list-option *ngFor="let database of databaseList" [value]="database" (click)="onSelectDatabase(database,stepper)">
+          {{database}}
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>{{chooseDatasetLable}}</ng-template>
+      <mat-selection-list #datasets [multiple]="false">
+        <mat-list-option *ngFor="let dataset of datasetList" [value]="dataset" (click)="onSelectDataset(dataset,stepper)">
+          {{dataset}}
+        </mat-list-option>
+      </mat-selection-list>
+      
+     
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>نهایی سازی</ng-template>
+      <mat-form-field appearance="outline">
+        <mat-label>نام دیتاست</mat-label>
+        <input
+          type="text"
+          ngModel
+          name="datasetName"
+          #datasetName="ngModel"
+          matInput
+          placeholder=""
+          required
+        /> 
+      </mat-form-field>
+      <div class="actions-wrapper">
+        <mat-progress-bar
+          *ngIf="isLoadingData"
+          mode="indeterminate"
+        ></mat-progress-bar>
+        <div class="bottons-wrapper">
+          <button
+            type="submit"
+            [disabled]="isLoadingData || !form.valid"
+            mat-raised-button
+            color="primary"
+          >
+            {{ isLoadingData ? "در حال افزودن ..." : "افزودن" }}
+          </button>
+          <button type="button" mat-stroked-button color="primary" (click)="onCancle()">
+            لغو
+          </button>
+        </div>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</form>
+
+<!-- 
+<mat-accordion >
+  <mat-expansion-panel
+    (opened)="panelOpenState = true"
+    (closed)="panelOpenState = false"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> اتصال </mat-panel-title>
+      <mat-panel-description> انتخاب اتصال </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="panel-body">
+      <p>اتصال های موجود:</p>
+      <button mat-button class="active_btn" (click)="isLocalHost = true">
+        اتصال محلی
+      </button>
+      <button mat-button *ngFor="let btn of templist"></button>
+      <button mat-button>اتصال ۲</button>
+      <mat-divider></mat-divider>
+
+      <p>اعمال دیگر:</p>
+
+      <button
+        class="btn-add"
+        mat-raised-button
+        color="primary"
+        (click)="addNewConnection()"
+      >
+        <img src="assets/images/add.svg" alt="" />
+        افزودن اتصال جدید
+      </button>
+
+      <input
+        style="display: none"
+        type="file"
+        accept=".csv"
+        (change)="onUpload($event)"
+        #file
+      />
+    </div>
+  </mat-expansion-panel>
+</mat-accordion> -->

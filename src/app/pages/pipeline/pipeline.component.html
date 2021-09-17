@@ -1,0 +1,167 @@
+<ng-container *ngIf="pipeline">
+    <header class="pipeline-header">
+        <button
+                mat-button
+                class="back-btn"
+                (click)="router.navigateByUrl('dashboard')"
+        >
+            <mat-icon class="mat-icon-rtl-mirror">arrow_back</mat-icon>
+        </button>
+        <div class="pipeline-subheader">
+            <div *ngIf="!isEditingPipelineTitle" class="current-title">
+                <h1 (dblclick)="isEditingPipelineTitle = true">{{pipeline.Name}}</h1>
+                <mat-icon (click)="isEditingPipelineTitle = true">edit</mat-icon>
+            </div>
+            <form
+                    *ngIf="isEditingPipelineTitle"
+                    #editNameForm="ngForm"
+                    (ngSubmit)="editPipelineName(pipeline, editNameForm)"
+                    class="edit-title"
+            >
+                <mat-form-field>
+                    <input
+                            name="newName"
+                            [ngModel]="pipeline.Name"
+                            matInput
+                            type="text"
+                            required
+                            (keyup.enter)="editPipelineName(pipeline, editNameForm)"
+                    />
+                    <button
+                            mat-button
+                            matSuffix
+                            mat-icon-button
+                            class="cancel"
+                            (click)="isEditingPipelineTitle = false"
+                    >
+                        <mat-icon class="material-icons-outlined">cancel</mat-icon>
+                    </button>
+                    <button
+                            type="submit"
+                            mat-button
+                            matSuffix
+                            mat-icon-button
+                            class="submit"
+                    >
+                        <mat-icon>check_circle</mat-icon>
+                    </button>
+                </mat-form-field>
+            </form>
+        </div>
+
+        <div class="download-wrapper">
+        <button
+        matTooltip="بارگیری"
+
+        mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+<img src="assets/images/download-fill.svg" alt="">
+        </button>
+        </div>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="downloadCsv()">
+              دیتاست خروجی <span class="blue-color" >csv</span>
+            </button>
+            <button mat-menu-item (click)="downloadYml()">
+            پایپلاین  <span class="blue-color" >yml</span> 
+            </button>
+          </mat-menu>
+        <div class="run-wrapper" [ngClass]="{'running': running}"
+        > 
+            <button 
+            matTooltip="اجرا"
+            class="run-btn" mat-icon-button (click) = "runPipeline()" [disabled]="running"
+            >
+                <img src="assets/images/run.svg" alt="run">
+            </button>
+        </div>
+        <div class="header-actions">
+          
+            <div class="view-actions">
+                <button
+    
+                        [ngClass]="{ 'toggle-preview active': true, active: expandPreview }"
+                        (click)="expandPreview = !expandPreview"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path
+                                d="M14.77 12.566c0 .34-.276.616-.616.616H1.846a.616.616 0 0 1-.615-.616V11.47c0-.34.276-.616.615-.616h12.308c.34 0 .615.276.615.616v1.096zM14.112 1.79H1.896A1.893 1.893 0 0 0 .004 3.68v8.729c0 1.043.848 1.89 1.892 1.89h12.217c1.043 0 1.89-.847 1.89-1.89v-8.73c0-1.042-.847-1.89-1.89-1.89z"
+                        ></path>
+                    </svg>
+                </button>
+                <button
+                        [ngClass]="{ 'toggle-sidebar': true, active: expandSidebar }"
+                        (click)="toggleSidebar()"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path
+                                d="M14.875 12.372c0 .34-.276.616-.616.616h-1.096a.616.616 0 0 1-.616-.616V3.757c0-.34.276-.615.616-.615h1.096c.34 0 .616.275.616.615v8.615zm-.761-10.558H1.896a1.893 1.893 0 0 0-1.892 1.89v8.727c0 1.044.85 1.892 1.892 1.892h12.218c1.042 0 1.89-.848 1.89-1.892V3.704c0-1.044-.848-1.89-1.89-1.89z"
+                        ></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+    </header>
+    <mat-progress-bar *ngIf="running"  mode="indeterminate"></mat-progress-bar>
+
+    
+    <main (mousemove)="handleResize($event)">
+    
+        <div class="graph-template-container">
+            <app-pipeline-graph [pipeline]="pipeline"></app-pipeline-graph>
+        </div>
+    
+        <div
+                class="preview-container"
+                [hidden]="!expandPreview"
+                [ngStyle]="{ height: previewResize.previewHeight + 'px' }"
+        >
+            <div class="preview">
+                <div class="resize-grip" (mousedown)="onStartResize($event)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path
+                                d="M3.593 7.943a1.77 1.77 0 1 0-3.539 0 1.77 1.77 0 0 0 3.54 0m2.658 0a1.769 1.769 0 1 0 3.538 0 1.769 1.769 0 0 0-3.538 0m6.205 0a1.77 1.77 0 1 0 3.538 0 1.77 1.77 0 0 0-3.538 0"
+                        ></path>
+                    </svg>
+                </div>
+                <header class="preview-header">نتیجه</header>
+                <main>
+              
+                </main>
+            </div>
+        </div>
+        <div
+                class="preview-container"
+                [hidden]="!expandPreview"
+                [ngStyle]="{ height: previewResize.previewHeight + 'px' }"
+        >
+            <div class="preview">
+                <div class="resize-grip" (mousedown)="onStartResize($event)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path
+                                d="M3.593 7.943a1.77 1.77 0 1 0-3.539 0 1.77 1.77 0 0 0 3.54 0m2.658 0a1.769 1.769 0 1 0 3.538 0 1.769 1.769 0 0 0-3.538 0m6.205 0a1.77 1.77 0 1 0 3.538 0 1.77 1.77 0 0 0-3.538 0"
+                        ></path>
+                    </svg>
+                </div>
+                <header class="preview-header">نتیجه</header>
+                <main class="main-preview-result">
+                    <app-table-input-output [tableData]= "inputSource"></app-table-input-output>
+
+                    <app-table-input-output [tableData]= "outputSource"></app-table-input-output>
+
+                </main>
+            </div>
+        </div>
+    
+        <div class="details-sidebar" [ngClass]="{
+                 'filter': pipelineService.selectedNode?.nodeType === NodeType.FILTER,
+                 'join':  pipelineService.selectedNode?.nodeType === NodeType.JOIN,
+                 'aggregate':  pipelineService.selectedNode?.nodeType === NodeType.AGGREGATE
+                 }"
+             [hidden]="!expandSidebar">
+            <app-sidebar [pipeline] = "pipeline"
+            ></app-sidebar>
+        </div>
+    </main>
+</ng-container>
+

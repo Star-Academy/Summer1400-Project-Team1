@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>دانلود فایل خروجی</h2>
+<mat-dialog-content class="mat-typography">
+
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+
+    <mat-form-field appearance="outline">
+        <mat-label>جداکننده</mat-label>
+        <input
+          type="text"
+          ngModel
+          name="datasetSeparator"
+          #datasetSeparator="ngModel"
+          required
+          matInput
+        />
+      </mat-form-field>
+      <div>عنوان ستون‌ها</div>
+
+      <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        [(ngModel)]="haveHeader"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <mat-radio-button [value]="true" color="primary">دارد</mat-radio-button>
+        <mat-radio-button [value]="false" color="primary"
+          >ندارد</mat-radio-button
+        >
+      </mat-radio-group>
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" mat-button mat-dialog-close>لغو</button>
+  <button  mat-button  cdkFocusInitial (click)="onSubmit()">بارگیری</button>
+</mat-dialog-actions>

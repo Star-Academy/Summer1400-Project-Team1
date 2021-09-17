@@ -1,0 +1,113 @@
+$orange-color: #c73e08;
+
+body,
+html {
+  overflow: auto;
+}
+nav {
+  background-color: #fafafa;
+  height: auto;
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: all 1s ease;
+
+  & > button.nav__link {
+    color: #103183bd;
+    font-size: 1.6em;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0);
+    cursor: pointer;
+    margin: 0 2rem;
+    transition: all 0.3 ease;
+
+    &:hover {
+      border-bottom: 0.15rem solid #103183bd;
+    }
+
+    &--active {
+      color: #c73e08 !important;
+      border-bottom: 0.15rem solid #c73e08 !important;
+    }
+  }
+
+  & > img {
+    width: 15rem;
+    height: auto;
+  }
+}
+
+.wallpaper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  background-image: url("../../../assets/images/wallpaper-home.jpg");
+  background-position: center center;
+  background-size: cover;
+  height: 100vh;
+  transition: all 1s ease;
+
+  & > div.box {
+    background-color: #c73e08f5;
+    color: white;
+    margin-bottom: 3rem;
+    margin-left: 3rem;
+    padding: 5rem;
+    border-radius: 0.7rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & > h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+.static {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 30%;
+
+  &__holder {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+
+    margin: 10rem 0;
+    flex-wrap: wrap;
+  }
+
+  & > img {
+    width: 8rem;
+    height: 8rem;
+    fill: var(--color-primary);
+  }
+
+  & > div {
+    font-size: 1.6em;
+    color: black;
+    margin: 1rem 0;
+
+    & > span {
+      display: inline-block;
+      width: 10rem;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+}

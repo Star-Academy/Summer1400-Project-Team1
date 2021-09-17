@@ -1,0 +1,85 @@
+* {
+  font-family: "iransans", sans-serif !important;
+}
+
+.btn-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  gap: 1rem;
+}
+
+.btn-container button,
+.btn-container input {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.7rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.btn-container .btn-add {
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.btn-container .btn-add img {
+  height: 2rem;
+  width: 2rem;
+}
+
+.btn-container .btn-drop {
+  background: #fff;
+  border-style: dashed;
+  height: 100%;
+  padding: 0.8rem 1rem;
+}
+
+.btn-container .btn-drop img {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.btn-container .btn-drop span {
+  color: #0676c1;
+  font-weight: bold;
+}
+
+.btn-container .btn-drop:hover {
+  background: rgba(52, 170, 249, 0.22);
+}
+
+.dataset-list-container {
+  padding: 2rem;
+}
+
+table {
+  width: 98%;
+  margin: 1rem;
+}
+
+table .mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+table .mat-row:hover .mat-cell {
+  background: rgba(224, 220, 220, 0.29);
+}
+/*# sourceMappingURL=datasets.component.css.map */

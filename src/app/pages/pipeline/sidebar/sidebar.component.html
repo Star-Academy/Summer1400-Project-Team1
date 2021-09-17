@@ -1,0 +1,42 @@
+<ng-container *ngIf="pipelineService.selectedNode else noNodeSelected">
+    <div [ngSwitch]="pipelineService.selectedNode.nodeType" class="sidebar-wrapper">
+        <header>
+            <p>{{pipelineService.selectedNode.name}}</p>
+            <button mat-icon-button (click) = "openDialog()">
+                <img src="assets/images/delete.svg" alt="">
+            </button>
+        </header>
+        <div *ngSwitchCase="NodeType.FILTER">
+            <app-filter-processor [filterNode]="$any(pipelineService.selectedNode)"></app-filter-processor>
+        </div>
+        <div *ngSwitchCase="NodeType.JOIN">
+            <app-join-processor [joinNode]="$any(pipelineService.selectedNode)"></app-join-processor>
+        </div>
+        <div *ngSwitchCase="NodeType.AGGREGATE">
+            <app-aggregate-processor [aggregateNode]="$any(pipelineService.selectedNode)"></app-aggregate-processor>
+        </div>
+        <div class='actions-wrapper'>
+            <div class='validate-wrapper'>
+                <button type="submit" mat-raised-button color='primary' (click) = "updateNode()">اعمال</button>
+            </div>
+            <button mat-stroked-button color='primary'>لغو</button>
+        </div>
+    </div >
+</ng-container>
+
+<ng-template #noNodeSelected>
+    <main>
+        <p>پردازه‌ای انتخاب نشده</p>
+        <button mat-raised-button color='primary'>انتخاب</button>
+    </main>
+</ng-template>
+
+
+
+
+
+
+
+
+
+
